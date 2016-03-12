@@ -8,5 +8,5 @@ Démo en vidéo : http://serandour.com/minitel1b.htm
 
 <b>Historique</b> :
 
-12/03/2016 - Début de la version HardwareSerial sur GitHub<br>
+12/03/2016 - Début de la version HardwareSerial de Minitel1B sur GitHub<br>
 
