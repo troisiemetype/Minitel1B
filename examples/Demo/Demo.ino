@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Démo - Version du 12 mars 2016 à 22 h 56
+   Minitel1B_Hard - Démo - Version du 14 octobre 2016 à 22 h 17
    Copyright 2016 - Eric Sérandour
    http://chaplab.info
    
@@ -38,7 +38,8 @@
 #include <Minitel1B_Hard.h>
 // On n'utilise pas la bibliothèque SoftwareSerial.
   
-Minitel minitel(Serial1);  // Un des ports série matériel de l'ATMega 1284P.
+Minitel minitel(Serial);  // Le port série matériel de l'ATMega 328P.
+// Minitel minitel(Serial1);  // Le premier port série matériel de l'ATMega 1284P. 
 
 int pause = 10000;
 
