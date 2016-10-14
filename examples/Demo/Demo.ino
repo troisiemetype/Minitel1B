@@ -2,7 +2,7 @@
 /*
    Minitel1B_Hard - Démo - Version du 12 mars 2016 à 22 h 56
    Copyright 2016 - Eric Sérandour
-   http://bidouille.serandour.com
+   http://chaplab.info
    
    Documentation utilisée :
    Spécifications Techniques d'Utilisation du Minitel 1B
