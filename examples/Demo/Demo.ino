@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
    Minitel1B_Hard - Démo - Version du 5 juin 2017 à 22 h 25
-   Copyright 2016 - Eric Sérandour
+   Copyright 2016, 2017 - Eric Sérandour
    
    Documentation utilisée :
    Spécifications Techniques d'Utilisation du Minitel 1B
