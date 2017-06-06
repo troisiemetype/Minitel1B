@@ -6,7 +6,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-06/06/2017 - 2 nouvelles fonctions graphiques :<br>
+06/06/2017 - 2 nouvelles fonctions graphiques + 1 nouvel exemple (3615_Couleurs.ino) :<br>
 void graphic(byte b, int x, int y)<br>
 void graphic(byte b)<br>
 
