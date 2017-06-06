@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Démo - Version du 6 juin 2017 à 02 h 25
+   Minitel1B_Hard - Démo - Version du 6 juin 2017 à 19 h 33
    Copyright 2016, 2017 - Eric Sérandour
    
    Documentation utilisée :
