@@ -6,7 +6,10 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-06/06/2017 - 2 nouvelles fonctions graphiques + 1 nouvel exemple qui inclut l'affichage d'une image (3615_Couleurs.ino) :<br>
+06/06/2017 - 1 nouvel exemple qui inclut l'affichage d'une image :<br>
+3615_Couleurs.ino<br>
+
+06/06/2017 - 2 nouvelles fonctions graphiques :<br>
 void graphic(byte b, int x, int y)<br>
 void graphic(byte b)<br>
 
