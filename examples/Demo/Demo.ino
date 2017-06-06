@@ -37,8 +37,8 @@
 #include <Minitel1B_Hard.h>
 // On n'utilise pas la bibliothèque SoftwareSerial.
   
-Minitel minitel(Serial);  // Le port série matériel de l'ATMega 328P.
-// Minitel minitel(Serial1);  // Le deuxième port série matériel de l'ATMega 1284P (RXD1 TXD1).
+// Minitel minitel(Serial);  // Le premier port série matériel de l'ATMega 1284P (RXD0 TXD0).
+Minitel minitel(Serial1);  // Le deuxième port série matériel de l'ATMega 1284P (RXD1 TXD1).
 
 int pause = 10000;
 
