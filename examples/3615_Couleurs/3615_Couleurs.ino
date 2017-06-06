@@ -166,7 +166,7 @@ void lectureChamp(int premiereLigne, int nbLignes) {
 ////////////////////////////////////////////////////////////////////////
 
 void portrait() {
-  // https://github.com/eserandour/Conversion_Videotex_Hex
+  // Voir https://github.com/eserandour/Conversion_Videotex_Hex
   for (int i=0; i<LONGUEUR_TRAME_PORTRAIT; i++) {
     minitel.writeByte(pgm_read_byte_near(PORTRAIT + i));
   }
