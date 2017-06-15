@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 15 juin 2017 à 20h48
+   Minitel1B_Hard - Fichier source - Version du 15 juin 2017 à 22h11
    Copyright 2016, 2017 - Eric Sérandour
    http://3615.entropie.org
 
