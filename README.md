@@ -6,6 +6,10 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
+15/06/2017 - 2 nouvelles fonctions qui donnent la position du curseur : <br>
+int getCursorX()<br>
+int getCursorY()<br>
+
 06/06/2017 - Exemple d'utilisation du clavier et d'affichage d'une image :<br>
 Couleurs_3615.ino<br>
 
