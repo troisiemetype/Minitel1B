@@ -6,6 +6,8 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
+18/06/2017 - Exemple Tweet_3615.ino<br>
+
 15/06/2017 - 2 nouvelles fonctions qui donnent la position du curseur : <br>
 int getCursorX()<br>
 int getCursorY()<br>
