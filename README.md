@@ -6,6 +6,11 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
+11/05/2018 - Modifications des fonctions
+void printDiacriticChar(unsigned char caractere)
+boolean isDiacritic(unsigned char caractere)
+pour tenir compte de la remarque de Boris sur les caractères diacritiques majuscules.
+
 18/06/2017 - Exemple Tweet_3615.ino<br>
 
 15/06/2017 - 2 nouvelles fonctions qui donnent la position du curseur : <br>
