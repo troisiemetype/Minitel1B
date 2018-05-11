@@ -6,7 +6,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-11/05/2018 - Modifications des fonctions<br>
+11/05/2018 - Modification de deux fonctions :<br>
 void printDiacriticChar(unsigned char caractere)<br>
 boolean isDiacritic(unsigned char caractere)<br>
 pour tenir compte de la remarque de Boris sur les caractères diacritiques majuscules.
