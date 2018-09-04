@@ -1,7 +1,11 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   3615 - Version du 11 juin 2017 à 16h00
-   Copyright 2017 - Eric Sérandour
+   3615 - Version du 4 septembre 2018 à 18h04
+   Copyright 2017-2018 - Eric Sérandour
+   
+   Attention : Ce programme fonctionne bien sur un ATMega 1284P.
+   Sur un microcontrôleur qui dispose de moins de mémoire,
+   il pourrait ne pas fonctionner correctement.
    
    Documentation utilisée :
    Spécifications Techniques d'Utilisation du Minitel 1B
