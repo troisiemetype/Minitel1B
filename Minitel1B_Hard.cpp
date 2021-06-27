@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 28 juin 2021 à 00h12
+   Minitel1B_Hard - Fichier source - Version du 28 juin 2021 à 00h18
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
 
@@ -589,18 +589,18 @@ unsigned long Minitel::getKeyCode() {
   // Pour passer au clavier étendu manuellement : Fnct C + E
   // Pour revenir au clavier vidéotex standard  : Fnct C + V
   else if (code == 0x1B) {
-	delay(10);  // Indispensable. 0x1B seul correspond à la touche Esc,
-	            // on ne peut donc pas utiliser la boucle while (!available()>0).           
-	if (mySerial.available()>0) {
-	  code = (code << 8) + readByte();
-	  if (code == 0x1B5B) {
+    delay(10);  // Indispensable. 0x1B seul correspond à la touche Esc,
+                // on ne peut donc pas utiliser la boucle while (!available()>0).           
+    if (mySerial.available()>0) {
+      code = (code << 8) + readByte();
+      if (code == 0x1B5B) {
         while (!mySerial.available()>0);  // Indispensable
         code = (code << 8) + readByte();
         if ((code == 0x1B5B34) || (code == 0x1B5B32)) {
-	      while (!mySerial.available()>0);  // Indispensable
-	      code = (code << 8) + readByte();			
-		}
-	  }
+          while (!mySerial.available()>0);  // Indispensable
+          code = (code << 8) + readByte();
+        }
+      }
     }
   }
 // Pour test
