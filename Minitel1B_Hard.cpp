@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 11 mai 2018 à 23h33
-   Copyright 2016, 2017, 2018 - Eric Sérandour
+   Minitel1B_Hard - Fichier source - Version du 28 juin 2021 à 00h12
+   Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
 
    Documentation utilisée :
@@ -549,8 +549,8 @@ unsigned long Minitel::getKeyCode() {
 	  while (!mySerial.available()>0);  // Indispensable
 	  byte caractere = readByte();
 	  code = (code << 8) + caractere;
-	  switch (code) {  // On convertit le code reçu en un code que l'on peut visualiser sous forme d'un caractère dans le moniteur série du logiciel Arduino avec la fonction write().
-	    case 0x194161 : code = 0xE0; break;  // à 
+	  switch (code) {  // On convertit le code reçu en un code Extended ASCII Table (Windows-1252)
+	    case 0x194161 : code = 0xE0; break;  // à
 	    case 0x194165 : code = 0xE8; break;  // è
 	    case 0x194175 : code = 0xF9; break;  // ù
 	    case 0x194265 : code = 0xE9; break;  // é
@@ -570,7 +570,7 @@ unsigned long Minitel::getKeyCode() {
 	}
 	// Les autres caractères spéciaux disponibles sous Arduino (2 codes)
 	else {
-	  switch (code) {  // On convertit le code reçu en un code que l'on peut visualiser sous forme d'un caractère dans le moniteur série du logiciel Arduino avec la fonction write().
+	  switch (code) {  // On convertit le code reçu en un code Extended ASCII Table (Windows-1252)
 	    case 0x1923 : code = 0xA3; break;  // Livre
 	    case 0x1927 : code = 0xA7; break;  // Paragraphe
 	    case 0x1930 : code = 0xB0; break;  // Degré
@@ -589,13 +589,19 @@ unsigned long Minitel::getKeyCode() {
   // Pour passer au clavier étendu manuellement : Fnct C + E
   // Pour revenir au clavier vidéotex standard  : Fnct C + V
   else if (code == 0x1B) {
-	delay(1);  // Indispensable. 0x1B seul correspond à la touche Esc,
-	           // on ne peut donc pas utiliser la boucle while (!available()>0).
-    if (mySerial.available()>0) {
-      code = (code << 8) + readByte();
-      while (!mySerial.available()>0);  // Indispensable
-      code = (code << 8) + readByte();
-    }	  
+	delay(10);  // Indispensable. 0x1B seul correspond à la touche Esc,
+	            // on ne peut donc pas utiliser la boucle while (!available()>0).           
+	if (mySerial.available()>0) {
+	  code = (code << 8) + readByte();
+	  if (code == 0x1B5B) {
+        while (!mySerial.available()>0);  // Indispensable
+        code = (code << 8) + readByte();
+        if ((code == 0x1B5B34) || (code == 0x1B5B32)) {
+	      while (!mySerial.available()>0);  // Indispensable
+	      code = (code << 8) + readByte();			
+		}
+	  }
+    }
   }
 // Pour test
 /*
@@ -605,7 +611,7 @@ unsigned long Minitel::getKeyCode() {
     Serial.write(code);
     Serial.println("");
   }
-*/ 
+*/
   return code;
 }
 /*--------------------------------------------------------------------*/
