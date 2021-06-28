@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier d'en-tête - Version du 28 juin 2021 à 10h24
+   Minitel1B_Hard - Fichier d'en-tête - Version du 28 juin 2021 à 15h12
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
    
@@ -192,22 +192,25 @@
 
 
 // Chapitre 6 : Le Protocole (voir p.134)
-#define CODE_EMISSION_ECRAN     0x50
-#define CODE_EMISSION_CLAVIER   0x51
-#define CODE_EMISSION_MODEM     0x52
-#define CODE_EMISSION_PRISE     0x53
-#define CODE_RECEPTION_ECRAN    0x58
-#define CODE_RECEPTION_CLAVIER  0x59
-#define CODE_RECEPTION_MODEM    0x5A
-#define CODE_RECEPTION_PRISE    0x5B
+#define CODE_EMISSION_ECRAN        0x50
+#define CODE_EMISSION_CLAVIER      0x51
+#define CODE_EMISSION_MODEM        0x52
+#define CODE_EMISSION_PRISE        0x53
+#define CODE_RECEPTION_ECRAN       0x58
+#define CODE_RECEPTION_CLAVIER     0x59
+#define CODE_RECEPTION_MODEM       0x5A
+#define CODE_RECEPTION_PRISE       0x5B
 
-#define PROG                    0x6B
-#define STATUS_VITESSE          0x74
-#define START                   0x69
-#define STOP                    0x6A
-#define ROULEAU                 0x43  // Ecran en mode rouleau
-#define MINUSCULES              0x45  // Clavier en mode minuscules
-#define ETEN                    0x41  // Clavier en mode étendu
+#define AIGUILLAGE_OFF             0x60
+#define AIGUILLAGE_ON              0x61
+
+#define PROG                       0x6B
+#define STATUS_VITESSE             0x74
+#define START                      0x69
+#define STOP                       0x6A
+#define ROULEAU                    0x43  // Ecran en mode rouleau
+#define MINUSCULES                 0x45  // Clavier en mode minuscules
+#define ETEN                       0x41  // Clavier en mode étendu
 
 
 
@@ -313,6 +316,10 @@ public:
   int capitalMode();  // Mode majuscules du clavier
   int extendedKeyboard();  // Clavier étendu
   int standardKeyboard();  // Clavier standard
+  void echo(boolean commande);  // Active ou désactive l'écho à l'écran de ce qui est tapé au clavier
+  
+  // Protocole
+  void aiguillage(boolean commande, byte emetteur, byte recepteur);
   
 private: 
   HardwareSerial& mySerial; 
