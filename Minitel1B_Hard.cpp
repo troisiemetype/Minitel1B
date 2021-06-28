@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 28 juin 2021 à 15h12
+   Minitel1B_Hard - Fichier source - Version du 28 juin 2021 à 15h31
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
 
@@ -604,14 +604,14 @@ unsigned long Minitel::getKeyCode() {  // Code ASCII en général
     }
   }
 // Pour test
-
+/*
   if (code != 0) {
     Serial.print(code,HEX);
     Serial.print(" ");
     Serial.write(code);
     Serial.println("");
   }
-
+*/
   return code;
 }
 /*--------------------------------------------------------------------*/
