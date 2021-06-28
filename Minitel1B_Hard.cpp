@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 28 juin 2021 à 09h48
+   Minitel1B_Hard - Fichier source - Version du 28 juin 2021 à 15h12
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
 
@@ -546,39 +546,39 @@ unsigned long Minitel::getKeyCode() {  // Code ASCII en général
     code = (code << 8) + readByte();
     // Les diacritiques (3 codes)
     if ((code == 0x1941) || (code == 0x1942) || (code == 0x1943) || (code == 0x1948) || (code == 0x194B)) {  // Accents, tréma, cédille
-	  while (!mySerial.available()>0);  // Indispensable
-	  byte caractere = readByte();
-	  code = (code << 8) + caractere;
-	  switch (code) {  // On convertit le code reçu en un code Extended ASCII Table (Windows-1252)
-	    case 0x194161 : code = 0xE0; break;  // à
-	    case 0x194165 : code = 0xE8; break;  // è
-	    case 0x194175 : code = 0xF9; break;  // ù
-	    case 0x194265 : code = 0xE9; break;  // é
-	    case 0x194361 : code = 0xE2; break;  // â
-	    case 0x194365 : code = 0xEA; break;  // ê
-	    case 0x194369 : code = 0xEE; break;  // î
-	    case 0x19436F : code = 0xF4; break;  // ô
-	    case 0x194375 : code = 0xFB; break;  // û
-	    case 0x194861 : code = 0xE4; break;  // ä
-	    case 0x194865 : code = 0xEB; break;  // ë
-	    case 0x194869 : code = 0xEF; break;  // ï
-	    case 0x19486F : code = 0xF6; break;  // ö
-	    case 0x194875 : code = 0xFC; break;  // ü
-	    case 0x194B63 : code = 0xE7; break;  // ç
-	    default : code = caractere; break;
-	  }
-	}
-	// Les autres caractères spéciaux disponibles sous Arduino (2 codes)
-	else {
-	  switch (code) {  // On convertit le code reçu en un code Extended ASCII Table (Windows-1252)
-	    case 0x1923 : code = 0xA3; break;  // Livre
-	    case 0x1927 : code = 0xA7; break;  // Paragraphe
-	    case 0x1930 : code = 0xB0; break;  // Degré
-	    case 0x1931 : code = 0xB1; break;  // Plus ou moins
-	    case 0x1938 : code = 0xF7; break;  // Division
-	    case 0x197B : code = 0xDF; break;  // Bêta
-	  }
-	}
+    while (!mySerial.available()>0);  // Indispensable
+    byte caractere = readByte();
+    code = (code << 8) + caractere;
+    switch (code) {  // On convertit le code reçu en un code Extended ASCII Table (Windows-1252)
+      case 0x194161 : code = 0xE0; break;  // à
+      case 0x194165 : code = 0xE8; break;  // è
+      case 0x194175 : code = 0xF9; break;  // ù
+      case 0x194265 : code = 0xE9; break;  // é
+      case 0x194361 : code = 0xE2; break;  // â
+      case 0x194365 : code = 0xEA; break;  // ê
+      case 0x194369 : code = 0xEE; break;  // î
+      case 0x19436F : code = 0xF4; break;  // ô
+      case 0x194375 : code = 0xFB; break;  // û
+      case 0x194861 : code = 0xE4; break;  // ä
+      case 0x194865 : code = 0xEB; break;  // ë
+      case 0x194869 : code = 0xEF; break;  // ï
+      case 0x19486F : code = 0xF6; break;  // ö
+      case 0x194875 : code = 0xFC; break;  // ü
+      case 0x194B63 : code = 0xE7; break;  // ç
+      default : code = caractere; break;
+    }
+  }
+  // Les autres caractères spéciaux disponibles sous Arduino (2 codes)
+  else {
+    switch (code) {  // On convertit le code reçu en un code Extended ASCII Table (Windows-1252)
+      case 0x1923 : code = 0xA3; break;  // Livre
+      case 0x1927 : code = 0xA7; break;  // Paragraphe
+      case 0x1930 : code = 0xB0; break;  // Degré
+      case 0x1931 : code = 0xB1; break;  // Plus ou moins
+      case 0x1938 : code = 0xF7; break;  // Division
+      case 0x197B : code = 0xDF; break;  // Bêta
+    }
+  }
   }
   // Touches de fonction (voir p.123)
   else if (code == 0x13) {
@@ -604,14 +604,14 @@ unsigned long Minitel::getKeyCode() {  // Code ASCII en général
     }
   }
 // Pour test
-/*
+
   if (code != 0) {
     Serial.print(code,HEX);
     Serial.print(" ");
     Serial.write(code);
     Serial.println("");
   }
-*/
+
   return code;
 }
 /*--------------------------------------------------------------------*/
@@ -658,6 +658,19 @@ int Minitel::standardKeyboard() {
 }
 /*--------------------------------------------------------------------*/
 
+void Minitel::echo(boolean commande) {
+  aiguillage(commande, CODE_EMISSION_CLAVIER, CODE_RECEPTION_ECRAN);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::aiguillage(boolean commande, byte emetteur, byte recepteur) {  // Voir p.135
+  // Commande
+  writeBytesPRO(3);                                     // 0x1B 0x3B
+  writeByte(commande ? AIGUILLAGE_ON : AIGUILLAGE_OFF); // 0x61 ou 0x60
+  writeByte(recepteur);
+  writeByte(emetteur);
+}
+/*--------------------------------------------------------------------*/
 
 
 
