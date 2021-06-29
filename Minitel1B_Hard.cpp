@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 28 juin 2021 à 15h31
+   Minitel1B_Hard - Fichier source - Version du 29 juin 2021 à 10h50
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
 
@@ -56,6 +56,12 @@ void Minitel::writeByte(byte b) {
     bitWrite(b,7,0);  // Ecriture du bit de parité
   }
   mySerial.write(b);  // Envoi de l'octet sur le port série
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::writeWord(word w) {
+  writeByte(highByte(w));
+  writeByte(lowByte(w));
 }
 /*--------------------------------------------------------------------*/
 
@@ -153,7 +159,7 @@ void Minitel::noCursor() {
 /*--------------------------------------------------------------------*/
 
 void Minitel::moveCursorXY(int x, int y) {  // Voir p.95
-  attributs(CSI);   // 0x1B 0x5B
+  writeWord(CSI);   // 0x1B 0x5B
   writeBytesP(y);   // Pr : Voir section Private ci-dessous
   writeByte(0x3B);
   writeBytesP(x);   // Pc : Voir section Private ci-dessous
@@ -165,7 +171,7 @@ void Minitel::moveCursorLeft(int n) {  // Voir p.94 et 95
   if (n==1) { writeByte(BS); }
   else if (n>1) {
 	// Curseur vers la gauche de n colonnes. Arrêt au bord gauche de l'écran.
-    attributs(CSI);   // 0x1B 0x5B
+    writeWord(CSI);   // 0x1B 0x5B
     writeBytesP(n);   // Pn : Voir section Private ci-dessous
     writeByte(0x44);
   }
@@ -176,7 +182,7 @@ void Minitel::moveCursorRight(int n) {  // Voir p.94
   if (n==1) { writeByte(HT); }
   else if (n>1) {
 	// Curseur vers la droite de n colonnes. Arrêt au bord droit de l'écran.
-    attributs(CSI);   // 0x1B 0x5B
+    writeWord(CSI);   // 0x1B 0x5B
     writeBytesP(n);   // Pn : Voir section Private ci-dessous
     writeByte(0x43);
   }
@@ -187,7 +193,7 @@ void Minitel::moveCursorDown(int n) {  // Voir p.94
   if (n==1) { writeByte(LF); }
   else if (n>1) {
 	// Curseur vers le bas de n rangées. Arrêt en bas de l'écran.
-    attributs(CSI);   // 0x1B 0x5B
+    writeWord(CSI);   // 0x1B 0x5B
     writeBytesP(n);   // Pn : Voir section Private ci-dessous
     writeByte(0x42);
   }
@@ -198,7 +204,7 @@ void Minitel::moveCursorUp(int n) {  // Voir p.94
   if (n==1) { writeByte(VT); }
   else if (n>1) {
 	// Curseur vers le haut de n rangées. Arrêt en haut de l'écran.
-    attributs(CSI);   // 0x1B 0x5B
+    writeWord(CSI);   // 0x1B 0x5B
     writeBytesP(n);   // Pn : Voir section Private ci-dessous
     writeByte(0x41);
   }	
@@ -227,84 +233,84 @@ void Minitel::cancel() {  // Voir p.95
 /*--------------------------------------------------------------------*/
 
 void Minitel::clearScreenFromCursor() {  // Voir p.95
-  attributs(CSI);  // 0x1B 0x5B
+  writeWord(CSI);  // 0x1B 0x5B
   // writeByte(0x30);  Inutile
   writeByte(0x4A);
 }
 /*--------------------------------------------------------------------*/
 
 void Minitel::clearScreenToCursor() {  // Voir p.95
-  attributs(CSI);  // 0x1B 0x5B
+  writeWord(CSI);  // 0x1B 0x5B
   writeByte(0x31);
   writeByte(0x4A);
 }
 /*--------------------------------------------------------------------*/
 
 void Minitel::clearScreen() {  // Voir p.95
-  attributs(CSI);  // 0x1B 0x5B
+  writeWord(CSI);  // 0x1B 0x5B
   writeByte(0x32);
   writeByte(0x4A);
 }
 /*--------------------------------------------------------------------*/
 
 void Minitel::clearLineFromCursor() {  // Voir p.95
-  attributs(CSI);  // 0x1B 0x5B
+  writeWord(CSI);  // 0x1B 0x5B
   // writeByte(0x30);  Inutile
   writeByte(0x4B);
 }
 /*--------------------------------------------------------------------*/
 
 void Minitel::clearLineToCursor() {  // Voir p.95
-  attributs(CSI);  // 0x1B 0x5B
+  writeWord(CSI);  // 0x1B 0x5B
   writeByte(0x31);
   writeByte(0x4B);
 }
 /*--------------------------------------------------------------------*/
 
 void Minitel::clearLine() {  // Voir p.95
-  attributs(CSI);  // 0x1B 0x5B
+  writeWord(CSI);  // 0x1B 0x5B
   writeByte(0x32);
   writeByte(0x4B);
 }
 /*--------------------------------------------------------------------*/
 
 void Minitel::deleteChars(int n) {  // Voir p.95
-  attributs(CSI);  // 0x1B 0x5B
+  writeWord(CSI);  // 0x1B 0x5B
   writeBytesP(n);  // Voir section Private ci-dessous
   writeByte(0x50);
 }
 /*--------------------------------------------------------------------*/
 
 void Minitel::insertChars(int n) {  // Voir p.95
-  attributs(CSI);  // 0x1B 0x5B
+  writeWord(CSI);  // 0x1B 0x5B
   writeBytesP(n);  // Voir section Private ci-dessous
   writeByte(0x40);
 }
 /*--------------------------------------------------------------------*/
 
 void Minitel::startInsert() {  // Voir p.95
-  attributs(CSI);  // 0x1B 0x5B
+  writeWord(CSI);  // 0x1B 0x5B
   writeByte(0x34);
   writeByte(0x68);
 }
 /*--------------------------------------------------------------------*/
 
 void Minitel::stopInsert() {  // Voir p.95
-  attributs(CSI);  // 0x1B 0x5B
+  writeWord(CSI);  // 0x1B 0x5B
   writeByte(0x34);
   writeByte(0x6C);
 }
 /*--------------------------------------------------------------------*/
 
 void Minitel::deleteLines(int n) {  // Voir p.95
-  attributs(CSI);  // 0x1B 0x5B
+  writeWord(CSI);  // 0x1B 0x5B
   writeBytesP(n);  // Voir section Private ci-dessous
   writeByte(0x4D);
 }
 /*--------------------------------------------------------------------*/
 
 void Minitel::insertLines(int n) {  // Voir p.95
-  attributs(CSI);  // 0x1B 0x5B
+  writeWord(CSI);  // 0x1B 0x5B
   writeBytesP(n);  // Voir section Private ci-dessous
   writeByte(0x4C);
 }
@@ -322,21 +328,92 @@ void Minitel::graphicMode() {
 
 int Minitel::pageMode() {
   // Commande
-  writeBytesPRO(2);   // 0x1B 0x3A
-  writeByte(STOP);    // 0x6A
-  writeByte(ROULEAU); // 0x43
+  writeBytesPRO(2);    // 0x1B 0x3A
+  writeByte(STOP);     // 0x6A
+  writeByte(ROULEAU);  // 0x43
   // Acquittement
-  return workingMode();
+  return workingMode();  // Renvoie un octet
 }
 /*--------------------------------------------------------------------*/
 
 int Minitel::scrollMode() {
   // Commande
-  writeBytesPRO(2);   // 0x1B 0x3A
-  writeByte(START);   // 0x69
-  writeByte(ROULEAU); // 0x43
+  writeBytesPRO(2);    // 0x1B 0x3A
+  writeByte(START);    // 0x69
+  writeByte(ROULEAU);  // 0x43
   // Acquittement
-  return workingMode();
+  return workingMode();  // Renvoie un octet
+}
+/*--------------------------------------------------------------------*/
+
+int Minitel::modeMixte() {  // Voir p.144
+  // Passage du standard Télétel mode Vidéotex au standard Télétel mode Mixte
+  // Commande
+  writeBytesPRO(2);   // 0x1B 0x3A
+  writeWord(MIXTE1);  // 0x32 0x7D
+  // Acquittement
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned long trame = 0;  // 32 bits = 4 octets  
+  while (trame != 0x1370) {  // SEP (0x13), 0x70
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+      //Serial.println(trame, HEX);
+    }
+  }
+  return 0;
+}
+/*--------------------------------------------------------------------*/
+
+int Minitel::modeVideotex() {  // Voir p.144
+  // Passage du standard Télétel mode Mixte au standard Télétel mode Vidéotex
+  // Commande
+  writeBytesPRO(2);   // 0x1B 0x3A
+  writeWord(MIXTE2);  // 0x32 0x7E
+  // Acquittement
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned long trame = 0;  // 32 bits = 4 octets  
+  while (trame != 0x1371) {  // SEP (0x13), 0x71
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+      //Serial.println(trame, HEX);
+    }
+  }
+  return 0;
+}
+/*--------------------------------------------------------------------*/
+
+int Minitel::standardTeleinformatique() {  // Voir p.144
+  // Passage du standard Télétel au standard Téléinformatique
+  writeBytesPRO(2);    // 0x1B 0x3A
+  writeWord(TELINFO);  // 0x31 0x7D
+  // Acquittement
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned long trame = 0;  // 32 bits = 4 octets  
+  while (trame != 0x1B5B3F7A) {  // CSI (0x1B,0x5B), 0x3F, 0x7A
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+      //Serial.println(trame, HEX);
+    }
+  }
+  return 0;
+}
+/*--------------------------------------------------------------------*/
+
+int Minitel::standardTeletel() {  // Voir p.144
+  // Passage du standard Téléinformatique au standard Télétel 
+  writeWord(CSI);  // 0x1B Ox5B
+  writeByte(0x3F);
+  writeByte(0x7B);
+  // Acquittement
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned long trame = 0;  // 32 bits = 4 octets  
+  while (trame != 0x135E) {  // SEP (0x13), 0x5E
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+      //Serial.println(trame, HEX);
+    }
+  }
+  return 0;
 }
 /*--------------------------------------------------------------------*/
 
@@ -622,7 +699,7 @@ int Minitel::smallMode() {
   writeByte(START);       // 0x69
   writeByte(MINUSCULES);  // 0x45
   // Acquittement
-  return workingMode();
+  return workingMode();   // Renvoie un octet
 }
 /*--------------------------------------------------------------------*/
 
@@ -632,7 +709,7 @@ int Minitel::capitalMode() {
   writeByte(STOP);        // 0x6A
   writeByte(MINUSCULES);  // 0x45
   // Acquittement
-  return workingMode();
+  return workingMode();   // Renvoie un octet
 }
 /*--------------------------------------------------------------------*/
 
@@ -643,7 +720,7 @@ int Minitel::extendedKeyboard() {
   writeByte(CODE_RECEPTION_CLAVIER);  // 0x59
   writeByte(ETEN);                    // 0x41
   // Acquittement
-  return workingKeyboard();	
+  return workingKeyboard();  // Renvoie un octet
 }
 /*--------------------------------------------------------------------*/
 
@@ -654,7 +731,7 @@ int Minitel::standardKeyboard() {
   writeByte(CODE_RECEPTION_CLAVIER);  // 0x59
   writeByte(ETEN);                    // 0x41
   // Acquittement
-  return workingKeyboard();	
+  return workingKeyboard();  // Renvoie un octet
 }
 /*--------------------------------------------------------------------*/
 
@@ -729,7 +806,7 @@ int Minitel::workingSpeed() {
   unsigned long trame = 0;  // 32 bits = 4 octets
   // On se donne 1000 ms pour récupérer une trame exploitable
   while ((trame >> 8 != 0x1B3A75) && (duree < 1000)) {  // Voir p.141
-	if (mySerial.available() > 0) {
+    if (mySerial.available() > 0) {
       trame = (trame << 8) + readByte();
       //Serial.println(trame, HEX);
     }
@@ -753,7 +830,7 @@ byte Minitel::workingMode() {  // Voir p.143
   // F  : format d'écran (1 = 80 colonnes)
   while (!mySerial);  // On attend que le port soit sur écoute.
   unsigned long trame = 0;  // 32 bits = 4 octets  
-  while (trame >> 8 != 0x1B3A73) {
+  while (trame >> 8 != 0x1B3A73) {  // PRO2 (0x1B,0x3A), REP_STATUS_FONCTIONNEMENT (0x73)
     if (mySerial.available() > 0) {
       trame = (trame << 8) + readByte();
       //Serial.println(trame, HEX);
@@ -769,14 +846,14 @@ byte Minitel::workingKeyboard() {  // Voir p.142
   // C0   : codage en jeu C0 des touches de gestion du curseur (1 = actif)
   while (!mySerial);  // On attend que le port soit sur écoute.
   unsigned long trame = 0;  // 32 bits = 4 octets  
-  while (trame != 0x1B3B7359) {
+  while (trame != 0x1B3B7359) {  // PRO3 (0x1B,0x3B), REP_STATUS_CLAVIER (0x73), CODE_RECEPTION_CLAVIER (0x59)
     if (mySerial.available() > 0) {
       trame = (trame << 8) + readByte();
       //Serial.println(trame, HEX);
     }
   }
   while (!mySerial.available()>0);  // Indispensable
-  return readByte();
+  return readByte(); // Octet de status fonctionnement clavier
 }
 /*--------------------------------------------------------------------*/
 
