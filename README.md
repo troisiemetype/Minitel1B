@@ -11,7 +11,8 @@ void writeWord(word w)<br>
 int modeMixte()<br>
 int modeVideotex()<br>
 int standardTeleinformatique()<br>
-int standardTeletel()
+int standardTeletel()<br>
+Correction d'un bug sur la fonction void echo(boolean commande).
 
 
 28/06/2021 - Modification de la fonction :<br>
