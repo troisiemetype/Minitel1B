@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier d'en-tête - Version du 29 juin 2021 à 10h50
+   Minitel1B_Hard - Fichier d'en-tête - Version du 29 juin 2021 à 23h03
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
    
@@ -303,10 +303,10 @@ public:
   void insertLines(int n);  // Insertion de n rangées à partir de celle où est le curseur.
   
   // Modes du standard Télétel
-  void textMode();      // Accès au jeu G0 - Mode Vidéotex 40 colonnes (par défaut à la mise sous tension du Minitel)
-  void graphicMode();   // Accès au jeu G1 - Mode Vidéotex 40 colonnes
-  int pageMode();       // Mode page
-  int scrollMode();     // Mode rouleau
+  void textMode();     // Accès au jeu G0 - Mode Vidéotex 40 colonnes (par défaut à la mise sous tension du Minitel)
+  void graphicMode();  // Accès au jeu G1 - Mode Vidéotex 40 colonnes
+  int pageMode();      // Mode page
+  int scrollMode();    // Mode rouleau
   int modeMixte();     // Mode Vidéotex => Mode Mixte 80 colonnes (Aucun caractère semi-graphique (jeu G1) n'est visualisable)
   int modeVideotex();  // Mode Mixte => Mode Vidéotex 40 colonnes
 
@@ -355,6 +355,7 @@ private:
   // Protocole
   void writeBytesPRO(int n);  // PRO1, PRO2 ou PRO3
   int workingSpeed();
+  byte workingStandard(unsigned long sequence);
   byte workingMode();
   byte workingKeyboard();
   
