@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier d'en-tête - Version du 28 juin 2021 à 15h12
+   Minitel1B_Hard - Fichier d'en-tête - Version du 28 juin 2021 à 10h50
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
    
@@ -115,7 +115,7 @@
 #define FOND_NORMAL       0x5C  // Non utilisable en mode graphique
 #define INVERSION_FOND    0x5D  // Non utilisable en mode graphique
 // Echappement vers la norme ISO 6429
-#define CSI               0x5B
+#define CSI               0x1B5B
 
 
 // 1.2.5 Fonctions de mise en page (voir p.94)
@@ -192,6 +192,8 @@
 
 
 // Chapitre 6 : Le Protocole (voir p.134)
+
+// 1 Généralités (voir p.134)
 #define CODE_EMISSION_ECRAN        0x50
 #define CODE_EMISSION_CLAVIER      0x51
 #define CODE_EMISSION_MODEM        0x52
@@ -201,16 +203,30 @@
 #define CODE_RECEPTION_MODEM       0x5A
 #define CODE_RECEPTION_PRISE       0x5B
 
+// 3 Commandes d'aiguillages et de blocage des modules
+// 3.2 Format des commandes (voir p.135)
 #define AIGUILLAGE_OFF             0x60
 #define AIGUILLAGE_ON              0x61
 
+// 8 Commandes relatives à la prise (voir p.141)
 #define PROG                       0x6B
 #define STATUS_VITESSE             0x74
+
+// 9 Commandes relatives au clavier (voir p.141)
+#define ETEN                       0x41  // Clavier en mode étendu
+
+// 10 Commandes relatives à l'écran (voir p.142)
+#define ROULEAU                    0x43  // Ecran en mode rouleau
+
+// 11 Commandes relatives à plusieurs modules (voir p.143)
 #define START                      0x69
 #define STOP                       0x6A
-#define ROULEAU                    0x43  // Ecran en mode rouleau
-#define MINUSCULES                 0x45  // Clavier en mode minuscules
-#define ETEN                       0x41  // Clavier en mode étendu
+#define MINUSCULES                 0x45  // Mode minuscules / majuscules du clavier
+
+// 12 Commandes Protocole relatives au changement de standard  (voir p.144)
+#define MIXTE1                     0x327D
+#define MIXTE2                     0x327E
+#define TELINFO                    0x317D
 
 
 
@@ -234,8 +250,9 @@ class Minitel
 public:
   Minitel(HardwareSerial& serial);
   
-  // Ecrire / Lire un octet
+  // Ecrire un octet ou un mot / Lire un octet
   void writeByte(byte b);
+  void writeWord(word w);
   byte readByte();
   
   // Vitesse de la liaison série
@@ -285,14 +302,20 @@ public:
   void deleteLines(int n);  // Suppression de n rangées à partir de celle où est le curseur.
   void insertLines(int n);  // Insertion de n rangées à partir de celle où est le curseur.
   
-  // Modes
-  void textMode();     // Accès au jeu G0
-  void graphicMode();  // Accès au jeu G1
-  int pageMode();      // Mode page
-  int scrollMode();    // Mode rouleau
-  
+  // Modes du standard Télétel
+  void textMode();      // Accès au jeu G0 - Mode Vidéotex 40 colonnes (par défaut à la mise sous tension du Minitel)
+  void graphicMode();   // Accès au jeu G1 - Mode Vidéotex 40 colonnes
+  int pageMode();       // Mode page
+  int scrollMode();     // Mode rouleau
+  int modeMixte();     // Mode Vidéotex => Mode Mixte 80 colonnes (Aucun caractère semi-graphique (jeu G1) n'est visualisable)
+  int modeVideotex();  // Mode Mixte => Mode Vidéotex 40 colonnes
+
+  // Standards
+  int standardTeleinformatique();  // Standard Télétel => Standard Téléinformatique 80 colonnes (Possibilités de programmation moins étendues)
+  int standardTeletel();           // Standard Téléinformatique => Standard Télétel (inclut les modes Vidéotex et Mixte)
+
   // Contenu
-  void attributs(byte attribut); 
+  void attributs(byte attribut);
   void print(String chaine);
   void println(String chaine);
   void println();
