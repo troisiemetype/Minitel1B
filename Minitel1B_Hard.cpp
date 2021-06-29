@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 29 juin 2021 à 10h50
+   Minitel1B_Hard - Fichier source - Version du 29 juin 2021 à 20h05
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
 
@@ -736,7 +736,7 @@ int Minitel::standardKeyboard() {
 /*--------------------------------------------------------------------*/
 
 void Minitel::echo(boolean commande) {
-  aiguillage(commande, CODE_EMISSION_CLAVIER, CODE_RECEPTION_ECRAN);
+  aiguillage(commande, CODE_EMISSION_MODEM, CODE_RECEPTION_ECRAN);
 }
 /*--------------------------------------------------------------------*/
 
