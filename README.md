@@ -5,6 +5,21 @@ Documentation utilisée : Spécifications Techniques d'Utilisation du Minitel 1B
 http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
+01/07/2021 - 1 nouvelle fonction :<br>
+byte statutAiguillage(byte module)<br>
+et mise à jour de :<br>
+byte pageMode()<br>
+byte scrollMode()<br>
+byte modeMixte()<br>
+byte modeVideotex()<br>
+byte standardTeleinformatique()<br>
+byte standardTeletel()<br>
+byte smallMode()<br>
+byte capitalMode()<br>
+byte extendedKeyboard()<br>
+byte standardKeyboard()<br>
+byte echo(boolean commande)<br>
+byte aiguillage(boolean commande, byte emetteur, byte recepteur)<br>
 
 29/06/2021 - 5 nouvelles fonctions :<br>
 void writeWord(word w)<br>
