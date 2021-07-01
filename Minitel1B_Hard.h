@@ -207,7 +207,7 @@
 // 3.2 Format des commandes (voir p.135)
 #define AIGUILLAGE_OFF             0x60
 #define AIGUILLAGE_ON              0x61
-// 3.4 Demande de status d'aiguillages des modules
+// 3.4 Demande de statut d'aiguillages des modules
 #define TO                         0x62
 #define FROM                       0x63
 
