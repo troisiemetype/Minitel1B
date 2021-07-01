@@ -5,6 +5,7 @@ Documentation utilisée : Spécifications Techniques d'Utilisation du Minitel 1B
 http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
+
 01/07/2021 - 1 nouvelle fonction :<br>
 byte statutAiguillage(byte module)<br>
 et mise à jour de :<br>
