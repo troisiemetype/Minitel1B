@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 01 juillet 2021 à 22h03
+   Minitel1B_Hard - Fichier source - Version du 02 juillet 2021 à 15h27
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
 
@@ -729,7 +729,7 @@ byte Minitel::aiguillage(boolean commande, byte emetteur, byte recepteur) {  // 
 }
 /*--------------------------------------------------------------------*/
 
-byte Minitel::statutAiguillage(byte module) {  // Voir p. 136
+byte Minitel::statusAiguillage(byte module) {  // Voir p. 136
   // module peut prendre comme valeur :
   // CODE_EMISSION_ECRAN, CODE_EMISSION_CLAVIER, CODE_EMISSION_MODEM, CODE_EMISSION_PRISE
   // CODE_RECEPTION_ECRAN, CODE_RECEPTION_CLAVIER, CODE_RECEPTION_MODEM, CODE_RECEPTION_PRISE
