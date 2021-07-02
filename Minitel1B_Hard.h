@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier d'en-tête - Version du 01 juillet 2021 à 22h03
+   Minitel1B_Hard - Fichier d'en-tête - Version du 02 juillet 2021 à 15h27
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
    
@@ -346,7 +346,7 @@ public:
   
   // Protocole
   byte aiguillage(boolean commande, byte emetteur, byte recepteur);
-  byte statutAiguillage(byte module);
+  byte statusAiguillage(byte module);
   
 private: 
   HardwareSerial& mySerial; 
