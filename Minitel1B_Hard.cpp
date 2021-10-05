@@ -747,6 +747,17 @@ byte Minitel::statusAiguillage(byte module) {  // Voir p. 136
 }
 /*--------------------------------------------------------------------*/
 
+byte Minitel::connexion(boolean commande) {  // Voir p.139
+  // commande peut prendre comme valeur :
+  // true, false
+  // Commande
+  writeBytesPRO(1);  // 0x1B 0x3A
+  writeByte(commande ? CONNEXION : DECONNEXION);  // 0x68 ou 0x67
+  // Acquittement
+  return workingModem();  // Renvoie un octet
+}
+/*--------------------------------------------------------------------*/
+
 byte Minitel::reset() {  // Voir p.145
   // Commande
   writeBytesPRO(1);  // 0x1B 0x39
@@ -899,6 +910,22 @@ byte Minitel::workingAiguillage(byte module) {  // Voir p.136
   }
   while (!mySerial.available()>0);  // Indispensable
   return readByte(); // Octet de statut associé à un module
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::workingModem() {  // Voir p.126
+  // On récupère uniquement la séquence immédiate 0x1359
+  // en cas de connexion confirmé, la séquence 0x1356 s'ajoutera - non traité ici
+  // en cas de timeout (environ 40sec), la séquence 0x1359 s'ajoutera - non traité ici
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned int trame = 0;  // 16 bits = 2 octets
+  while (trame >> 8 != 0x13) {
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+      //Serial.println(trame, HEX);
+    }
+  }
+  return (byte) trame;
 }
 /*--------------------------------------------------------------------*/
 
