@@ -97,6 +97,9 @@ int Minitel::changeSpeed(int bauds) {  // Voir p.141
     case 4800 : writeByte(0b1110110); break;  // 0x76
     case 9600 : writeByte(0b1111111); break;  // 0x7F (pour le Minitel 2 seulement)
   }
+  #if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
+  mySerial.flush(false); // Patch pour Arduino-ESP32 core v1.0.6 https://github.com/espressif/arduino-esp32
+  #endif
   mySerial.end();
   mySerial.begin(bauds);
   // Acquittement
