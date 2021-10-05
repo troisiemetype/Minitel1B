@@ -92,11 +92,13 @@ int Minitel::changeSpeed(int bauds) {  // Voir p.141
   writeBytesPRO(2);  // 0x1B 0x3A
   writeByte(PROG);   // 0x6B
   switch (bauds) {
-    case  300 : writeByte(0b1010010); mySerial.begin( 300); break;  // 0x52
-    case 1200 : writeByte(0b1100100); mySerial.begin(1200); break;  // 0x64
-    case 4800 : writeByte(0b1110110); mySerial.begin(4800); break;  // 0x76
-    case 9600 : writeByte(0b1111111); mySerial.begin(9600); break;  // 0x7F (pour le Minitel 2 seulement)
+    case  300 : writeByte(0b1010010); break;  // 0x52
+    case 1200 : writeByte(0b1100100); break;  // 0x64
+    case 4800 : writeByte(0b1110110); break;  // 0x76
+    case 9600 : writeByte(0b1111111); break;  // 0x7F (pour le Minitel 2 seulement)
   }
+  mySerial.end();
+  mySerial.begin(bauds);
   // Acquittement
   return workingSpeed();  // En bauds (voir section Private ci-dessous)
 }
