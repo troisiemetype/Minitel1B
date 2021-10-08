@@ -4,6 +4,9 @@
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
    
+   Remerciements à :
+   BorisFR, iodeo
+   
    Documentation utilisée :
    Spécifications Techniques d'Utilisation du Minitel 1B
    http://543210.free.fr/TV/stum1b.pdf
