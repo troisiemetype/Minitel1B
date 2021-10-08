@@ -6,7 +6,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-08/10/2021 - Sur proposition de iodeo :
+08/10/2021 - Sur proposition de @iodeo :
 Correction de bugs mineurs + 1 nouvelle fonction :<br>
 byte connexion(boolean commande)<br>
 
