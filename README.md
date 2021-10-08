@@ -9,6 +9,7 @@ http://543210.free.fr/TV/stum1b.pdf
 08/10/2021 - Sur proposition de iodeo :
 Correction de bugs mineurs + 1 nouvelle fonction :<br>
 byte connexion(boolean commande)<br>
+Patch pour Arduino-ESP32 core v1.0.6 https://github.com/espressif/arduino-esp32<br>
 
 02/07/2021 - 1 nouvelle fonction :<br>
 byte reset()<br>
