@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 08 octobre 2021 à 22h57
+   Minitel1B_Hard - Fichier source - Version du 08 octobre 2021 à 23h57
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
    
@@ -757,7 +757,7 @@ byte Minitel::connexion(boolean commande) {  // Voir p.139
   // commande peut prendre comme valeur :
   // true, false
   // Commande
-  writeBytesPRO(1);  // 0x1B 0x3A
+  writeBytesPRO(1);  // 0x1B 0x39
   writeByte(commande ? CONNEXION : DECONNEXION);  // 0x68 ou 0x67
   // Acquittement
   return workingModem();  // Renvoie un octet
@@ -928,14 +928,14 @@ byte Minitel::workingAiguillage(byte module) {  // Voir p.136
 byte Minitel::workingModem() {  // Voir p.126
   // Fonction proposée par iodeo sur GitHub en octobre 2021
   // On récupère uniquement la séquence immédiate 0x1359
-  // en cas de connexion confirmé, la séquence 0x1356 s'ajoutera - non traité ici
+  // en cas de connexion confirmé, la séquence 0x1353 s'ajoutera - non traité ici
   // en cas de timeout (environ 40sec), la séquence 0x1359 s'ajoutera - non traité ici
   while (!mySerial);  // On attend que le port soit sur écoute.
   unsigned int trame = 0;  // 16 bits = 2 octets
   while (trame >> 8 != 0x13) {
     if (mySerial.available() > 0) {
       trame = (trame << 8) + readByte();
-      //Serial.println(trame, HEX);
+      Serial.println(trame, HEX);
     }
   }
   return (byte) trame;
