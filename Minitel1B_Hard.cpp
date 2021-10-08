@@ -92,11 +92,16 @@ int Minitel::changeSpeed(int bauds) {  // Voir p.141
   writeBytesPRO(2);  // 0x1B 0x3A
   writeByte(PROG);   // 0x6B
   switch (bauds) {
-    case  300 : writeByte(0b1010010); mySerial.begin( 300); break;  // 0x52
-    case 1200 : writeByte(0b1100100); mySerial.begin(1200); break;  // 0x64
-    case 4800 : writeByte(0b1110110); mySerial.begin(4800); break;  // 0x76
-    case 9600 : writeByte(0b1111111); mySerial.begin(9600); break;  // 0x7F (pour le Minitel 2 seulement)
+    case  300 : writeByte(0b1010010); break;  // 0x52
+    case 1200 : writeByte(0b1100100); break;  // 0x64
+    case 4800 : writeByte(0b1110110); break;  // 0x76
+    case 9600 : writeByte(0b1111111); break;  // 0x7F (pour le Minitel 2 seulement)
   }
+  #if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
+  mySerial.flush(false); // Patch pour Arduino-ESP32 core v1.0.6 https://github.com/espressif/arduino-esp32
+  #endif
+  mySerial.end();
+  mySerial.begin(bauds);
   // Acquittement
   return workingSpeed();  // En bauds (voir section Private ci-dessous)
 }
@@ -705,10 +710,10 @@ byte Minitel::standardKeyboard() {
 }
 /*--------------------------------------------------------------------*/
 
-byte Minitel::echo(boolean commande) {  // Voir p.81 et p.156
+byte Minitel::echo(boolean commande) {  // Voir p.81, p.135 et p.156
   // commande peut prendre comme valeur :
   // true, false
-  return aiguillage(commande, CODE_EMISSION_MODEM, CODE_RECEPTION_ECRAN);
+  return aiguillage(commande, CODE_EMISSION_CLAVIER, CODE_RECEPTION_MODEM);
 }
 /*--------------------------------------------------------------------*/
 
@@ -739,6 +744,17 @@ byte Minitel::statusAiguillage(byte module) {  // Voir p. 136
   writeByte(module);
   // Acquittement
   return workingAiguillage(module);  // Renvoie un octet
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::connexion(boolean commande) {  // Voir p.139
+  // commande peut prendre comme valeur :
+  // true, false
+  // Commande
+  writeBytesPRO(1);  // 0x1B 0x3A
+  writeByte(commande ? CONNEXION : DECONNEXION);  // 0x68 ou 0x67
+  // Acquittement
+  return workingModem();  // Renvoie un octet
 }
 /*--------------------------------------------------------------------*/
 
@@ -827,14 +843,19 @@ int Minitel::workingSpeed() {
 
 byte Minitel::workingStandard(unsigned long sequence) {
   while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned long time = millis();
+  unsigned long duree = 0;
   unsigned long trame = 0;  // 32 bits = 4 octets  
-  while (trame != sequence) {
+  // On se donne 100ms pour recevoir l'acquittement
+  // Sinon, on peut supposer que le mode demandé était déjà actif
+  while ((trame != sequence) && (duree < 100)) {
     if (mySerial.available() > 0) {
       trame = (trame << 8) + readByte();
       //Serial.println(trame, HEX);
     }
+    duree = millis() - time;
   }
-  return 0;
+  return (trame == sequence)? 1 : 0;
 }
 /*--------------------------------------------------------------------*/
 
@@ -894,6 +915,22 @@ byte Minitel::workingAiguillage(byte module) {  // Voir p.136
   }
   while (!mySerial.available()>0);  // Indispensable
   return readByte(); // Octet de statut associé à un module
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::workingModem() {  // Voir p.126
+  // On récupère uniquement la séquence immédiate 0x1359
+  // en cas de connexion confirmé, la séquence 0x1356 s'ajoutera - non traité ici
+  // en cas de timeout (environ 40sec), la séquence 0x1359 s'ajoutera - non traité ici
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned int trame = 0;  // 16 bits = 2 octets
+  while (trame >> 8 != 0x13) {
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+      //Serial.println(trame, HEX);
+    }
+  }
+  return (byte) trame;
 }
 /*--------------------------------------------------------------------*/
 
