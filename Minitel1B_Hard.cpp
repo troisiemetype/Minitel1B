@@ -3,6 +3,9 @@
    Minitel1B_Hard - Fichier source - Version du 08 octobre 2021 à 22h57
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
+   
+   Remerciements à :
+   BorisFR, iodeo
 
    Documentation utilisée :
    Spécifications Techniques d'Utilisation du Minitel 1B
