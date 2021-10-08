@@ -843,14 +843,19 @@ int Minitel::workingSpeed() {
 
 byte Minitel::workingStandard(unsigned long sequence) {
   while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned long time = millis();
+  unsigned long duree = 0;
   unsigned long trame = 0;  // 32 bits = 4 octets  
-  while (trame != sequence) {
+  // On se donne 100ms pour recevoir l'acquittement
+  // Sinon, on peut supposer que le mode demandé était déjà actif
+  while ((trame != sequence) && (duree < 100)) {
     if (mySerial.available() > 0) {
       trame = (trame << 8) + readByte();
       //Serial.println(trame, HEX);
     }
+    duree = millis() - time;
   }
-  return 0;
+  return (trame == sequence)? 1 : 0;
 }
 /*--------------------------------------------------------------------*/
 
