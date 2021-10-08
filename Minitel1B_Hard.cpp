@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 02 juillet 2021 à 15h38
+   Minitel1B_Hard - Fichier source - Version du 08 octobre 2021 à 22h57
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
 
@@ -88,6 +88,7 @@ byte Minitel::readByte() {
 /*--------------------------------------------------------------------*/
 
 int Minitel::changeSpeed(int bauds) {  // Voir p.141
+  // Fonction modifiée par iodeo sur GitHub en octobre 2021
   // Format de la commande
   writeBytesPRO(2);  // 0x1B 0x3A
   writeByte(PROG);   // 0x6B
@@ -711,6 +712,7 @@ byte Minitel::standardKeyboard() {
 /*--------------------------------------------------------------------*/
 
 byte Minitel::echo(boolean commande) {  // Voir p.81, p.135 et p.156
+  // Fonction modifiée par iodeo sur GitHub en octobre 2021
   // commande peut prendre comme valeur :
   // true, false
   return aiguillage(commande, CODE_EMISSION_CLAVIER, CODE_RECEPTION_MODEM);
@@ -748,6 +750,7 @@ byte Minitel::statusAiguillage(byte module) {  // Voir p. 136
 /*--------------------------------------------------------------------*/
 
 byte Minitel::connexion(boolean commande) {  // Voir p.139
+  // Fonction proposée par iodeo sur GitHub en octobre 2021
   // commande peut prendre comme valeur :
   // true, false
   // Commande
@@ -842,6 +845,7 @@ int Minitel::workingSpeed() {
 /*--------------------------------------------------------------------*/
 
 byte Minitel::workingStandard(unsigned long sequence) {
+  // Fonction modifiée par iodeo sur GitHub en octobre 2021
   while (!mySerial);  // On attend que le port soit sur écoute.
   unsigned long time = millis();
   unsigned long duree = 0;
@@ -919,6 +923,7 @@ byte Minitel::workingAiguillage(byte module) {  // Voir p.136
 /*--------------------------------------------------------------------*/
 
 byte Minitel::workingModem() {  // Voir p.126
+  // Fonction proposée par iodeo sur GitHub en octobre 2021
   // On récupère uniquement la séquence immédiate 0x1359
   // en cas de connexion confirmé, la séquence 0x1356 s'ajoutera - non traité ici
   // en cas de timeout (environ 40sec), la séquence 0x1359 s'ajoutera - non traité ici
