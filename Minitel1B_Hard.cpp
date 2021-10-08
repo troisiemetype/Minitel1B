@@ -935,7 +935,7 @@ byte Minitel::workingModem() {  // Voir p.126
   while (trame >> 8 != 0x13) {
     if (mySerial.available() > 0) {
       trame = (trame << 8) + readByte();
-      Serial.println(trame, HEX);
+      //Serial.println(trame, HEX);
     }
   }
   return (byte) trame;
