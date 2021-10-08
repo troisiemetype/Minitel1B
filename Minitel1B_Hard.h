@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier d'en-tête - Version du 02 juillet 2021 à 15h38
+   Minitel1B_Hard - Fichier d'en-tête - Version du 08 octobre 2021 à 22h57
    Copyright 2016-2021 - Eric Sérandour
    http://3615.entropie.org
    
@@ -203,17 +203,17 @@
 #define CODE_RECEPTION_MODEM       0x5A
 #define CODE_RECEPTION_PRISE       0x5B
 
-// 3 Commandes d'aiguillages et de blocage des modules
+// 3 Commandes d'aiguillages et de blocage des modules (voir p.134)
 // 3.2 Format des commandes (voir p.135)
 #define AIGUILLAGE_OFF             0x60
 #define AIGUILLAGE_ON              0x61
-// 3.4 Demande de statut d'aiguillages des modules
+// 3.4 Demande de statut d'aiguillages des modules (voir p.136)
 #define TO                         0x62
 #define FROM                       0x63
 
-// 7 Commandes relatives au modem
-#define CONNEXION               0x68
-#define DECONNEXION             0x67
+// 7 Commandes relatives au modem (voir p.139)
+#define CONNEXION                  0x68
+#define DECONNEXION                0x67
 
 // 8 Commandes relatives à la prise (voir p.141)
 #define PROG                       0x6B
