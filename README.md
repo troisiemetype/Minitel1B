@@ -6,7 +6,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-08/10/2021 - Sur proposition de iodeo :
+08/10/2021 - Sur proposition de iodeo :<br>
 Correction de bugs mineurs + 1 nouvelle fonction :<br>
 byte connexion(boolean commande)<br>
 Patch pour Arduino-ESP32 core v1.0.6 https://github.com/espressif/arduino-esp32<br>
