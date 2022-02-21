@@ -8,7 +8,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 21/02/2022 - Sur proposition de iodeo :<br>
 Ajout d'une option qui permet de désactiver la conversion des caractères en ascii étendue :<br>
-unsigned long getKeyCode(bool ascii = true);
+unsigned long getKeyCode(bool ascii = true)
 
 08/10/2021 - Sur proposition de iodeo :<br>
 Correction de bugs mineurs + 1 nouvelle fonction liée au modem :<br>
