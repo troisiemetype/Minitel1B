@@ -348,7 +348,7 @@ public:
   void vLine(int x, int y1, int y2, int position, int sens);  // Ligne verticale. position = LEFT, CENTER ou RIGHT. sens = DOWN ou UP.
   
   // Clavier
-  unsigned long getKeyCode();
+  unsigned long getKeyCode(bool ascii = true);
   byte smallMode();  // Mode minuscules du clavier
   byte capitalMode();  // Mode majuscules du clavier
   byte extendedKeyboard();  // Clavier étendu
