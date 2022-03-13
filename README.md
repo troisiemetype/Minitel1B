@@ -6,6 +6,8 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
+13/03/2022 - Exemple HelloWorld.ino<br>
+
 21/02/2022 - Sur proposition de iodeo :<br>
 Ajout d'une option qui permet de désactiver la conversion des caractères en ascii étendue (cela sert en particulier pour la communication avec des services Minitel externes) :<br>
 unsigned long getKeyCode(bool ascii = true)
