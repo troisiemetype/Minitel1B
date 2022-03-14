@@ -13,7 +13,8 @@ Ajout d'une option qui permet de désactiver la conversion des caractères en as
 unsigned long getKeyCode(bool ascii = true)
 
 08/10/2021 - Sur proposition de iodeo :<br>
-Correction de bugs mineurs + 1 nouvelle fonction liée au modem :<br>
+Correction de bugs mineurs dans echo(boolean commande) et changeSpeed(int bauds)<br>
+Ajout d'une nouvelle fonction liée au modem :<br>
 byte connexion(boolean commande)<br>
 Patch pour Arduino-ESP32 core v1.0.6 https://github.com/espressif/arduino-esp32<br>
 
