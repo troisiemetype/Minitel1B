@@ -14,7 +14,7 @@ unsigned long getKeyCode(bool ascii = true)
 
 08/10/2021 - Sur proposition de iodeo :<br>
 Correction de bugs mineurs dans echo(boolean commande) et changeSpeed(int bauds).<br>
-Ajout d'une nouvelle fonction liée au modem :<br>
+Ajout d'une nouvelle fonction liée au modem (équivalent de la touche CONNEXION / FIN) :<br>
 byte connexion(boolean commande)<br>
 Patch pour Arduino-ESP32 core v1.0.6 https://github.com/espressif/arduino-esp32<br>
 
