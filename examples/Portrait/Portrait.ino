@@ -46,7 +46,6 @@ const prog_uchar PORTRAIT[] PROGMEM = {0x0C,0x0E,0x1B,0x42,0x1B,0x56,0x37,0x1B,0
 void setup() {
   Serial.begin(9600);  // Port série matériel de l'ATmega à 9600 bauds.
   minitel.changeSpeed(minitel.searchSpeed());
-  minitel.smallMode();
   minitel.newScreen();
 }
 
