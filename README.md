@@ -6,6 +6,8 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
+24/04/2022 - Ajout d'un exemple : Portrait.ino (affichage d'une image)<br>
+
 13/03/2022 - Ajout d'un exemple basique : HelloWorld.ino<br>
 
 21/02/2022 - Sur proposition de iodeo :<br>
