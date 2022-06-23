@@ -773,7 +773,7 @@ byte Minitel::reset() {  // Voir p.145
   writeBytesPRO(1);  // 0x1B 0x39
   writeByte(RESET);  // 0x7F
   // Acquittement
-  workingStandard(0x135E);  // SEP (0x13), 0x5E
+  return workingStandard(0x135E);  // SEP (0x13), 0x5E
 }
 /*--------------------------------------------------------------------*/
 
