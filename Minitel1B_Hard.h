@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier d'en-tête - Version du 08 octobre 2021 à 22h57
-   Copyright 2016-2021 - Eric Sérandour
+   Minitel1B_Hard - Fichier d'en-tête - Version du 21 février 2022 à 22h00
+   Copyright 2016-2022 - Eric Sérandour
    http://3615.entropie.org
    
    Remerciements à :

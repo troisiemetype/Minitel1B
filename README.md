@@ -6,8 +6,17 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
+24/04/2022 - Ajout d'un exemple : Portrait.ino (affichage d'une image)<br>
+
+13/03/2022 - Ajout d'un exemple basique : HelloWorld.ino<br>
+
+21/02/2022 - Sur proposition de iodeo :<br>
+Ajout d'une option qui permet de désactiver la conversion des caractères en ascii étendue (cela sert en particulier pour la communication avec des services Minitel externes) :<br>
+unsigned long getKeyCode(bool ascii = true)
+
 08/10/2021 - Sur proposition de iodeo :<br>
-Correction de bugs mineurs + 1 nouvelle fonction liée au modem :<br>
+Correction de bugs mineurs dans echo(boolean commande) et changeSpeed(int bauds).<br>
+Ajout d'une nouvelle fonction liée au modem (équivalent de la touche CONNEXION / FIN) :<br>
 byte connexion(boolean commande)<br>
 Patch pour Arduino-ESP32 core v1.0.6 https://github.com/espressif/arduino-esp32<br>
 
