@@ -267,6 +267,7 @@ public:
   // Ecrire un octet ou un mot / Lire un octet
   void writeByte(byte b);
   void writeWord(word w);
+  void write(unsigned long code);
   byte readByte();
   
   // Vitesse de la liaison série
@@ -337,6 +338,7 @@ public:
   void printDiacriticChar(unsigned char caractere);  // Caractère avec accent, tréma ou cédille.  
   void printSpecialChar(byte b);  // Caractère du jeu G2. Voir plus haut, au niveau de 1.2.3, les constantes possibles.
   byte getCharByte(char caractere); 
+  String getString(unsigned long code);
   void graphic(byte b, int x, int y);  // Jeu G1. Voir page 101. Sous la forme 0b000000 à 0b111111 en allant du coin supérieur gauche au coin inférieur droit. En colonne x et rangée y.
   void graphic(byte b);  // Voir la ligne ci-dessus.
   void repeat(int n);  // Permet de répéter le dernier caractère visualisé avec les attributs courants de la position active d'écriture.
@@ -348,7 +350,7 @@ public:
   void vLine(int x, int y1, int y2, int position, int sens);  // Ligne verticale. position = LEFT, CENTER ou RIGHT. sens = DOWN ou UP.
   
   // Clavier
-  unsigned long getKeyCode(bool ascii = true);
+  unsigned long getKeyCode(bool unicode = true);
   byte smallMode();  // Mode minuscules du clavier
   byte capitalMode();  // Mode majuscules du clavier
   byte extendedKeyboard();  // Clavier étendu
@@ -367,6 +369,7 @@ private:
   byte currentSize = GRANDEUR_NORMALE;
   boolean isValidChar(byte index);
   boolean isDiacritic(unsigned char caractere);
+  boolean isVisualisable(unsigned long code);
   void writeBytesP(int n);  // Pn, Pr, Pc
   
   // Protocole
