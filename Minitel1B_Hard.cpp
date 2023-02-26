@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 26 février 2023 à 01h58
-   Copyright 2016-2022 - Eric Sérandour
-   http://3615.entropie.org
+   Minitel1B_Hard - Fichier source - Version du 26 février 2023 à 02h10
+   Copyright 2016-2023 - Eric Sérandour
+   https://entropie.org/3615/
    
    Remerciements à :
    BorisFR, iodeo
@@ -441,7 +441,7 @@ void Minitel::print(String chaine) {
         case 0xC2BE: code = 0x193E; break;   // ¾ (VGP5 et VGP2 - voir page 90)
         case 0xC380: code = 0x41; break;     // À (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
         case 0xC382: code = 0x41; break;     // Â (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC384: code = 0x41; break;     // Â (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
+        case 0xC384: code = 0x41; break;     // Ä (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
         case 0xC387: code = 0x43; break;     // Ç (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
         case 0xC388: code = 0x45; break;     // È (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
         case 0xC389: code = 0x45; break;     // É (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
@@ -920,20 +920,24 @@ boolean Minitel::isVisualisable(unsigned long code) {
   if (code <= DEL) return true;
   switch (code) {
     case 0x00A3: return true; // £
-    case 0x00A7: return true; // § (VGP5)
+    case 0x00A7: return true; // § (VGP5 seulement, pas VGP2 - voir page 90)
     case 0x00B0: return true; // °
     case 0x00B1: return true; // ±
     case 0x00BC: return true; // ¼
     case 0x00BD: return true; // ½
     case 0x00BE: return true; // ¾
+    /*  iodeo, je ne comprends pas cette partie car
+        aucune lettre accentuée majuscule n'est disponible sur le Minitel - voir page 90
+
     case 0x00C0: return true; // À (VGP2)
     case 0x00C7: return true; // Ç (VGP2)
     case 0x00C8: return true; // È (VGP2)
     case 0x00C9: return true; // É (VGP2)
-    case 0x00DF: return true; // ß (VGP5)
+    */
+    case 0x00DF: return true; // ß (VGP5 seulement, pas VGP2 - voir page 90)
     case 0x00E0: return true; // à
     case 0x00E2: return true; // â
-    case 0x00E4: return true; // ä (VGP5)
+    case 0x00E4: return true; // ä (VGP5 seulement, pas VGP2 - voir page 90)
     case 0x00E7: return true; // ç
     case 0x00E8: return true; // è
     case 0x00E9: return true; // é
@@ -942,11 +946,11 @@ boolean Minitel::isVisualisable(unsigned long code) {
     case 0x00EE: return true; // î
     case 0x00EF: return true; // ï
     case 0x00F4: return true; // ô
-    case 0x00F6: return true; // ö (VGP5)
+    case 0x00F6: return true; // ö (VGP5 seulement, pas VGP2 - voir page 90)
     case 0x00F7: return true; // ÷
     case 0x00F9: return true; // ù
     case 0x00FB: return true; // û
-    case 0x00FC: return true; // ü (VGP5)
+    case 0x00FC: return true; // ü (VGP5 seulement, pas VGP2 - voir page 90)
     case 0x0152: return true; // Œ
     case 0x0153: return true; // œ
     case 0x2014: return true; // —
