@@ -68,6 +68,14 @@ void Minitel::writeWord(word w) {
 }
 /*--------------------------------------------------------------------*/
 
+void Minitel::write(unsigned long code) {
+  if (code > 0x00FFFFFF) writeByte((byte) (code >> 24));
+  if (code > 0x0000FFFF) writeByte((byte) (code >> 16));
+  if (code > 0x000000FF) writeByte((byte) (code >> 8));
+  writeByte((byte) code);
+}
+/*--------------------------------------------------------------------*/
+
 byte Minitel::readByte() {
   byte b = mySerial.read();
   // Le bit de parité est à 0 si la somme des autres bits est paire
@@ -410,16 +418,67 @@ void Minitel::attributs(byte attribut) {
 /*--------------------------------------------------------------------*/
 
 void Minitel::print(String chaine) {
-  for (int i=0; i<chaine.length(); i++) {
-    unsigned char caractere = chaine.charAt(i);
-    if (!isDiacritic(caractere)) {
-	  printChar(caractere);
-	}
-	else {
-	  i+=1;  // Un caractère accentué prend la place de 2 caractères
-	  caractere = chaine.charAt(i);
-	  printDiacriticChar(caractere);
-	}
+  unsigned int i = 0;
+  while (i < chaine.length()) {
+    unsigned long code = (byte) chaine.charAt(i++);
+    if (code < SP) code = 0;
+    else if (code >= SP && code <= DEL) {
+      switch (code) {
+        case 0x5E: code = 0; break; // ^ non visualisable seul
+        case 0x60: code = 0; break; // ` non visualisable seul
+      }
+    }
+    else if (code == 0xC2 || code == 0xC3 || code == 0xC5) {
+      // Caractères sur 2 octets
+      code = (code << 8) + (byte) chaine.charAt(i++);
+      switch (code) {
+        case 0xC2A3: code = 0x1923; break;   // £
+        case 0xC2A7: code = 0x1927; break;   // § (VGP5)
+        case 0xC2B0: code = 0x1930; break;   // °
+        case 0xC2B1: code = 0x1931; break;   // ±
+        case 0xC2BC: code = 0x193C; break;   // ¼
+        case 0xC2BD: code = 0x193D; break;   // ½
+        case 0xC2BE: code = 0x193E; break;   // ¾
+        case 0xC380: code = 0x194141; break; // À (VGP2)
+        case 0xC387: code = 0x194B43; break; // Ç (VGP2)
+        case 0xC388: code = 0x194145; break; // È (VGP2)
+        case 0xC389: code = 0x194245; break; // É (VGP2)
+        case 0xC39F: code = 0x197B; break;   // ß (VGP5)
+        case 0xC3A0: code = 0x194161; break; // à
+        case 0xC3A2: code = 0x194361; break; // â
+        case 0xC3A4: code = 0x194861; break; // ä (VGP5)
+        case 0xC3A7: code = 0x194B63; break; // ç
+        case 0xC3A8: code = 0x194165; break; // è
+        case 0xC3A9: code = 0x194265; break; // é
+        case 0xC3AA: code = 0x194365; break; // ê
+        case 0xC3AB: code = 0x194865; break; // ë
+        case 0xC3AE: code = 0x194369; break; // î
+        case 0xC3AF: code = 0x194869; break; // ï
+        case 0xC3B4: code = 0x19436F; break; // ô
+        case 0xC3B6: code = 0x19486F; break; // ö (VGP5)
+        case 0xC3B7: code = 0x1938; break;   // ÷
+        case 0xC3B9: code = 0x194175; break; // ù
+        case 0xC3BB: code = 0x194375; break; // û
+        case 0xC3BC: code = 0x194875; break; // ü (VGP5)
+        case 0xC592: code = 0x196A; break;   // Œ
+        case 0xC593: code = 0x197A; break;   // œ
+        default: code = 0; // supposé non-visualisable
+      }
+    }
+    else if (code == 0xE2) {
+      // Caractères sur 3 octets
+      code = (code << 8) + (byte) chaine.charAt(i++);
+      code = (code << 8) + (byte) chaine.charAt(i++);
+      switch (code) {
+        case 0xE28094: code = 0x60; break;   // —
+        case 0xE28690: code = 0x192C; break; // ←
+        case 0xE28691: code = 0x5E; break;   // ↑
+        case 0xE28692: code = 0x192E; break; // →
+        case 0xE28693: code = 0x192F; break; // ↓
+        default: code = 0; // supposé non-visualisable
+      }
+    }
+    if (code != 0) write(code);
   }
 }
 /*--------------------------------------------------------------------*/
@@ -515,6 +574,28 @@ byte Minitel::getCharByte(char caractere) {
 }
 /*--------------------------------------------------------------------*/
 
+String Minitel::getString(unsigned long code) {
+  // Convertit un caractère unicode en String utf-8
+  // Renvoie "" si le code ne correspond pas à un caractère visualisable
+  String str = "";
+  //str.reserve(4);
+  Serial.printf("isVisual %X : %i\n", code, isVisualisable(code));
+  if (isVisualisable(code)) {
+    if (code < 0x80) { // U+0000 à U+007F
+      str += char(code);
+    } else if (code < 0x800) { // U+0080 à U+07FF
+      str += char((0b110 << 5) | (code >> 6));
+      str += char((0b10 << 6) | (code & 0x3F));
+    } else if(code < 0x10000) { // U+0800 à U+FFFF
+      str += char((0b1110 << 4) | (code >> 12));
+      str += char((0b10 << 6) | ((code >> 6) & 0x3F));
+      str += char((0b10 << 6) | (code & 0x3F));
+    }
+  }
+  return str;
+}
+/*--------------------------------------------------------------------*/
+
 void Minitel::graphic(byte b, int x, int y) {
   moveCursorXY(x,y);
   graphic(b);
@@ -590,7 +671,9 @@ void Minitel::vLine(int x, int y1, int y2, int position, int sens) {
 }
 /*--------------------------------------------------------------------*/
 
-unsigned long Minitel::getKeyCode(bool ascii) {  // Code ASCII en général (ascii=true) ou Code brut (ascii=false)
+unsigned long Minitel::getKeyCode(bool unicode) {
+  // Renvoie le code brut émis par le clavier (unicode = false)
+  // ou sa conversion unicode si applicable (unicode = true, choix par défault)
   unsigned long code = 0;
   // Code unique
   if (mySerial.available()>0) {
@@ -602,43 +685,48 @@ unsigned long Minitel::getKeyCode(bool ascii) {  // Code ASCII en général (asc
     code = (code << 8) + readByte();
     // Les diacritiques (3 codes)
     if ((code == 0x1941) || (code == 0x1942) || (code == 0x1943) || (code == 0x1948) || (code == 0x194B)) {  // Accents, tréma, cédille
-    while (!mySerial.available()>0);  // Indispensable
-    byte caractere = readByte();
-    code = (code << 8) + caractere;
-    if (ascii) {
-      switch (code) {  // On convertit le code reçu en un code Extended ASCII Table (Windows-1252)
-        case 0x194161 : code = 0xE0; break;  // à
-        case 0x194165 : code = 0xE8; break;  // è
-        case 0x194175 : code = 0xF9; break;  // ù
-        case 0x194265 : code = 0xE9; break;  // é
-        case 0x194361 : code = 0xE2; break;  // â
-        case 0x194365 : code = 0xEA; break;  // ê
-        case 0x194369 : code = 0xEE; break;  // î
-        case 0x19436F : code = 0xF4; break;  // ô
-        case 0x194375 : code = 0xFB; break;  // û
-        case 0x194861 : code = 0xE4; break;  // ä
-        case 0x194865 : code = 0xEB; break;  // ë
-        case 0x194869 : code = 0xEF; break;  // ï
-        case 0x19486F : code = 0xF6; break;  // ö
-        case 0x194875 : code = 0xFC; break;  // ü
-        case 0x194B63 : code = 0xE7; break;  // ç
-        default : code = caractere; break;
+      while (!mySerial.available()>0);  // Indispensable
+      byte caractere = readByte();
+      code = (code << 8) + caractere;
+      if (unicode) {
+        switch (code) {  // On convertit le code reçu en unicode
+          case 0x194161 : code = 0xE0; break;  // à
+          case 0x194165 : code = 0xE8; break;  // è
+          case 0x194175 : code = 0xF9; break;  // ù
+          case 0x194265 : code = 0xE9; break;  // é
+          case 0x194361 : code = 0xE2; break;  // â
+          case 0x194365 : code = 0xEA; break;  // ê
+          case 0x194369 : code = 0xEE; break;  // î
+          case 0x19436F : code = 0xF4; break;  // ô
+          case 0x194375 : code = 0xFB; break;  // û
+          case 0x194861 : code = 0xE4; break;  // ä
+          case 0x194865 : code = 0xEB; break;  // ë
+          case 0x194869 : code = 0xEF; break;  // ï
+          case 0x19486F : code = 0xF6; break;  // ö
+          case 0x194875 : code = 0xFC; break;  // ü
+          case 0x194B63 : code = 0xE7; break;  // ç
+          default : code = caractere; break;
+        }
       }
     }
-  }
-  // Les autres caractères spéciaux disponibles sous Arduino (2 codes)
-  else {
-    if (ascii) {
-      switch (code) {  // On convertit le code reçu en un code Extended ASCII Table (Windows-1252)
-        case 0x1923 : code = 0xA3; break;  // Livre
-        case 0x1927 : code = 0xA7; break;  // Paragraphe
-        case 0x1930 : code = 0xB0; break;  // Degré
-        case 0x1931 : code = 0xB1; break;  // Plus ou moins
-        case 0x1938 : code = 0xF7; break;  // Division
-        case 0x197B : code = 0xDF; break;  // Bêta
+    // Les autres caractères spéciaux disponibles sous Arduino (2 codes)
+    else {
+      if (unicode) {
+        switch (code) {  // On convertit le code reçu en unicode
+          case 0x1923 : code = 0xA3; break;    // Livre
+          case 0x1927 : code = 0xA7; break;    // Paragraphe
+          case 0x192C : code = 0x2190; break;  // Flèche gauche
+          case 0x192E : code = 0x2192; break;  // Flèche droite
+          case 0x192F : code = 0x2193; break;  // Flèche bas
+          case 0x1930 : code = 0xB0; break;    // Degré
+          case 0x1931 : code = 0xB1; break;    // Plus ou moins
+          case 0x1938 : code = 0xF7; break;    // Division
+          case 0x196A : code = 0x152; break;   // Ligature OE
+          case 0x197A : code = 0x153; break;   // Ligature oe
+          case 0x197B : code = 0xDF; break;    // Bêta
+        }
       }
     }
-  }
   }
   // Touches de fonction (voir p.123)
   else if (code == 0x13) {
@@ -661,6 +749,12 @@ unsigned long Minitel::getKeyCode(bool ascii) {  // Code ASCII en général (asc
           code = (code << 8) + readByte();
         }
       }
+    }
+  }
+  else {
+    if(unicode) { // On convertit les codes uniques en unicode
+      if (code == 0x5E) code = 0x2191; // Flèche haut
+      else if (code == 0x60) code = 0x2014; // Tiret cadratin
     }
   }
 // Pour test
@@ -802,6 +896,55 @@ boolean Minitel::isDiacritic(unsigned char caractere) {
     return true; 
   }
   return false;
+}
+/*--------------------------------------------------------------------*/
+
+boolean Minitel::isVisualisable(unsigned long code) {
+  // Convertit un code brut clavier en équivalent unicode
+  // Renvoie 0 si le code ne correspond pas à un caractère visualisable
+  
+  // Les caractères de contrôle ne sont pas visualisables
+  if (code < SP) return false;
+  // Les autres caractères de 7 bits sont visualisables
+  if (code <= DEL) return true;
+  switch (code) {
+    case 0x00A3: return true; // £
+    case 0x00A7: return true; // § (VGP5)
+    case 0x00B0: return true; // °
+    case 0x00B1: return true; // ±
+    case 0x00BC: return true; // ¼
+    case 0x00BD: return true; // ½
+    case 0x00BE: return true; // ¾
+    case 0x00C0: return true; // À (VGP2)
+    case 0x00C7: return true; // Ç (VGP2)
+    case 0x00C8: return true; // È (VGP2)
+    case 0x00C9: return true; // É (VGP2)
+    case 0x00DF: return true; // ß (VGP5)
+    case 0x00E0: return true; // à
+    case 0x00E2: return true; // â
+    case 0x00E4: return true; // ä (VGP5)
+    case 0x00E7: return true; // ç
+    case 0x00E8: return true; // è
+    case 0x00E9: return true; // é
+    case 0x00EA: return true; // ê
+    case 0x00EB: return true; // ë
+    case 0x00EE: return true; // î
+    case 0x00EF: return true; // ï
+    case 0x00F4: return true; // ô
+    case 0x00F6: return true; // ö (VGP5)
+    case 0x00F7: return true; // ÷
+    case 0x00F9: return true; // ù
+    case 0x00FB: return true; // û
+    case 0x00FC: return true; // ü (VGP5)
+    case 0x0152: return true; // Œ
+    case 0x0153: return true; // œ
+    case 0x2014: return true; // —
+    case 0x2190: return true; // ←
+    case 0x2191: return true; // ↑
+    case 0x2192: return true; // →
+    case 0x2193: return true; // ↓
+  }
+  return false; // Les caractères non listés sont supposés non visualisables
 }
 /*--------------------------------------------------------------------*/
 
