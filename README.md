@@ -21,6 +21,9 @@ boolean isVisualisable(unsigned long code)<br>
 Modification de :<br>
 void print(String chaine)<br>
 unsigned long getKeyCode(bool unicode = true)<br>
+Supression, car devenues inutiles, de :<br>
+printDiacriticChar(unsigned char caractere)<br>
+isDiacritic(unsigned char caractere)<br>
 
 25/06/2022 - Sur proposition de iodeo :<br>
 Correction d'un bug dans la fonction byte reset()
