@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 26 février 2023 à 02h10
+   Minitel1B_Hard - Fichier source - Version du 26 février 2023 à 02h39
    Copyright 2016-2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -590,7 +590,7 @@ String Minitel::getString(unsigned long code) {
   // Renvoie "" si le code ne correspond pas à un caractère visualisable
   String str = "";
   //str.reserve(4);
-  Serial.printf("isVisual %X : %i\n", code, isVisualisable(code));
+  //Serial.printf("isVisual %X : %i\n", code, isVisualisable(code));
   if (isVisualisable(code)) {
     if (code < 0x80) { // U+0000 à U+007F
       str += char(code);
