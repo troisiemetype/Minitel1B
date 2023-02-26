@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 26 février 2023 à 02h39
+   Minitel1B_Hard - Fichier source - Version du 26 février 2023 à 06h20
    Copyright 2016-2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -69,6 +69,7 @@ void Minitel::writeWord(word w) {
 /*--------------------------------------------------------------------*/
 
 void Minitel::write(unsigned long code) {
+  // Fonction proposée par iodeo sur GitHub en février 2023
   if (code > 0x00FFFFFF) writeByte((byte) (code >> 24));
   if (code > 0x0000FFFF) writeByte((byte) (code >> 16));
   if (code > 0x000000FF) writeByte((byte) (code >> 8));
@@ -418,6 +419,21 @@ void Minitel::attributs(byte attribut) {
 /*--------------------------------------------------------------------*/
 
 void Minitel::print(String chaine) {
+  // Fonction modifiée par iodeo sur GitHub en février 2023
+/*
+  // Fonction initiale (pour mémoire)  // Obsolète depuis le 26/02/2023
+  for (int i=0; i<chaine.length(); i++) {
+    unsigned char caractere = chaine.charAt(i);
+    if (!isDiacritic(caractere)) {
+      printChar(caractere);
+    }
+    else {
+      i+=1;  // Un caractère accentué prend la place de 2 caractères
+      caractere = chaine.charAt(i);
+      printDiacriticChar(caractere);
+    }
+  }
+*/
   unsigned int i = 0;
   while (i < chaine.length()) {
     unsigned long code = (byte) chaine.charAt(i++);
@@ -431,48 +447,48 @@ void Minitel::print(String chaine) {
     else if (code == 0xC2 || code == 0xC3 || code == 0xC5) {
       // Caractères sur 2 octets
       code = (code << 8) + (byte) chaine.charAt(i++);
-      switch (code) {
-        case 0xC2A3: code = 0x1923; break;   // £ (VGP5 et VGP2 - voir page 90)
-        case 0xC2A7: code = 0x1927; break;   // § (VGP5 seulement, pas VPG2 - voir page 90)
-        case 0xC2B0: code = 0x1930; break;   // ° (VGP5 et VGP2 - voir page 90)
-        case 0xC2B1: code = 0x1931; break;   // ± (VGP5 et VGP2 - voir page 90)
-        case 0xC2BC: code = 0x193C; break;   // ¼ (VGP5 et VGP2 - voir page 90)
-        case 0xC2BD: code = 0x193D; break;   // ½ (VGP5 et VGP2 - voir page 90)
-        case 0xC2BE: code = 0x193E; break;   // ¾ (VGP5 et VGP2 - voir page 90)
-        case 0xC380: code = 0x41; break;     // À (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC382: code = 0x41; break;     // Â (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC384: code = 0x41; break;     // Ä (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC387: code = 0x43; break;     // Ç (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC388: code = 0x45; break;     // È (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC389: code = 0x45; break;     // É (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC38A: code = 0x45; break;     // Ê (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC38B: code = 0x45; break;     // Ë (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC38E: code = 0x49; break;     // Î (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC38F: code = 0x49; break;     // Ï (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC394: code = 0x4F; break;     // Ô (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC396: code = 0x4F; break;     // Ö (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC399: code = 0x55; break;     // Ù (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC39B: code = 0x55; break;     // Û (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC39C: code = 0x55; break;     // Ü (Aucune lettre accentuée majuscule n'est disponible - voir page 90)
-        case 0xC39F: code = 0x197B; break;   // ß (VGP5 seulement, pas VPG2 - voir page 90)
-        case 0xC3A0: code = 0x194161; break; // à (VGP5 et VGP2 - voir page 90)
-        case 0xC3A2: code = 0x194361; break; // â (VGP5 et VGP2 - voir page 90)
-        case 0xC3A4: code = 0x194861; break; // ä (VGP5 seulement, pas VPG2 - voir page 90)
-        case 0xC3A7: code = 0x194B63; break; // ç (VGP5 et VGP2 - voir page 90)
-        case 0xC3A8: code = 0x194165; break; // è (VGP5 et VGP2 - voir page 90)
-        case 0xC3A9: code = 0x194265; break; // é (VGP5 et VGP2 - voir page 90)
-        case 0xC3AA: code = 0x194365; break; // ê (VGP5 et VGP2 - voir page 90)
-        case 0xC3AB: code = 0x194865; break; // ë (VGP5 et VGP2 - voir page 90)
-        case 0xC3AE: code = 0x194369; break; // î (VGP5 et VGP2 - voir page 90)
-        case 0xC3AF: code = 0x194869; break; // ï (VGP5 et VGP2 - voir page 90)
-        case 0xC3B4: code = 0x19436F; break; // ô (VGP5 et VGP2 - voir page 90)
-        case 0xC3B6: code = 0x19486F; break; // ö (VGP5 seulement, pas VPG2 - voir page 90)
-        case 0xC3B7: code = 0x1938; break;   // ÷ (VGP5 et VGP2 - voir page 90)
-        case 0xC3B9: code = 0x194175; break; // ù (VGP5 et VGP2 - voir page 90)
-        case 0xC3BB: code = 0x194375; break; // û (VGP5 et VGP2 - voir page 90)
-        case 0xC3BC: code = 0x194875; break; // ü (VGP5 seulement, pas VPG2 - voir page 90)
-        case 0xC592: code = 0x196A; break;   // Œ (VGP5 et VGP2 - voir page 90)
-        case 0xC593: code = 0x197A; break;   // œ (VGP5 et VGP2 - voir page 90)
+      switch (code) {                        // Voir p.90 pour VGP5 ou VGP2
+        case 0xC2A3: code = 0x1923; break;   // £ (VGP5 et VGP2)
+        case 0xC2A7: code = 0x1927; break;   // § (VGP5 seulement)
+        case 0xC2B0: code = 0x1930; break;   // ° (VGP5 et VGP2)
+        case 0xC2B1: code = 0x1931; break;   // ± (VGP5 et VGP2)
+        case 0xC2BC: code = 0x193C; break;   // ¼ (VGP5 et VGP2)
+        case 0xC2BD: code = 0x193D; break;   // ½ (VGP5 et VGP2)
+        case 0xC2BE: code = 0x193E; break;   // ¾ (VGP5 et VGP2)
+        case 0xC380: code = 0x41; break;     // À (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC382: code = 0x41; break;     // Â (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC384: code = 0x41; break;     // Ä (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC387: code = 0x43; break;     // Ç (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC388: code = 0x45; break;     // È (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC389: code = 0x45; break;     // É (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC38A: code = 0x45; break;     // Ê (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC38B: code = 0x45; break;     // Ë (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC38E: code = 0x49; break;     // Î (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC38F: code = 0x49; break;     // Ï (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC394: code = 0x4F; break;     // Ô (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC396: code = 0x4F; break;     // Ö (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC399: code = 0x55; break;     // Ù (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC39B: code = 0x55; break;     // Û (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC39C: code = 0x55; break;     // Ü (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC39F: code = 0x197B; break;   // ß (VGP5 seulement)
+        case 0xC3A0: code = 0x194161; break; // à (VGP5 et VGP2)
+        case 0xC3A2: code = 0x194361; break; // â (VGP5 et VGP2)
+        case 0xC3A4: code = 0x194861; break; // ä (VGP5 seulement)
+        case 0xC3A7: code = 0x194B63; break; // ç (VGP5 et VGP2)
+        case 0xC3A8: code = 0x194165; break; // è (VGP5 et VGP2)
+        case 0xC3A9: code = 0x194265; break; // é (VGP5 et VGP2)
+        case 0xC3AA: code = 0x194365; break; // ê (VGP5 et VGP2)
+        case 0xC3AB: code = 0x194865; break; // ë (VGP5 et VGP2)
+        case 0xC3AE: code = 0x194369; break; // î (VGP5 et VGP2)
+        case 0xC3AF: code = 0x194869; break; // ï (VGP5 et VGP2)
+        case 0xC3B4: code = 0x19436F; break; // ô (VGP5 et VGP2)
+        case 0xC3B6: code = 0x19486F; break; // ö (VGP5 seulement)
+        case 0xC3B7: code = 0x1938; break;   // ÷ (VGP5 et VGP2)
+        case 0xC3B9: code = 0x194175; break; // ù (VGP5 et VGP2)
+        case 0xC3BB: code = 0x194375; break; // û (VGP5 et VGP2)
+        case 0xC3BC: code = 0x194875; break; // ü (VGP5 seulement)
+        case 0xC592: code = 0x196A; break;   // Œ (VGP5 et VGP2)
+        case 0xC593: code = 0x197A; break;   // œ (VGP5 et VGP2)
         default: code = 0; // supposé non-visualisable
       }
     }
@@ -522,8 +538,8 @@ void Minitel::printChar(char caractere) {
   }
 }
 /*--------------------------------------------------------------------*/
-
-void Minitel::printDiacriticChar(unsigned char caractere) {
+/*
+void Minitel::printDiacriticChar(unsigned char caractere) {  // Obsolète depuis le 26/02/2023
   writeByte(SS2);  // Accès au jeu G2 (voir p.103)
   String diacritics = "àâäèéêëîïôöùûüçÀÂÄÈÉÊËÎÏÔÖÙÛÜÇ";
   // Dans une chaine de caractères, un caractère diacritique prend la
@@ -566,6 +582,7 @@ void Minitel::printDiacriticChar(unsigned char caractere) {
   }
   printChar(car);
 }
+*/
 /*--------------------------------------------------------------------*/
 
 void Minitel::printSpecialChar(byte b) {
@@ -580,17 +597,19 @@ byte Minitel::getCharByte(char caractere) {
   // Dans la chaine ci-dessous, on utilise l'échappement (\) :
   // \" rend au guillemet sa signification littérale.
   // \\ donne à l'antislash sa signification littérale .
-  String caracteres = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_xabcdefghijklmnopqrstuvwxyz";
+  String caracteres = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_xabcdefghijklmnopqrstuvwxyz{|}";
   return (byte) caracteres.lastIndexOf(caractere);
 }
 /*--------------------------------------------------------------------*/
 
 String Minitel::getString(unsigned long code) {
+  // Fonction proposée par iodeo sur GitHub en février 2023
   // Convertit un caractère unicode en String utf-8
   // Renvoie "" si le code ne correspond pas à un caractère visualisable
   String str = "";
   //str.reserve(4);
-  //Serial.printf("isVisual %X : %i\n", code, isVisualisable(code));
+  // Pour test
+  // Serial.printf("isVisual %X : %i\n", code, isVisualisable(code));
   if (isVisualisable(code)) {
     if (code < 0x80) { // U+0000 à U+007F
       str += char(code);
@@ -900,17 +919,19 @@ boolean Minitel::isValidChar(byte index) {
   return false;
 }
 /*--------------------------------------------------------------------*/
-
-boolean Minitel::isDiacritic(unsigned char caractere) {
+/*
+boolean Minitel::isDiacritic(unsigned char caractere) {  // Obsolète depuis le 26/02/2023
   String diacritics = "àâäèéêëîïôöùûüçÀÂÄÈÉÊËÎÏÔÖÙÛÜÇ";
   if (diacritics.indexOf(caractere) >= 0) {
     return true; 
   }
   return false;
 }
+*/
 /*--------------------------------------------------------------------*/
 
 boolean Minitel::isVisualisable(unsigned long code) {
+  // Fonction proposée par iodeo sur GitHub en février 2023
   // Convertit un code brut clavier en équivalent unicode
   // Renvoie 0 si le code ne correspond pas à un caractère visualisable
   
@@ -920,7 +941,7 @@ boolean Minitel::isVisualisable(unsigned long code) {
   if (code <= DEL) return true;
   switch (code) {
     case 0x00A3: return true; // £
-    case 0x00A7: return true; // § (VGP5 seulement, pas VGP2 - voir page 90)
+    case 0x00A7: return true; // § (VGP5 seulement, pas VGP2 - voir p.90)
     case 0x00B0: return true; // °
     case 0x00B1: return true; // ±
     case 0x00BC: return true; // ¼
@@ -934,10 +955,10 @@ boolean Minitel::isVisualisable(unsigned long code) {
     case 0x00C8: return true; // È (VGP2)
     case 0x00C9: return true; // É (VGP2)
     */
-    case 0x00DF: return true; // ß (VGP5 seulement, pas VGP2 - voir page 90)
+    case 0x00DF: return true; // ß (VGP5 seulement, pas VGP2 - voir p.90)
     case 0x00E0: return true; // à
     case 0x00E2: return true; // â
-    case 0x00E4: return true; // ä (VGP5 seulement, pas VGP2 - voir page 90)
+    case 0x00E4: return true; // ä (VGP5 seulement, pas VGP2 - voir p.90)
     case 0x00E7: return true; // ç
     case 0x00E8: return true; // è
     case 0x00E9: return true; // é
@@ -946,11 +967,11 @@ boolean Minitel::isVisualisable(unsigned long code) {
     case 0x00EE: return true; // î
     case 0x00EF: return true; // ï
     case 0x00F4: return true; // ô
-    case 0x00F6: return true; // ö (VGP5 seulement, pas VGP2 - voir page 90)
+    case 0x00F6: return true; // ö (VGP5 seulement, pas VGP2 - voir p.90)
     case 0x00F7: return true; // ÷
     case 0x00F9: return true; // ù
     case 0x00FB: return true; // û
-    case 0x00FC: return true; // ü (VGP5 seulement, pas VGP2 - voir page 90)
+    case 0x00FC: return true; // ü (VGP5 seulement, pas VGP2 - voir p.90)
     case 0x0152: return true; // Œ
     case 0x0153: return true; // œ
     case 0x2014: return true; // —
