@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   3615 - Version du 4 septembre 2018 à 18h04
-   Copyright 2017-2018 - Eric Sérandour
+   3615 - Version du 26 février 2023 à 02h49
+   Copyright 2017-2023 - Eric Sérandour
    
    Attention : Ce programme fonctionne bien sur un ATMega 1284P.
    Sur un microcontrôleur qui dispose de moins de mémoire,
@@ -147,7 +147,7 @@ void lectureChamp(int premiereLigne, int nbLignes) {
         (touche != ENVOI)) {
       if (nbCaracteres < 40*nbLignes) {
         nbCaracteres++;
-        texte += char(touche);
+        texte += minitel.getString(touche);
       }
       if (nbCaracteres == 40*nbLignes) {
         minitel.moveCursorXY(40,(premiereLigne-1)+nbLignes);
