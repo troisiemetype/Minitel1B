@@ -6,6 +6,8 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
+Dernière Version : 26/02/2023 à 19h36.<br>
+
 26/02/2023 - Des exemples où il est question de caractères...<br>
 Ajout d'un nouvel exemple :<br>
 TestCaracteresSpeciaux.ino<br>
