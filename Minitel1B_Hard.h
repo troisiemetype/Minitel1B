@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier d'en-tête - Version du 26 février 2023 à 01h58
+   Minitel1B_Hard - Fichier d'en-tête - Version du 26 février 2023 à 06h20
    Copyright 2016-2022 - Eric Sérandour
    http://3615.entropie.org
    
@@ -334,10 +334,10 @@ public:
   void print(String chaine);
   void println(String chaine);
   void println();
-  void printChar(char caractere);  // Caractère du jeu G0 exceptés ceux codés 0x60, 0x7B à 0x7F.
-  void printDiacriticChar(unsigned char caractere);  // Caractère avec accent, tréma ou cédille.  
+  void printChar(char caractere);  // Caractère du jeu G0 exceptés ceux codés 0x60, 0x7E, 0x7F.
+  // void printDiacriticChar(unsigned char caractere);  // Caractère avec accent, tréma ou cédille.  // Obsolète depuis le 26/02/2023
   void printSpecialChar(byte b);  // Caractère du jeu G2. Voir plus haut, au niveau de 1.2.3, les constantes possibles.
-  byte getCharByte(char caractere); 
+  byte getCharByte(char caractere);
   String getString(unsigned long code);
   void graphic(byte b, int x, int y);  // Jeu G1. Voir page 101. Sous la forme 0b000000 à 0b111111 en allant du coin supérieur gauche au coin inférieur droit. En colonne x et rangée y.
   void graphic(byte b);  // Voir la ligne ci-dessus.
@@ -368,7 +368,7 @@ private:
   
   byte currentSize = GRANDEUR_NORMALE;
   boolean isValidChar(byte index);
-  boolean isDiacritic(unsigned char caractere);
+  // boolean isDiacritic(unsigned char caractere);  // Obsolète depuis le 26/02/2023
   boolean isVisualisable(unsigned long code);
   void writeBytesP(int n);  // Pn, Pr, Pc
   
