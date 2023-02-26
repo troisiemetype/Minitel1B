@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////
 /*
    Minitel1B_Hard - Fichier d'en-tête - Version du 26 février 2023 à 19h36
-   Copyright 2016-2022 - Eric Sérandour
-   http://3615.entropie.org
+   Copyright 2016-2023 - Eric Sérandour
+   https://entropie.org/3615/
    
    Remerciements à :
    BorisFR, iodeo
