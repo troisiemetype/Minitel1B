@@ -6,7 +6,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-26/02/2023 - Sur proposition de iodeo :<br>
+26/02/2023 - Sur proposition de iodeo, pour une meilleure gestion des caractères spéciaux :<br>
 Ajout de nouvelles fonctions :<br>
 void write(unsigned long code)<br>
 String getString(unsigned long code)<br>
