@@ -6,6 +6,15 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
+26/02/2023 - Sur proposition de iodeo :<br>
+Ajout de nouvelles fonctions :<br>
+void write(unsigned long code)<br>
+String getString(unsigned long code)<br>
+boolean isVisualisable(unsigned long code)<br>
+Modification de :<br>
+void print(String chaine)<br>
+unsigned long getKeyCode(bool unicode = true)<br>
+
 25/06/2022 - Sur proposition de iodeo :<br>
 Correction d'un bug dans la fonction byte reset()
 
