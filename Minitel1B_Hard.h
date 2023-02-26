@@ -1,18 +1,18 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier d'en-tête - Version du 26 février 2023 à 06h20
-   Copyright 2016-2022 - Eric Sérandour
-   http://3615.entropie.org
+   Minitel1B_Hard - Fichier source - Version du 26 février 2023 à 19h36
+   Copyright 2016-2023 - Eric Sérandour
+   https://entropie.org/3615/
    
    Remerciements à :
    BorisFR, iodeo
-   
+
    Documentation utilisée :
    Spécifications Techniques d'Utilisation du Minitel 1B
    http://543210.free.fr/TV/stum1b.pdf
-   
+
 ////////////////////////////////////////////////////////////////////////
-   
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
@@ -28,362 +28,1125 @@
 */
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef MINITEL1B_H  // Si la constante MINITEL1B_H n'est
-#define MINITEL1B_H  // pas définie, on la définit.
-
-// Selon la version d'Arduino
-#if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif  // Fin Si (ARDUINO)
+#include "Minitel1B_Hard.h"
 
 ////////////////////////////////////////////////////////////////////////
-
-// Le standard Télétel
-
-// Chapitre 2 : L'écran
-
-// 1 Mode Vidéotex
-
-// 1.2.3 Codage des caractères visualisables
-// Jeu G0 => alphanumérique (voir p.100)
-// Jeu G1 => semi-graphique (voir p.101 et 102)
-// Jeu G2 => complément à G0 (voir p.103)
-// Les caractères du jeu G2 sont obtenus si précédés du code SS2 (0x19).
-// On peut les afficher directement en utilisant printSpecialChar(byte b) :
-#define LIVRE              0x23
-#define DOLLAR             0x24
-#define DIESE              0x26
-#define PARAGRAPHE         0x27
-#define FLECHE_GAUCHE      0x2C
-#define FLECHE_HAUT        0x2D
-#define FLECHE_DROITE      0x2E
-#define FLECHE_BAS         0x2F
-#define DEGRE              0x30
-#define PLUS_OU_MOINS      0x31
-#define DIVISION           0x38
-#define UN_QUART           0x3C
-#define UN_DEMI            0x3D
-#define TROIS_QUART        0x3E
-#define OE_MAJUSCULE       0x6A
-#define OE_MINUSCULE       0x7A
-#define BETA               0x7B
-// Les diacritiques ne peuvent pas être affichés seuls.
-// printSpecialChar(byte b) n'aura donc aucun effet ici.
-#define ACCENT_GRAVE       0x41
-#define ACCENT_AIGU        0x42
-#define ACCENT_CIRCONFLEXE 0x43
-#define TREMA              0x48
-#define CEDILLE            0x4B
-
-
-// 1.2.4 Codage des attributs de visualisation (voir p.91)
-// Ces fonctions sont obtenues si précédées du code ESC (0x1B).
-// Nous avons alors accès à la grille C1. On peut y accéder directement
-// en utilisant attributs(byte attribut).
-// Couleur de caractère
-#define CARACTERE_NOIR    0x40
-#define CARACTERE_ROUGE   0x41
-#define CARACTERE_VERT    0x42
-#define CARACTERE_JAUNE   0x43
-#define CARACTERE_BLEU    0x44
-#define CARACTERE_MAGENTA 0x45
-#define CARACTERE_CYAN    0x46
-#define CARACTERE_BLANC   0x47
-// Couleur de fond              // En mode texte, l'espace (0x20) est l'élément déclencheur du changement de couleur de fond (voir p.93). Ce changement est valide jusqu'à la fin d'une rangée.
-#define FOND_NOIR         0x50  // Pour éviter d'avoir cet espace à l'écran, une autre solution (dans ce cas le caractère sera noir), est de mettre en oeuvre le fond inversé.
-#define FOND_ROUGE        0x51  // Par exemple :
-#define FOND_VERT         0x52  // minitel.attributs(CARACTERE_VERT);
-#define FOND_JAUNE        0x53  // minitel.attributs(INVERSION_FOND);
-#define FOND_BLEU         0x54  // minitel.print("J'ECRIS ICI MON TEXTE");
-#define FOND_MAGENTA      0x55  // minitel.attributs(FOND_NORMAL);
-#define FOND_CYAN         0x56
-#define FOND_BLANC        0x57
-// Taille
-#define GRANDEUR_NORMALE  0x4C  // Non utilisable en mode graphique
-#define DOUBLE_HAUTEUR    0x4D  // Non utilisable en mode graphique
-#define DOUBLE_LARGEUR    0x4E  // Non utilisable en mode graphique
-#define DOUBLE_GRANDEUR   0x4F  // Non utilisable en mode graphique
-// Clignotement ou fixité
-#define CLIGNOTEMENT      0x48
-#define FIXE              0x49
-// Début et fin de masquage
-#define MASQUAGE          0x58
-#define DEMASQUAGE        0x5F
-// Début ou fin de lignage
-#define FIN_LIGNAGE       0x59
-#define DEBUT_LIGNAGE     0x5A  // En mode texte, l'espace (0x20) marque le début d'une zone de lignage. C'est l'élément déclencheur (voir p.93).
-// Fond inversé ou normal
-#define FOND_NORMAL       0x5C  // Non utilisable en mode graphique
-#define INVERSION_FOND    0x5D  // Non utilisable en mode graphique
-// Echappement vers la norme ISO 6429
-#define CSI               0x1B5B
-
-
-// 1.2.5 Fonctions de mise en page (voir p.94)
-#define BS   0x08  // BackSpace : Déplacement du curseur d'un emplacement de caractère à gauche.
-#define HT   0x09  // Horizontal Tab : Déplacement du curseur d'un emplacement de caractère à droite.
-#define LF   0x0A  // Line Feed : Déplacement du curseur d'un emplacement de caractère vers le bas.
-#define VT   0x0B  // Vertical Tab : Déplacement du curseur d'un emplacement de caractère vers le haut.
-#define CR   0x0D  // Carriage Return : Retour du curseur au début de la rangée courante.
-// Les fonctions de type CSI sont développées à l'intérieur de la classe Minitel (plus bas).
-#define RS   0x1E  // Record Separator : Retour du curseur en première position de la rangée 01. Ce code est un séparateur explicite d'article.
-#define FF   0x0C  // Form Feed : Retour du curseur en première position de la rangée 01 avec effacement complet de l'écran.
-#define US   0x1F  // Unit Separator : Séparateur de sous-article.
-#define CAN  0x18  // Cancel : Remplissage à partir de la position courante du curseur et jusqu'à la fin de la rangée par des espaces du jeu courant ayant l'état courant des attributs. La position courante du curseur n'est pas déplacée.
-
-
-// 1.2.6 Autres fonctions (voir p.98)
-// 1.2.6.1 Fonctions diverses :
-#define REP  0x12  // Repetition : Permet de répéter le dernier caractère visualisé avec les attributs courants de la position active d'écriture.
-#define NUL  0x00  // Null :
-#define SP   0x20  // Space :
-#define DEL  0x7F  // Delete :
-#define BEL  0x07  // Bell : Provoque l'émission d'un signal sonore
-// 1.2.6.2 Demande de position du curseur
-//...
-// 1.2.6.3 Fonctions d'extension de code
-#define SO   0x0E  // Shift Out : Accès au jeu G1. => Mode semi-graphique
-#define SI   0x0F  // Shift In : Accès au jeu G0.  => Mode alphanumérique
-#define SS2  0x19  // Single Shift 2 : Appel d'un caractère unique du jeu G2.
-#define ESC  0x1B  // Escape : Echappement et accès à la grille C1.
-// 1.2.6.4 Visualisation du curseur
-#define CON  0x11  // Visualisation de la position active du curseur (curseur actif).
-#define COFF 0x14  // Arrêt de la visualisation de la position active (curseur inactif).
-
-
-// 1.2.7 Filtages particuliers (voir p.99)
-//...
-
-
-// 1.2.8 Comportements en cas d'erreur et resynchronisation (voir p.99)
-// ...
-
-
-
-
-// Chapitre 3 : Le clavier
-
-// 6 Séquences émises par les touches de fonction en mode Vidéotex ou Mixte (voir p.123)
-#define ENVOI          0x1341
-#define RETOUR         0x1342
-#define REPETITION     0x1343
-#define GUIDE          0x1344
-#define ANNULATION     0x1345
-#define SOMMAIRE       0x1346
-#define CORRECTION     0x1347
-#define SUITE          0x1348
-#define CONNEXION_FIN  0x1359  // Non documenté
-
-// 7 Codes et séquences émis par les touches de gestion du curseur et d'édition en mode Vidéotex ou Mixte (voir p.124)
-#define TOUCHE_FLECHE_HAUT         0x1B5B41
-#define SUPPRESSION_LIGNE          0x1B5B4D
-#define TOUCHE_FLECHE_BAS          0x1B5B42
-#define INSERTION_LIGNE            0x1B5B4C
-#define TOUCHE_FLECHE_DROITE       0x1B5B43
-#define DEBUT_INSERTION_CARACTERE  0x1B5B3468
-#define FIN_INSERTION_CARACTERE    0x1B5B346C
-#define TOUCHE_FLECHE_GAUCHE       0x1B5B44
-#define SUPRESSION_CARACTERE       0x1B5B50
-// #define DEL                        0x7F  // Déjà défini plus haut (1.2.6.1)
-// #define CR                         0x0D  // Déjà défini plus haut (1.2.5)
-#define HOME                       0x1B5B4B
-#define EFFACEMENT_PAGE            0x1B5B324A
-
-
-
-
-// Chapitre 6 : Le Protocole (voir p.134)
-
-// 1 Généralités (voir p.134)
-#define CODE_EMISSION_ECRAN        0x50
-#define CODE_EMISSION_CLAVIER      0x51
-#define CODE_EMISSION_MODEM        0x52
-#define CODE_EMISSION_PRISE        0x53
-#define CODE_RECEPTION_ECRAN       0x58
-#define CODE_RECEPTION_CLAVIER     0x59
-#define CODE_RECEPTION_MODEM       0x5A
-#define CODE_RECEPTION_PRISE       0x5B
-
-// 3 Commandes d'aiguillages et de blocage des modules (voir p.134)
-// 3.2 Format des commandes (voir p.135)
-#define AIGUILLAGE_OFF             0x60
-#define AIGUILLAGE_ON              0x61
-// 3.4 Demande de statut d'aiguillages des modules (voir p.136)
-#define TO                         0x62
-#define FROM                       0x63
-
-// 7 Commandes relatives au modem (voir p.139)
-#define CONNEXION                  0x68
-#define DECONNEXION                0x67
-
-// 8 Commandes relatives à la prise (voir p.141)
-#define PROG                       0x6B
-#define STATUS_VITESSE             0x74
-
-// 9 Commandes relatives au clavier (voir p.141)
-#define ETEN                       0x41  // Clavier en mode étendu
-
-// 10 Commandes relatives à l'écran (voir p.142)
-#define ROULEAU                    0x43  // Ecran en mode rouleau
-
-// 11 Commandes relatives à plusieurs modules (voir p.143)
-#define START                      0x69
-#define STOP                       0x6A
-#define MINUSCULES                 0x45  // Mode minuscules / majuscules du clavier
-
-// 12 Commandes Protocole relatives au changement de standard  (voir p.144)
-#define MIXTE1                     0x327D
-#define MIXTE2                     0x327E
-#define TELINFO                    0x317D
-
-// 13 L'état initial du minitel
-// 13.2 Sur réception d'une commande de reset
-#define RESET                      0x7F
-
-
-
-
-// Constantes personnelles pour hline et vline
-#define CENTER  0
-#define TOP     1
-#define BOTTOM  2
-#define LEFT    3
-#define RIGHT   4
-#define UP      5
-#define DOWN    6
-
-
-
-
+/*
+   Public
+*/
 ////////////////////////////////////////////////////////////////////////
 
-class Minitel
-{
-public:
-  Minitel(HardwareSerial& serial);
-  
-  // Ecrire un octet ou un mot / Lire un octet
-  void writeByte(byte b);
-  void writeWord(word w);
-  void write(unsigned long code);
-  byte readByte();
-  
-  // Vitesse de la liaison série
+Minitel::Minitel(HardwareSerial& serial) : mySerial(serial) {
   // A la mise sous tension du Minitel, la vitesse des échanges entre
   // le Minitel et le périphérique est de 1200 bauds par défaut.
-  // L'usager du Minitel peut programmer au clavier la vitesse des
-  // échanges avec le périphérique quel que soit l'état du terminal
-  // grâce aux commandes suivantes :
-  // Fnct P + 3 : 300 bauds
-  // Fnct P + 1 : 1200 bauds
-  // Fnct P + 4 : 4800 bauds
-  // Fnct P + 9 : 9600 bauds (pour le Minitel 2 seulement)
-  // Attention ! Si le Minitel et le périphérique ne communiquent pas
-  // à la même vitesse, on perd la liaison.
-  int changeSpeed(int bauds);  // A tout moment, un périphérique peut modifier les vitesses d'échange de la prise (vitesses possibles : 300, 1200, 4800 bauds ; également 9600 bauds pour le Minitel 2).
-  int currentSpeed();  // Pour connaitre la vitesse d'échange en cours, le Minitel et le périphérique échangeant à la même vitesse.
-  int searchSpeed();  // Pour connaitre la vitesse du Minitel, le Minitel et le périphérique n'échangeant pas nécessairement à la même vitesse.
-  
-  // Séparateurs
-  void newScreen();  // Attention ! newScreen réinitialise les attributs de visualisation.
-  void newXY(int x, int y);  // Attention ! newXY réinitialise les attributs de visualisation.
-  
-  // Curseur
-  void cursor();  // Curseur visible
-  void noCursor();  // Curseur invisible
-  void moveCursorXY(int x, int y);  // Adressage direct du curseur en colonne x et rangée y.
-  void moveCursorLeft(int n);  // Curseur vers la gauche de n colonnes. Arrêt au bord gauche de l'écran.
-  void moveCursorRight(int n);  // Curseur vers la droite de n colonnes. Arrêt au bord droit de l'écran.
-  void moveCursorDown(int n);  // Curseur vers le bas de n rangées. Arrêt en bas de l'écran.
-  void moveCursorUp(int n);  // Curseur vers le haut de n rangées. Arrêt en haut de l'écran.
-  void moveCursorReturn(int n);  // Retour du curseur au début de la rangée courante puis curseur vers le bas de n rangées. Arrêt en bas de l'écran.
-  int getCursorX();  // Colonne où se trouve le curseur
-  int getCursorY();  // Rangée où se trouve le curseur
-  
-  // Effacements, Suppressions, Insertions
-  void cancel();  // Remplissage à partir de la position courante du curseur et jusqu'à la fin de la rangée par des espaces du jeu courant ayant l'état courant des attributs. Le position courante du curseur n'est pas déplacée.
-  void clearScreenFromCursor();  // Effacement depuis le curseur inclus jusqu'à la fin de l'écran.
-  void clearScreenToCursor();  // Effacement depuis le début de l'écran jusqu'au curseur inclus.
-  void clearScreen();  // Effacement de tout l'écran (la position du curseur n'est pas modifiée).
-  void clearLineFromCursor();  // Effacement depuis le curseur inclus jusqu'à la fin de la rangée.
-  void clearLineToCursor();  // Effacement depuis le début de la rangée jusqu'au curseur inclus.
-  void clearLine();  // Effacement total de la rangée où est le curseur.
-  void deleteChars(int n);  // Suppression de n caractères en commençant à la position curseur incluse.
-  void insertChars(int n);  // Insertion de n caractères en commençant à la position curseur incluse (modèle RTIC uniquement, pas le MATRA ou le TELIC).
-  void startInsert();  // Début du mode insertion de caractères.
-  void stopInsert();  // Fin du mode insertion de caractères.
-  void deleteLines(int n);  // Suppression de n rangées à partir de celle où est le curseur.
-  void insertLines(int n);  // Insertion de n rangées à partir de celle où est le curseur.
-  
-  // Modes du standard Télétel
-  void textMode();      // Accès au jeu G0 - Mode Vidéotex 40 colonnes (par défaut à la mise sous tension du Minitel)
-  void graphicMode();   // Accès au jeu G1 - Mode Vidéotex 40 colonnes
-  byte pageMode();      // Mode page
-  byte scrollMode();    // Mode rouleau
-  byte modeMixte();     // Mode Vidéotex => Mode Mixte 80 colonnes (Aucun caractère semi-graphique (jeu G1) n'est visualisable)
-  byte modeVideotex();  // Mode Mixte => Mode Vidéotex 40 colonnes
+  mySerial.begin(1200);
+}
+/*--------------------------------------------------------------------*/
 
-  // Standards
-  byte standardTeleinformatique();  // Standard Télétel => Standard Téléinformatique 80 colonnes (Possibilités de programmation moins étendues)
-  byte standardTeletel();           // Standard Téléinformatique => Standard Télétel (inclut les modes Vidéotex et Mixte)
+void Minitel::writeByte(byte b) {
+  // Le bit de parité est mis à 0 si la somme des autres bits est paire
+  // et à 1 si elle est impaire.
+  boolean parite = 0;
+  for (int i=0; i<7; i++) {
+    if (bitRead(b,i) == 1)  {
+      parite = !parite;
+    }
+  }
+  if (parite) {
+    bitWrite(b,7,1);  // Ecriture du bit de parité
+  }
+  else {
+    bitWrite(b,7,0);  // Ecriture du bit de parité
+  }
+  mySerial.write(b);  // Envoi de l'octet sur le port série
+}
+/*--------------------------------------------------------------------*/
 
-  // Contenu
-  void attributs(byte attribut);
-  void print(String chaine);
-  void println(String chaine);
-  void println();
-  void printChar(char caractere);  // Caractère du jeu G0 exceptés ceux codés 0x60, 0x7E, 0x7F.
-  // void printDiacriticChar(unsigned char caractere);  // Caractère avec accent, tréma ou cédille.  // Obsolète depuis le 26/02/2023
-  void printSpecialChar(byte b);  // Caractère du jeu G2. Voir plus haut, au niveau de 1.2.3, les constantes possibles.
-  byte getCharByte(char caractere);
-  String getString(unsigned long code);
-  void graphic(byte b, int x, int y);  // Jeu G1. Voir page 101. Sous la forme 0b000000 à 0b111111 en allant du coin supérieur gauche au coin inférieur droit. En colonne x et rangée y.
-  void graphic(byte b);  // Voir la ligne ci-dessus.
-  void repeat(int n);  // Permet de répéter le dernier caractère visualisé avec les attributs courants de la position active d'écriture.
-  void bip();  // Bip sonore
-  
-  // Géométrie
-  void rect(int x1, int y1, int x2, int y2);  // Rectangle défini par 2 points.
-  void hLine(int x1, int y, int x2, int position);  // Ligne horizontale. position = TOP, CENTER ou BOTTOM.
-  void vLine(int x, int y1, int y2, int position, int sens);  // Ligne verticale. position = LEFT, CENTER ou RIGHT. sens = DOWN ou UP.
-  
-  // Clavier
-  unsigned long getKeyCode(bool unicode = true);
-  byte smallMode();  // Mode minuscules du clavier
-  byte capitalMode();  // Mode majuscules du clavier
-  byte extendedKeyboard();  // Clavier étendu
-  byte standardKeyboard();  // Clavier standard
-  byte echo(boolean commande);  // Active ou désactive l'écho à l'écran de ce qui est tapé au clavier
-  
-  // Protocole
-  byte aiguillage(boolean commande, byte emetteur, byte recepteur);
-  byte statusAiguillage(byte module);
-  byte connexion(boolean commande);
-  byte reset();
-  
-private: 
-  HardwareSerial& mySerial; 
-  
-  byte currentSize = GRANDEUR_NORMALE;
-  boolean isValidChar(byte index);
-  // boolean isDiacritic(unsigned char caractere);  // Obsolète depuis le 26/02/2023
-  boolean isVisualisable(unsigned long code);
-  void writeBytesP(int n);  // Pn, Pr, Pc
-  
-  // Protocole
-  void writeBytesPRO(int n);  // PRO1, PRO2 ou PRO3
-  int workingSpeed();
-  byte workingStandard(unsigned long sequence);
-  byte workingMode();
-  byte workingKeyboard();
-  byte workingAiguillage(byte module);
-  byte workingModem();
-  
-  unsigned long getCursorXY();
-};
+void Minitel::writeWord(word w) {
+  writeByte(highByte(w));
+  writeByte(lowByte(w));
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::write(unsigned long code) {
+  // Fonction proposée par iodeo sur GitHub en février 2023
+  if (code > 0x00FFFFFF) writeByte((byte) (code >> 24));
+  if (code > 0x0000FFFF) writeByte((byte) (code >> 16));
+  if (code > 0x000000FF) writeByte((byte) (code >> 8));
+  writeByte((byte) code);
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::readByte() {
+  byte b = mySerial.read();
+  // Le bit de parité est à 0 si la somme des autres bits est paire
+  // et à 1 si elle est impaire.	
+  boolean parite = 0;
+  for (int i=0; i<7; i++) {
+    if (bitRead(b,i) == 1)  {
+      parite = !parite;
+    }
+  }
+  if (bitRead(b,7) == parite) {  // La transmission est bonne, on peut récupérer la donnée.
+    if (bitRead(b,7) == 1) {  // Cas où le bit de parité vaut 1.
+      b = b ^ 0b10000000;  // OU exclusif pour mettre le bit de parité à 0 afin de récupérer la donnée.
+    }
+    return b;
+  }
+  else {
+    return 0xFF;  // Pour indiquer une erreur de parité.
+  }
+}
+/*--------------------------------------------------------------------*/
+
+int Minitel::changeSpeed(int bauds) {  // Voir p.141
+  // Fonction modifiée par iodeo sur GitHub en octobre 2021
+  // Format de la commande
+  writeBytesPRO(2);  // 0x1B 0x3A
+  writeByte(PROG);   // 0x6B
+  switch (bauds) {
+    case  300 : writeByte(0b1010010); break;  // 0x52
+    case 1200 : writeByte(0b1100100); break;  // 0x64
+    case 4800 : writeByte(0b1110110); break;  // 0x76
+    case 9600 : writeByte(0b1111111); break;  // 0x7F (pour le Minitel 2 seulement)
+  }
+  #if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
+  mySerial.flush(false); // Patch pour Arduino-ESP32 core v1.0.6 https://github.com/espressif/arduino-esp32
+  #endif
+  mySerial.end();
+  mySerial.begin(bauds);
+  // Acquittement
+  return workingSpeed();  // En bauds (voir section Private ci-dessous)
+}
+/*--------------------------------------------------------------------*/
+
+int Minitel::currentSpeed() {  // Voir p.141
+  // Demande
+  writeBytesPRO(1);
+  writeByte(STATUS_VITESSE);
+  // Réponse
+  return workingSpeed();  // En bauds (voir section Private ci-dessous)
+}
+/*--------------------------------------------------------------------*/
+
+int Minitel::searchSpeed() {
+  const int SPEED[4] = { 1200, 4800, 300, 9600 };  // 9600 bauds pour le Minitel 2 seulement
+  int i = 0;
+  int speed;
+  do {
+    mySerial.begin(SPEED[i]);
+    if (i++ > 3) { i = 0; }
+    speed = currentSpeed();
+  } while (speed < 0);
+  return speed;  // En bauds
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::newScreen() {
+  writeByte(FF);
+  currentSize = GRANDEUR_NORMALE;
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::newXY(int x, int y) {
+  if (x==1 && y==1) {
+    writeByte(RS);
+  }
+  else {
+    // Le code US est suivi de deux caractères non visualisés. Si les
+    // octets correspondants à ces deux caractères appartiennent tous deux
+    // aux colonnes 4 à 7, ils représentent respectivement (sous forme
+    // binaire avec 6 bits utiles) le numéro de rangée et le numéro de
+    // colonne du premier caractère du sous-article (voir p.96).
+    writeByte(US);
+    writeByte(0x40 + y);  // Numéro de rangée
+    writeByte(0x40 + x);  // Numéro de colonne
+  }
+  currentSize = GRANDEUR_NORMALE;
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::cursor() {
+  writeByte(CON);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::noCursor() {
+  writeByte(COFF);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::moveCursorXY(int x, int y) {  // Voir p.95
+  writeWord(CSI);   // 0x1B 0x5B
+  writeBytesP(y);   // Pr : Voir section Private ci-dessous
+  writeByte(0x3B);
+  writeBytesP(x);   // Pc : Voir section Private ci-dessous
+  writeByte(0x48);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::moveCursorLeft(int n) {  // Voir p.94 et 95
+  if (n==1) { writeByte(BS); }
+  else if (n>1) {
+    // Curseur vers la gauche de n colonnes. Arrêt au bord gauche de l'écran.
+    writeWord(CSI);   // 0x1B 0x5B
+    writeBytesP(n);   // Pn : Voir section Private ci-dessous
+    writeByte(0x44);
+  }
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::moveCursorRight(int n) {  // Voir p.94
+  if (n==1) { writeByte(HT); }
+  else if (n>1) {
+    // Curseur vers la droite de n colonnes. Arrêt au bord droit de l'écran.
+    writeWord(CSI);   // 0x1B 0x5B
+    writeBytesP(n);   // Pn : Voir section Private ci-dessous
+    writeByte(0x43);
+  }
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::moveCursorDown(int n) {  // Voir p.94
+  if (n==1) { writeByte(LF); }
+  else if (n>1) {
+    // Curseur vers le bas de n rangées. Arrêt en bas de l'écran.
+    writeWord(CSI);   // 0x1B 0x5B
+    writeBytesP(n);   // Pn : Voir section Private ci-dessous
+    writeByte(0x42);
+  }
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::moveCursorUp(int n) {  // Voir p.94
+  if (n==1) { writeByte(VT); }
+  else if (n>1) {
+    // Curseur vers le haut de n rangées. Arrêt en haut de l'écran.
+    writeWord(CSI);   // 0x1B 0x5B
+    writeBytesP(n);   // Pn : Voir section Private ci-dessous
+    writeByte(0x41);
+  }	
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::moveCursorReturn(int n) {  // Voir p.94
+  writeByte(CR);
+  moveCursorDown(n);  // Pour davantage de souplesse
+}
+/*--------------------------------------------------------------------*/
+
+int Minitel::getCursorX() {
+  return (getCursorXY() & 0x0000FF) - 0x40;
+}
+/*--------------------------------------------------------------------*/
+
+int Minitel::getCursorY() {
+  return ((getCursorXY() & 0x00FF00) >> 8) - 0x40;
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::cancel() {  // Voir p.95
+  writeByte(CAN);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::clearScreenFromCursor() {  // Voir p.95
+  writeWord(CSI);  // 0x1B 0x5B
+  // writeByte(0x30);  Inutile
+  writeByte(0x4A);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::clearScreenToCursor() {  // Voir p.95
+  writeWord(CSI);  // 0x1B 0x5B
+  writeByte(0x31);
+  writeByte(0x4A);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::clearScreen() {  // Voir p.95
+  writeWord(CSI);  // 0x1B 0x5B
+  writeByte(0x32);
+  writeByte(0x4A);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::clearLineFromCursor() {  // Voir p.95
+  writeWord(CSI);  // 0x1B 0x5B
+  // writeByte(0x30);  Inutile
+  writeByte(0x4B);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::clearLineToCursor() {  // Voir p.95
+  writeWord(CSI);  // 0x1B 0x5B
+  writeByte(0x31);
+  writeByte(0x4B);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::clearLine() {  // Voir p.95
+  writeWord(CSI);  // 0x1B 0x5B
+  writeByte(0x32);
+  writeByte(0x4B);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::deleteChars(int n) {  // Voir p.95
+  writeWord(CSI);  // 0x1B 0x5B
+  writeBytesP(n);  // Voir section Private ci-dessous
+  writeByte(0x50);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::insertChars(int n) {  // Voir p.95
+  writeWord(CSI);  // 0x1B 0x5B
+  writeBytesP(n);  // Voir section Private ci-dessous
+  writeByte(0x40);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::startInsert() {  // Voir p.95
+  writeWord(CSI);  // 0x1B 0x5B
+  writeByte(0x34);
+  writeByte(0x68);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::stopInsert() {  // Voir p.95
+  writeWord(CSI);  // 0x1B 0x5B
+  writeByte(0x34);
+  writeByte(0x6C);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::deleteLines(int n) {  // Voir p.95
+  writeWord(CSI);  // 0x1B 0x5B
+  writeBytesP(n);  // Voir section Private ci-dessous
+  writeByte(0x4D);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::insertLines(int n) {  // Voir p.95
+  writeWord(CSI);  // 0x1B 0x5B
+  writeBytesP(n);  // Voir section Private ci-dessous
+  writeByte(0x4C);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::textMode() {
+  writeByte(SI);  // Accès au jeu G0 (voir p.100)
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::graphicMode() {
+  writeByte(SO);  // Accès au jeu G1 (voir p.101 & 102)
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::pageMode() {
+  // Commande
+  writeBytesPRO(2);    // 0x1B 0x3A
+  writeByte(STOP);     // 0x6A
+  writeByte(ROULEAU);  // 0x43
+  // Acquittement
+  return workingMode();  // Renvoie un octet
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::scrollMode() {
+  // Commande
+  writeBytesPRO(2);    // 0x1B 0x3A
+  writeByte(START);    // 0x69
+  writeByte(ROULEAU);  // 0x43
+  // Acquittement
+  return workingMode();  // Renvoie un octet
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::modeMixte() {  // Voir p.144
+  // Passage du standard Télétel mode Vidéotex au standard Télétel mode Mixte
+  // Commande
+  writeBytesPRO(2);   // 0x1B 0x3A
+  writeWord(MIXTE1);  // 0x32 0x7D
+  // Acquittement
+  return workingStandard(0x1370);  // SEP (0x13), 0x70
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::modeVideotex() {  // Voir p.144
+  // Passage du standard Télétel mode Mixte au standard Télétel mode Vidéotex
+  // Commande
+  writeBytesPRO(2);   // 0x1B 0x3A
+  writeWord(MIXTE2);  // 0x32 0x7E
+  // Acquittement
+  return workingStandard(0x1371);  // SEP (0x13), 0x71
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::standardTeleinformatique() {  // Voir p.144
+  // Passage du standard Télétel au standard Téléinformatique
+  // Commande
+  writeBytesPRO(2);    // 0x1B 0x3A
+  writeWord(TELINFO);  // 0x31 0x7D
+  // Acquittement
+  return workingStandard(0x1B5B3F7A);  // CSI (0x1B,0x5B), 0x3F, 0x7A
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::standardTeletel() {  // Voir p.144
+  // Passage du standard Téléinformatique au standard Télétel
+  // Commande
+  writeWord(CSI);  // 0x1B Ox5B
+  writeByte(0x3F);
+  writeByte(0x7B);
+  // Acquittement
+  return workingStandard(0x135E);  // SEP (0x13), 0x5E
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::attributs(byte attribut) {
+  writeByte(ESC);  // Accès à la grille C1 (voir p.92)
+  writeByte(attribut);
+  if (attribut == DOUBLE_HAUTEUR || attribut == DOUBLE_GRANDEUR) {
+    moveCursorDown(1);
+    currentSize = attribut;
+  }
+  else if (attribut == GRANDEUR_NORMALE || attribut == DOUBLE_LARGEUR) {
+    currentSize = attribut;
+  }
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::print(String chaine) {
+  // Fonction modifiée par iodeo sur GitHub en février 2023
+/*
+  // Fonction initiale (pour mémoire)  // Obsolète depuis le 26/02/2023
+  for (int i=0; i<chaine.length(); i++) {
+    unsigned char caractere = chaine.charAt(i);
+    if (!isDiacritic(caractere)) {
+      printChar(caractere);
+    }
+    else {
+      i+=1;  // Un caractère accentué prend la place de 2 caractères
+      caractere = chaine.charAt(i);
+      printDiacriticChar(caractere);
+    }
+  }
+*/
+  // codes UTF-8 vers codes Minitel
+  unsigned int i = 0;
+  while (i < chaine.length()) {
+    unsigned long code = (byte) chaine.charAt(i++);
+    if (code < SP) code = 0;
+    else if (code >= SP && code <= DEL) {
+      switch (code) {
+        case 0x5E: code = 0; break; // ^ non visualisable seul
+        case 0x60: code = 0; break; // ` non visualisable seul
+      }
+    }
+    else if (code == 0xC2 || code == 0xC3 || code == 0xC5) {
+      // Caractères sur 2 octets
+      code = (code << 8) + (byte) chaine.charAt(i++);
+      switch (code) {                        // Voir p.90 pour VGP5 ou VGP2
+                          // 0x19 => SS2 (Accès au jeu G2)
+                          // 0x0F => SI (Accès au jeu G0)
+        case 0xC2A3: code = 0x1923; break;   // £ (VGP5 et VGP2)
+        case 0xC2A7: code = 0x1927; break;   // § (VGP5 seulement)
+        case 0xC2B0: code = 0x1930; break;   // ° (VGP5 et VGP2)
+        case 0xC2B1: code = 0x1931; break;   // ± (VGP5 et VGP2)
+        case 0xC2BC: code = 0x193C; break;   // ¼ (VGP5 et VGP2)
+        case 0xC2BD: code = 0x193D; break;   // ½ (VGP5 et VGP2)
+        case 0xC2BE: code = 0x193E; break;   // ¾ (VGP5 et VGP2)
+        case 0xC380: code = 0x0F41; break;   // À (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC382: code = 0x0F41; break;   // Â (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC384: code = 0x0F41; break;   // Ä (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC387: code = 0x0F43; break;   // Ç (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC388: code = 0x0F45; break;   // È (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC389: code = 0x0F45; break;   // É (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC38A: code = 0x0F45; break;   // Ê (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC38B: code = 0x0F45; break;   // Ë (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC38E: code = 0x0F49; break;   // Î (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC38F: code = 0x0F49; break;   // Ï (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC394: code = 0x0F4F; break;   // Ô (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC396: code = 0x0F4F; break;   // Ö (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC399: code = 0x0F55; break;   // Ù (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC39B: code = 0x0F55; break;   // Û (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC39C: code = 0x0F55; break;   // Ü (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+        case 0xC39F: code = 0x197B; break;   // ß (VGP5 seulement)
+        case 0xC3A0: code = 0x194161; break; // à (VGP5 et VGP2)
+        case 0xC3A2: code = 0x194361; break; // â (VGP5 et VGP2)
+        case 0xC3A4: code = 0x194861; break; // ä (VGP5 seulement)
+        case 0xC3A7: code = 0x194B63; break; // ç (VGP5 et VGP2)
+        case 0xC3A8: code = 0x194165; break; // è (VGP5 et VGP2)
+        case 0xC3A9: code = 0x194265; break; // é (VGP5 et VGP2)
+        case 0xC3AA: code = 0x194365; break; // ê (VGP5 et VGP2)
+        case 0xC3AB: code = 0x194865; break; // ë (VGP5 et VGP2)
+        case 0xC3AE: code = 0x194369; break; // î (VGP5 et VGP2)
+        case 0xC3AF: code = 0x194869; break; // ï (VGP5 et VGP2)
+        case 0xC3B4: code = 0x19436F; break; // ô (VGP5 et VGP2)
+        case 0xC3B6: code = 0x19486F; break; // ö (VGP5 seulement)
+        case 0xC3B7: code = 0x1938; break;   // ÷ (VGP5 et VGP2)
+        case 0xC3B9: code = 0x194175; break; // ù (VGP5 et VGP2)
+        case 0xC3BB: code = 0x194375; break; // û (VGP5 et VGP2)
+        case 0xC3BC: code = 0x194875; break; // ü (VGP5 seulement)
+        case 0xC592: code = 0x196A; break;   // Œ (VGP5 et VGP2)
+        case 0xC593: code = 0x197A; break;   // œ (VGP5 et VGP2)
+        default: code = 0; // supposé non-visualisable
+      }
+    }
+    else if (code == 0xE2) {
+      // Caractères sur 3 octets
+      code = (code << 8) + (byte) chaine.charAt(i++);
+      code = (code << 8) + (byte) chaine.charAt(i++);
+      switch (code) {
+        case 0xE28094: code = 0x60; break;   // —
+        case 0xE28690: code = 0x192C; break; // ←
+        case 0xE28691: code = 0x5E; break;   // ↑
+        case 0xE28692: code = 0x192E; break; // →
+        case 0xE28693: code = 0x192F; break; // ↓
+        default: code = 0; // supposé non-visualisable
+      }
+    }
+    if (code != 0) write(code);
+  }
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::println(String chaine) {
+  print(chaine);
+  if (currentSize == DOUBLE_HAUTEUR || currentSize == DOUBLE_GRANDEUR) {
+    moveCursorReturn(2);
+  }
+  else {
+    moveCursorReturn(1);
+  }
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::println() {
+  if (currentSize == DOUBLE_HAUTEUR || currentSize == DOUBLE_GRANDEUR) {
+    moveCursorReturn(2);
+  }
+  else {
+    moveCursorReturn(1);
+  }
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::printChar(char caractere) {
+  byte charByte = getCharByte(caractere);
+  if (isValidChar(charByte)) {
+    writeByte(charByte);
+  }
+}
+/*--------------------------------------------------------------------*/
+/*
+void Minitel::printDiacriticChar(unsigned char caractere) {  // Obsolète depuis le 26/02/2023
+  writeByte(SS2);  // Accès au jeu G2 (voir p.103)
+  String diacritics = "àâäèéêëîïôöùûüçÀÂÄÈÉÊËÎÏÔÖÙÛÜÇ";
+  // Dans une chaine de caractères, un caractère diacritique prend la
+  // place de 2 caractères simples, ce qui explique le /2.
+  int index = (diacritics.indexOf(caractere)-1)/2;
+  char car;
+  switch (index) {
+    case( 0): car = 'a'; writeByte(ACCENT_GRAVE); break;
+    case( 1): car = 'a'; writeByte(ACCENT_CIRCONFLEXE); break;
+    case( 2): car = 'a'; writeByte(TREMA); break;
+    case( 3): car = 'e'; writeByte(ACCENT_GRAVE); break;
+    case( 4): car = 'e'; writeByte(ACCENT_AIGU); break;
+    case( 5): car = 'e'; writeByte(ACCENT_CIRCONFLEXE); break;
+    case( 6): car = 'e'; writeByte(TREMA); break;
+    case( 7): car = 'i'; writeByte(ACCENT_CIRCONFLEXE); break;
+    case( 8): car = 'i'; writeByte(TREMA); break;
+    case( 9): car = 'o'; writeByte(ACCENT_CIRCONFLEXE); break;
+    case(10): car = 'o'; writeByte(TREMA); break;
+    case(11): car = 'u'; writeByte(ACCENT_GRAVE); break;
+    case(12): car = 'u'; writeByte(ACCENT_CIRCONFLEXE); break;      
+    case(13): car = 'u'; writeByte(TREMA); break;
+    case(14): car = 'c'; writeByte(CEDILLE); break;
+    // Pour les cas où on essaye d'afficher un caractère diacritique majuscule,
+    // ce que ne peut pas faire le Minitel.
+    case(15): car = 'A'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(16): car = 'A'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(17): car = 'A'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(18): car = 'E'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(19): car = 'E'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(20): car = 'E'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(21): car = 'E'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(22): car = 'I'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(23): car = 'I'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(24): car = 'O'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(25): car = 'O'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(26): car = 'U'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(27): car = 'U'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(28): car = 'U'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+    case(29): car = 'C'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
+  }
+  printChar(car);
+}
+*/
+/*--------------------------------------------------------------------*/
+
+void Minitel::printSpecialChar(byte b) {
+  // N'est pas fonctionnelle pour les diacritiques (accents, tréma et cédille)
+  writeByte(SS2);  // Accès au jeu G2 (voir p.103)
+  writeByte(b);
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::getCharByte(char caractere) {
+  // Voir les codes et séquences émis en mode Vidéotex (Jeu G0 p.100).
+  // Dans la chaine ci-dessous, on utilise l'échappement (\) :
+  // \" rend au guillemet sa signification littérale.
+  // \\ donne à l'antislash sa signification littérale .
+  String caracteres = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_xabcdefghijklmnopqrstuvwxyz{|}";
+  return (byte) caracteres.lastIndexOf(caractere);
+}
+/*--------------------------------------------------------------------*/
+
+String Minitel::getString(unsigned long code) {
+  // Fonction proposée par iodeo sur GitHub en février 2023
+  // Convertit un caractère Unicode en String UTF-8
+  // Renvoie "" si le code ne correspond pas à un caractère visualisable
+  String str = "";
+  //str.reserve(4);  ???
+  // Pour test
+  /*
+  Serial.print("isVisual ");
+  Serial.print(code);
+  Serial.print("\t : ");
+  Serial.println(isVisualisable(code));
+  */
+  if (isVisualisable(code)) {
+    if (code < 0x80) { // U+0000 à U+007F
+      str += char(code);
+    } else if (code < 0x800) { // U+0080 à U+07FF
+      str += char((0b110 << 5) | (code >> 6));
+      str += char((0b10 << 6) | (code & 0x3F));
+    } else if(code < 0x10000) { // U+0800 à U+FFFF
+      str += char((0b1110 << 4) | (code >> 12));
+      str += char((0b10 << 6) | ((code >> 6) & 0x3F));
+      str += char((0b10 << 6) | (code & 0x3F));
+    }
+  }
+  return str;
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::graphic(byte b, int x, int y) {
+  moveCursorXY(x,y);
+  graphic(b);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::graphic(byte b) {
+  // Voir Jeu G1 page 101.
+  if (b <= 0b111111) {
+    b = 0x20
+      + bitRead(b,5) 
+      + bitRead(b,4) * 2
+      + bitRead(b,3) * 4
+      + bitRead(b,2) * 8
+      + bitRead(b,1) * 16
+      + bitRead(b,0) * 64;
+    if (b == 0x7F) {  // 0b1111111
+      b= 0x5F;
+    }    
+  writeByte(b);
+  }
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::repeat(int n) {  // Voir p.98
+  writeByte(REP);
+  writeByte(0x40 + n);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::bip() {  // Voir p.98
+  writeByte(BEL);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::rect(int x1, int y1, int x2, int y2) {
+  hLine(x1,y1,x2,BOTTOM);
+  vLine(x2,y1+1,y2,RIGHT,DOWN);
+  hLine(x1,y2,x2,TOP);
+  vLine(x1,y1,y2-1,LEFT,UP);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::hLine(int x1, int y, int x2, int position) {
+  textMode();
+  moveCursorXY(x1,y);
+  switch (position) {
+    case TOP    : writeByte(0x7E); break;
+    case CENTER : writeByte(0x60); break;
+    case BOTTOM : writeByte(0x5F); break;
+  }
+  repeat(x2-x1);
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::vLine(int x, int y1, int y2, int position, int sens) {
+  textMode();
+  switch (sens) {
+    case DOWN : moveCursorXY(x,y1); break;
+    case UP   : moveCursorXY(x,y2); break;
+  }
+  for (int i=0; i<y2-y1; i++) {
+    switch (position) {
+      case LEFT   : writeByte(0x7B); break;
+      case CENTER : writeByte(0x7C); break;
+      case RIGHT  : writeByte(0x7D); break;
+    }
+    switch (sens) {
+      case DOWN : moveCursorLeft(1); moveCursorDown(1); break;
+      case UP   : moveCursorLeft(1); moveCursorUp(1); break;
+    }
+  }
+}
+/*--------------------------------------------------------------------*/
+
+unsigned long Minitel::getKeyCode(bool unicode) {
+  // Renvoie le code brut émis par le clavier (unicode = false)
+  // ou sa conversion unicode si applicable (unicode = true, choix par défaut)
+  unsigned long code = 0;
+  // Code unique
+  if (mySerial.available()>0) {
+    code = readByte();
+  }
+  // Séquences de deux ou trois codes (voir p.118)
+  if (code == 0x19) {  // SS2
+    while (!mySerial.available()>0);  // Indispensable
+    code = (code << 8) + readByte();
+    // Les diacritiques (3 codes)
+    if ((code == 0x1941) || (code == 0x1942) || (code == 0x1943) || (code == 0x1948) || (code == 0x194B)) {  // Accents, tréma, cédille
+      while (!mySerial.available()>0);  // Indispensable
+      byte caractere = readByte();
+      code = (code << 8) + caractere;
+      if (unicode) {
+        switch (code) {  // On convertit le code reçu en unicode
+          case 0x194161 : code = 0xE0; break;  // à
+          case 0x194165 : code = 0xE8; break;  // è
+          case 0x194175 : code = 0xF9; break;  // ù
+          case 0x194265 : code = 0xE9; break;  // é
+          case 0x194361 : code = 0xE2; break;  // â
+          case 0x194365 : code = 0xEA; break;  // ê
+          case 0x194369 : code = 0xEE; break;  // î
+          case 0x19436F : code = 0xF4; break;  // ô
+          case 0x194375 : code = 0xFB; break;  // û
+          case 0x194861 : code = 0xE4; break;  // ä
+          case 0x194865 : code = 0xEB; break;  // ë
+          case 0x194869 : code = 0xEF; break;  // ï
+          case 0x19486F : code = 0xF6; break;  // ö
+          case 0x194875 : code = 0xFC; break;  // ü
+          case 0x194B63 : code = 0xE7; break;  // ç
+          default : code = caractere; break;
+        }
+      }
+    }
+    // Les autres caractères spéciaux disponibles sous Arduino (2 codes)
+    else {
+      if (unicode) {
+        switch (code) {  // On convertit le code reçu en unicode
+          case 0x1923 : code = 0xA3; break;    // Livre
+          case 0x1927 : code = 0xA7; break;    // Paragraphe
+          case 0x192C : code = 0x2190; break;  // Flèche gauche
+          case 0x192E : code = 0x2192; break;  // Flèche droite
+          case 0x192F : code = 0x2193; break;  // Flèche bas
+          case 0x1930 : code = 0xB0; break;    // Degré
+          case 0x1931 : code = 0xB1; break;    // Plus ou moins
+          case 0x1938 : code = 0xF7; break;    // Division
+          case 0x196A : code = 0x152; break;   // Ligature OE
+          case 0x197A : code = 0x153; break;   // Ligature oe
+          case 0x197B : code = 0xDF; break;    // Bêta
+        }
+      }
+    }
+  }
+  // Touches de fonction (voir p.123)
+  else if (code == 0x13) {
+    while (!mySerial.available()>0);  // Indispensable
+    code = (code << 8) + readByte();
+  }  
+  // Touches de gestion du curseur lorsque le clavier est en mode étendu (voir p.124)
+  // Pour passer au clavier étendu manuellement : Fnct C + E
+  // Pour revenir au clavier vidéotex standard  : Fnct C + V
+  else if (code == 0x1B) {
+    delay(20);  // Indispensable. 0x1B seul correspond à la touche Esc,
+                // on ne peut donc pas utiliser la boucle while (!available()>0).           
+    if (mySerial.available()>0) {
+      code = (code << 8) + readByte();
+      if (code == 0x1B5B) {
+        while (!mySerial.available()>0);  // Indispensable
+        code = (code << 8) + readByte();
+        if ((code == 0x1B5B34) || (code == 0x1B5B32)) {
+          while (!mySerial.available()>0);  // Indispensable
+          code = (code << 8) + readByte();
+        }
+      }
+    }
+  }
+  else {
+    if(unicode) { // On convertit les codes uniques en unicode
+      if (code == 0x5E) code = 0x2191; // Flèche haut
+      else if (code == 0x60) code = 0x2014; // Tiret cadratin
+    }
+  }
+// Pour test
+/*
+  if (code != 0) {
+    Serial.print(code,HEX);
+    Serial.print(" ");
+    Serial.write(code);
+    Serial.println("");
+  }
+*/
+  return code;
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::smallMode() {
+  // Commande
+  writeBytesPRO(2);       // 0x1B 0x3A
+  writeByte(START);       // 0x69
+  writeByte(MINUSCULES);  // 0x45
+  // Acquittement
+  return workingMode();   // Renvoie un octet
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::capitalMode() {
+  // Commande
+  writeBytesPRO(2);       // 0x1B 0x3A
+  writeByte(STOP);        // 0x6A
+  writeByte(MINUSCULES);  // 0x45
+  // Acquittement
+  return workingMode();   // Renvoie un octet
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::extendedKeyboard() {
+  // Commande
+  writeBytesPRO(3);                   // 0x1B 0x3B
+  writeByte(START);                   // 0x69
+  writeByte(CODE_RECEPTION_CLAVIER);  // 0x59
+  writeByte(ETEN);                    // 0x41
+  // Acquittement
+  return workingKeyboard();  // Renvoie un octet
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::standardKeyboard() {
+  // Commande
+  writeBytesPRO(3);                   // 0x1B 0x3B
+  writeByte(STOP);                    // 0x6A
+  writeByte(CODE_RECEPTION_CLAVIER);  // 0x59
+  writeByte(ETEN);                    // 0x41
+  // Acquittement
+  return workingKeyboard();  // Renvoie un octet
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::echo(boolean commande) {  // Voir p.81, p.135 et p.156
+  // Fonction modifiée par iodeo sur GitHub en octobre 2021
+  // commande peut prendre comme valeur :
+  // true, false
+  return aiguillage(commande, CODE_EMISSION_CLAVIER, CODE_RECEPTION_MODEM);
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::aiguillage(boolean commande, byte emetteur, byte recepteur) {  // Voir p.135
+  // commande peut prendre comme valeur :
+  // true, false
+  // emetteur peut prendre comme valeur :
+  // CODE_EMISSION_ECRAN, CODE_EMISSION_CLAVIER, CODE_EMISSION_MODEM, CODE_EMISSION_PRISE
+  // recepteur peut prendre comme valeur :
+  // CODE_RECEPTION_ECRAN, CODE_RECEPTION_CLAVIER, CODE_RECEPTION_MODEM, CODE_RECEPTION_PRISE
+  // Commande
+  writeBytesPRO(3);                                     // 0x1B 0x3B
+  writeByte(commande ? AIGUILLAGE_ON : AIGUILLAGE_OFF); // 0x61 ou 0x60
+  writeByte(recepteur);
+  writeByte(emetteur);
+  // Acquittement
+  return workingAiguillage(recepteur);  // Renvoie un octet
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::statusAiguillage(byte module) {  // Voir p. 136
+  // module peut prendre comme valeur :
+  // CODE_EMISSION_ECRAN, CODE_EMISSION_CLAVIER, CODE_EMISSION_MODEM, CODE_EMISSION_PRISE
+  // CODE_RECEPTION_ECRAN, CODE_RECEPTION_CLAVIER, CODE_RECEPTION_MODEM, CODE_RECEPTION_PRISE
+  // Commande
+  writeBytesPRO(2);  // 0x1B 0x3A
+  writeByte(TO);     // 0x62
+  writeByte(module);
+  // Acquittement
+  return workingAiguillage(module);  // Renvoie un octet
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::connexion(boolean commande) {  // Voir p.139
+  // Fonction proposée par iodeo sur GitHub en octobre 2021
+  // commande peut prendre comme valeur :
+  // true, false
+  // Commande
+  writeBytesPRO(1);  // 0x1B 0x39
+  writeByte(commande ? CONNEXION : DECONNEXION);  // 0x68 ou 0x67
+  // Acquittement
+  return workingModem();  // Renvoie un octet
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::reset() {  // Voir p.145
+  // Commande
+  writeBytesPRO(1);  // 0x1B 0x39
+  writeByte(RESET);  // 0x7F
+  // Acquittement
+  return workingStandard(0x135E);  // SEP (0x13), 0x5E
+}
+/*--------------------------------------------------------------------*/
+
+
+
 
 ////////////////////////////////////////////////////////////////////////
+/*
+   Private
+*/
+////////////////////////////////////////////////////////////////////////
 
-#endif // Fin Si (MINITEL1B_H)
+boolean Minitel::isValidChar(byte index) {
+  // On vérifie que le caractère appartient au jeu G0 (voir p.100).
+  // SP (0x20) correspond à un espace et DEL (0x7F) à un pavé plein.
+  if (index >= SP && index <= DEL) {
+    return true;
+  }
+  return false;
+}
+/*--------------------------------------------------------------------*/
+/*
+boolean Minitel::isDiacritic(unsigned char caractere) {  // Obsolète depuis le 26/02/2023
+  String diacritics = "àâäèéêëîïôöùûüçÀÂÄÈÉÊËÎÏÔÖÙÛÜÇ";
+  if (diacritics.indexOf(caractere) >= 0) {
+    return true; 
+  }
+  return false;
+}
+*/
+/*--------------------------------------------------------------------*/
+
+boolean Minitel::isVisualisable(unsigned long code) {
+  // Fonction proposée par iodeo sur GitHub en février 2023
+  // Fonction utilisée dans getString(unsigned long code)
+  // Teste la conversion d'un code brut clavier en équivalent Unicode
+  // Renvoie 0 si le code ne correspond pas à un caractère visualisable
+  // Voir https://iodeo.github.io/MinitelKeyboardHelper/
+  
+  // Les caractères de contrôle ne sont pas visualisables
+  if (code < SP) return false;
+  // Les autres caractères de 7 bits sont visualisables
+  if (code <= DEL) return true;
+  switch (code) {
+    case 0x00A3: return true; // £
+    case 0x00A7: return true; // § (VGP5 seulement, pas VGP2 - voir p.90)
+    case 0x00B0: return true; // ° Ctrl 0 au clavier
+    case 0x00B1: return true; // ± Ctrl * au clavier
+    case 0x00BC: return true; // ¼
+    case 0x00BD: return true; // ½
+    case 0x00BE: return true; // ¾
+    /*  iodeo, je ne comprends pas cette partie car
+        aucune lettre accentuée majuscule n'est disponible sur le Minitel - voir page 90
+
+    case 0x00C0: return true; // À (VGP2)
+    case 0x00C7: return true; // Ç (VGP2)
+    case 0x00C8: return true; // È (VGP2)
+    case 0x00C9: return true; // É (VGP2)
+    */
+    case 0x00DF: return true; // ß (VGP5 seulement, pas VGP2 - voir p.90)
+    case 0x00E0: return true; // à
+    case 0x00E2: return true; // â
+    case 0x00E4: return true; // ä (VGP5 seulement, pas VGP2 - voir p.90)
+    case 0x00E7: return true; // ç
+    case 0x00E8: return true; // è
+    case 0x00E9: return true; // é
+    case 0x00EA: return true; // ê
+    case 0x00EB: return true; // ë
+    case 0x00EE: return true; // î
+    case 0x00EF: return true; // ï
+    case 0x00F4: return true; // ô
+    case 0x00F6: return true; // ö (VGP5 seulement, pas VGP2 - voir p.90)
+    case 0x00F7: return true; // ÷ Ctrl 7 au clavier
+    case 0x00F9: return true; // ù
+    case 0x00FB: return true; // û
+    case 0x00FC: return true; // ü (VGP5 seulement, pas VGP2 - voir p.90)
+    case 0x0152: return true; // Œ
+    case 0x0153: return true; // œ
+    case 0x2014: return true; // — Ctrl 5 au clavier
+    case 0x2190: return true; // ← Ctrl 8 au clavier
+    case 0x2191: return true; // ↑
+    case 0x2192: return true; // → Ctrl 9 au clavier
+    case 0x2193: return true; // ↓ Ctrl # au clavier
+  }
+  return false; // Les caractères non listés sont supposés non visualisables
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::writeBytesP(int n) {
+  // Pn, Pr, Pc : Voir remarques p.95 et 96
+  if (n<=9) {
+    writeByte(0x30 + n);
+  }
+  else {
+    writeByte(0x30 + n/10);
+    writeByte(0x30 + n%10);
+  }
+}
+/*--------------------------------------------------------------------*/
+
+void Minitel::writeBytesPRO(int n) {  // Voir p.134
+  writeByte(ESC);  // 0x1B
+  switch (n) {
+    case 1 : writeByte(0x39); break;
+    case 2 : writeByte(0x3A); break;
+    case 3 : writeByte(0x3B); break;
+  }
+}
+/*--------------------------------------------------------------------*/
+
+int Minitel::workingSpeed() {
+  int bauds = -1;
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned long time = millis();
+  unsigned long duree = 0;
+  unsigned long trame = 0;  // 32 bits = 4 octets
+  // On se donne 1000 ms pour récupérer une trame exploitable
+  while ((trame >> 8 != 0x1B3A75) && (duree < 1000)) {  // Voir p.141
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+      //Serial.println(trame, HEX);
+    }
+    duree = millis() - time;
+  }
+  switch (trame) {
+    case 0x1B3A7552 : bauds =  300; break;
+    case 0x1B3A7564 : bauds = 1200; break;
+    case 0x1B3A7576 : bauds = 4800; break;
+    case 0x1B3A757F : bauds = 9600; break;  // Pour le Minitel 2 seulement
+  }
+  return bauds;
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::workingStandard(unsigned long sequence) {
+  // Fonction modifiée par iodeo sur GitHub en octobre 2021
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned long time = millis();
+  unsigned long duree = 0;
+  unsigned long trame = 0;  // 32 bits = 4 octets  
+  // On se donne 100ms pour recevoir l'acquittement
+  // Sinon, on peut supposer que le mode demandé était déjà actif
+  while ((trame != sequence) && (duree < 100)) {
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+      //Serial.println(trame, HEX);
+    }
+    duree = millis() - time;
+  }
+  return (trame == sequence)? 1 : 0;
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::workingMode() {  // Voir p.143
+  // On récupère notamment les 4 bits de poids faibles suivants : ME PC RL F
+  // ME : mode minuscules / majuscules du clavier (1 = minuscule)
+  // PC : PCE (1 = actif)
+  // RL : rouleau (1 = actif)
+  // F  : format d'écran (1 = 80 colonnes)
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned long trame = 0;  // 32 bits = 4 octets  
+  while (trame >> 8 != 0x1B3A73) {  // PRO2 (0x1B,0x3A), REP_STATUS_FONCTIONNEMENT (0x73)
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+      //Serial.println(trame, HEX);
+    }
+  }
+  return (byte) trame;
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::workingKeyboard() {  // Voir p.142
+  // On récupère notamment les 3 bits de poids faibles suivants : C0 0 Eten
+  // Eten : mode étendu (1 = actif)
+  // C0   : codage en jeu C0 des touches de gestion du curseur (1 = actif)
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned long trame = 0;  // 32 bits = 4 octets  
+  while (trame != 0x1B3B7359) {  // PRO3 (0x1B,0x3B), REP_STATUS_CLAVIER (0x73), CODE_RECEPTION_CLAVIER (0x59)
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+      //Serial.println(trame, HEX);
+    }
+  }
+  while (!mySerial.available()>0);  // Indispensable
+  return readByte(); // Octet de statut fonctionnement clavier
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::workingAiguillage(byte module) {  // Voir p.136
+  // On récupère l'octet de statut d'aiguillage associé à un module :
+  // b7 : bit de parité
+  // b6 : 1
+  // b5 : 0
+  // b4 : 0
+  // b3 : prise
+  // b2 : modem             1 : liaison établie
+  // b1 : clavier           0 : liaison coupée
+  // b0 : écran
+  // L'octet de statut contient également l'état de la ressource que constitue le module lui-même (0 : module bloqué ; 1 : module actif)
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned long trame = 0;  // 32 bits = 4 octets
+  while (trame != (0x1B3B63 << 8 | module)) {  // PRO3 (0x1B,0x3B), FROM (0x63), code réception ou émission du module
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+      //Serial.println(trame, HEX);
+    }
+  }
+  while (!mySerial.available()>0);  // Indispensable
+  return readByte(); // Octet de statut associé à un module
+}
+/*--------------------------------------------------------------------*/
+
+byte Minitel::workingModem() {  // Voir p.126
+  // Fonction proposée par iodeo sur GitHub en octobre 2021
+  // On récupère uniquement la séquence immédiate 0x1359
+  // en cas de connexion confirmé, la séquence 0x1353 s'ajoutera - non traité ici
+  // en cas de timeout (environ 40sec), la séquence 0x1359 s'ajoutera - non traité ici
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned int trame = 0;  // 16 bits = 2 octets
+  while (trame >> 8 != 0x13) {
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+      //Serial.println(trame, HEX);
+    }
+  }
+  return (byte) trame;
+}
+/*--------------------------------------------------------------------*/
+
+unsigned long Minitel::getCursorXY() {  // Voir p.98
+  // Demande
+  writeByte(ESC);
+  writeByte(0x61);
+  // Réponse
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned long trame = 0;  // 32 bits = 4 octets  
+  while (trame >> 16 != US) {
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+    }
+  }
+  return trame;
+}
+/*--------------------------------------------------------------------*/
