@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 27 février 2023 à 12h58
+   Minitel1B_Hard - Fichier source - Version du 27 février 2023 à 13h40
    Copyright 2016-2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -768,9 +768,9 @@ unsigned long Minitel::getKeyCode(bool unicode) {
           case 0x1930 : code = 0xB0; break;    // Degré
           case 0x1931 : code = 0xB1; break;    // Plus ou moins
           case 0x1938 : code = 0xF7; break;    // Division
-          case 0x196A : code = 0x152; break;   // Ligature OE
-          case 0x197A : code = 0x153; break;   // Ligature oe
-          case 0x197B : code = 0x3B2; break;   // Bêta
+          case 0x196A : code = 0x0152; break;  // Ligature OE
+          case 0x197A : code = 0x0153; break;  // Ligature oe
+          case 0x197B : code = 0x03B2; break;  // Bêta
         }
       }
     }
