@@ -1025,15 +1025,17 @@ void Minitel::writeBytesPRO(int n) {  // Voir p.134
 }
 /*--------------------------------------------------------------------*/
 
-unsigned long Minitel::identificationBytes() { // Voir p.139
-  while (!mySerial); // On attend que le port soit sur écoute.
-  unsigned long trame = 0; // 32 bits = 4 octets
+unsigned long Minitel::identificationBytes() {  // Voir p.138
+  while (!mySerial);  // On attend que le port soit sur écoute.
+  unsigned long trame = 0;  // 32 bits = 4 octets
+  while (trame >> 24 != 0x01) {  // La trame doit débuter par SOH (0x01)
+    if (mySerial.available() > 0) {
+      trame = (trame << 8) + readByte();
+    }
+  }
   while (!mySerial.available()>0); // Indispensable
-  if (readByte() != 0x01) return 0;  // La trame doit débuter par SOH (0x01)
-  trame = readByte();                // octet définissant le constructeur du Minitel
-  trame = (trame << 8) + readByte(); // octet définissant le type du Minitel
-  trame = (trame << 8) + readByte(); // octet définissant la version du logiciel
   if (readByte() != 0x04) return 0;  // La trame doit se terminer par EOT (0x04)
+  trame = (trame << 8) >> 8;  // On élimine l'octet SOH (0x01) de la trame
   return trame;
 }
 /*--------------------------------------------------------------------*/
