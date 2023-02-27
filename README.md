@@ -6,9 +6,9 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-Dernière Version : 27/02/2023 à 13h40.<br>
+Dernière Version : 27/02/2023 à 17h25.<br>
 
-27/02/2023<br> - Correction d'un bug dans :
+27/02/2023 - Correction d'un bug dans :<br>
 unsigned long identificationBytes()
 
 27/02/2023 - Sur proposition de iodeo :<br>
