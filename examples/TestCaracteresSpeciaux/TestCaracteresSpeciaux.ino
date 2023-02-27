@@ -1,4 +1,4 @@
-// Version du 26 février 2023 à 03h19
+// Version du 27 février 2023 à 12h58
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
 
@@ -35,7 +35,7 @@ void setup() {
   texte = "àâäèéêëîïôöùûüçÀÂÄÈÉÊËÎÏÔÖÙÛÜÇ";
   minitel.println(texte);
   Serial.println(texte);
-  texte = "£§°±¼½¾ß÷Œœ";
+  texte = "£§°±¼½¾β÷Œœ";
   minitel.println(texte);
   Serial.println(texte);
   texte = "—←↑→↓";
@@ -128,18 +128,19 @@ void lectureChamp(int premiereLigne, int nbLignes) {
         minitel.moveCursorXY(40,(premiereLigne-1)+nbLignes);
       }
     }
-  switch (touche) {
-    case ENVOI : 
-      fin = true;
-      break;
-    case ANNULATION :
-      champVide(premiereLigne,nbLignes);
-      break;
-    case CORRECTION :
-      correction(nbLignes);
-      break;
-  }    
+    switch (touche) {
+      case ENVOI : 
+        fin = true;
+        break;
+      case ANNULATION :
+        champVide(premiereLigne,nbLignes);
+        break;
+      case CORRECTION :
+        correction(nbLignes);
+        break;
+    }    
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
+
