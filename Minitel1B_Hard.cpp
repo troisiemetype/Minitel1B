@@ -99,6 +99,16 @@ byte Minitel::readByte() {
 }
 /*--------------------------------------------------------------------*/
 
+unsigned long Minitel::identifyDevice() { // Voir p.139
+  // Fonction proposée par iodeo sur GitHub en février 2023
+  // Demande
+  writeBytesPRO(1); // 0x1B 0x39
+  writeByte(ENQROM); // 0x7B
+  // Réponse
+  return identificationBytes();
+}
+/*--------------------------------------------------------------------*/
+
 int Minitel::changeSpeed(int bauds) {  // Voir p.141
   // Fonction modifiée par iodeo sur GitHub en octobre 2021
   // Format de la commande
@@ -610,7 +620,6 @@ String Minitel::getString(unsigned long code) {
   // Convertit un caractère Unicode en String UTF-8
   // Renvoie "" si le code ne correspond pas à un caractère visualisable
   String str = "";
-  //str.reserve(4);  ???
   // Pour test
   /*
   Serial.print("isVisual ");
@@ -1015,6 +1024,20 @@ void Minitel::writeBytesPRO(int n) {  // Voir p.134
   }
 }
 /*--------------------------------------------------------------------*/
+
+unsigned long Minitel::identificationBytes() { // Voir p.139
+  while (!mySerial); // On attend que le port soit sur écoute.
+  unsigned long trame = 0; // 32 bits = 4 octets
+  while (!mySerial.available()>0); // Indispensable
+  if (readByte() != 0x01) return 0;  // La trame doit débuter par SOH (0x01)
+  trame = readByte();                // octet définissant le constructeur du Minitel
+  trame = (trame << 8) + readByte(); // octet définissant le type du Minitel
+  trame = (trame << 8) + readByte(); // octet définissant la version du logiciel
+  if (readByte() != 0x04) return 0;  // La trame doit se terminer par EOT (0x04)
+  return trame;
+}
+/*--------------------------------------------------------------------*/
+
 
 int Minitel::workingSpeed() {
   int bauds = -1;
