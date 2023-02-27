@@ -6,7 +6,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-Dernière Version : 27/02/2023 à 18h58.<br>
+Dernière Version : 27/02/2023 à 21h58.<br>
 
 27/02/2023<br>
 Correction d'un bug dans unsigned long identificationBytes()<br>
