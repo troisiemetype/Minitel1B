@@ -112,7 +112,7 @@ unsigned long Minitel::identifyDevice() { // Voir p.139
 
   // Codes d'identification de l'octet de poids fort :
   /*
-     0x43 : Telic-Alcatel
+     Telic-Alcatel : 0x43
   */
 
   // Codes d'identification de l'octet du milieu (voir p.103 du Guide STU du Minitel 2) :
