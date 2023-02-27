@@ -8,8 +8,8 @@ http://543210.free.fr/TV/stum1b.pdf
 
 Dernière Version : 27/02/2023 à 17h25.<br>
 
-27/02/2023 - Correction d'un bug dans :<br>
-unsigned long identificationBytes()<br>
+27/02/2023<br>
+Correction d'un bug dans unsigned long identificationBytes()<br>
 Mise à jour de l'exemple TestCaracteresSpeciaux.ino
 
 27/02/2023 - Sur proposition de iodeo :<br>
@@ -18,7 +18,8 @@ Ajout de fonctions pour identifier le Minitel :<br>
 unsigned long identifyDevice()<br>
 unsigned long identificationBytes()<br>
 
-26/02/2023 - Des exemples où il est question de caractères...<br>
+26/02/2023<br>
+Des exemples où il est question de caractères...<br>
 Ajout d'un nouvel exemple :<br>
 TestCaracteresSpeciaux.ino<br>
 Modification des exemples :<br>
