@@ -8,10 +8,13 @@ http://543210.free.fr/TV/stum1b.pdf
 
 Dernière Version : 27/02/2023 à 13h40.<br>
 
+27/02/2023<br> - Correction d'un bug dans :
+unsigned long identificationBytes()
+
 27/02/2023 - Sur proposition de iodeo :<br>
 Correction d'un bug sur le caractère Bêta => Mise à jour de l'exemple TestCaracteresSpeciaux.ino.<br>
 Ajout d'une fonction d'identification du matériel :<br>
-unsigned long identifyDevice() => Bugge (correction en cours)<br>
+unsigned long identifyDevice()<br>
 
 26/02/2023 - Des exemples où il est question de caractères...<br>
 Ajout d'un nouvel exemple :<br>
