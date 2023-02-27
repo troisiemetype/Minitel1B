@@ -28,14 +28,14 @@ Tweet_3615.ino<br>
 
 26/02/2023 - Sur proposition de iodeo :<br>
 Pour une meilleure gestion des caractères spéciaux :<br>
-- Ajout de nouvelles fonctions :<br>
+Ajout de nouvelles fonctions :<br>
 void write(unsigned long code)<br>
 String getString(unsigned long code)<br>
 boolean isVisualisable(unsigned long code)<br>
-- Modification de :<br>
+Modification de :<br>
 void print(String chaine)<br>
 unsigned long getKeyCode(bool unicode = true)<br>
-- Supression, car devenues inutiles, de :<br>
+Supression, car devenues inutiles, de :<br>
 void printDiacriticChar(unsigned char caractere)<br>
 boolean isDiacritic(unsigned char caractere)<br>
 
