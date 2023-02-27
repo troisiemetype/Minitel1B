@@ -99,6 +99,16 @@ byte Minitel::readByte() {
 }
 /*--------------------------------------------------------------------*/
 
+unsigned long Minitel::identifyDevice() { // Voir p.139
+  // Fonction proposée par iodeo sur GitHub en février 2023
+  // Demande
+  writeBytesPRO(1); // 0x1B 0x39
+  writeByte(ENQROM); // 0x7B
+  // Réponse
+  return identificationBytes();
+}
+/*--------------------------------------------------------------------*/
+
 int Minitel::changeSpeed(int bauds) {  // Voir p.141
   // Fonction modifiée par iodeo sur GitHub en octobre 2021
   // Format de la commande
@@ -445,7 +455,7 @@ void Minitel::print(String chaine) {
         case 0x60: code = 0; break; // ` non visualisable seul
       }
     }
-    else if (code == 0xC2 || code == 0xC3 || code == 0xC5) {
+    else if (code == 0xC2 || code == 0xC3 || code == 0xC5 || code == 0xCE) {
       // Caractères sur 2 octets
       code = (code << 8) + (byte) chaine.charAt(i++);
       switch (code) {                        // Voir p.90 pour VGP5 ou VGP2
@@ -473,7 +483,6 @@ void Minitel::print(String chaine) {
         case 0xC399: code = 0x0F55; break;   // Ù (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
         case 0xC39B: code = 0x0F55; break;   // Û (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
         case 0xC39C: code = 0x0F55; break;   // Ü (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-        case 0xC39F: code = 0x197B; break;   // ß (VGP5 seulement)
         case 0xC3A0: code = 0x194161; break; // à (VGP5 et VGP2)
         case 0xC3A2: code = 0x194361; break; // â (VGP5 et VGP2)
         case 0xC3A4: code = 0x194861; break; // ä (VGP5 seulement)
@@ -492,6 +501,7 @@ void Minitel::print(String chaine) {
         case 0xC3BC: code = 0x194875; break; // ü (VGP5 seulement)
         case 0xC592: code = 0x196A; break;   // Œ (VGP5 et VGP2)
         case 0xC593: code = 0x197A; break;   // œ (VGP5 et VGP2)
+        case 0xCEB2: code = 0x197B; break;   // β (VGP5 seulement)
         default: code = 0; // supposé non-visualisable
       }
     }
@@ -610,7 +620,6 @@ String Minitel::getString(unsigned long code) {
   // Convertit un caractère Unicode en String UTF-8
   // Renvoie "" si le code ne correspond pas à un caractère visualisable
   String str = "";
-  //str.reserve(4);  ???
   // Pour test
   /*
   Serial.print("isVisual ");
@@ -761,7 +770,7 @@ unsigned long Minitel::getKeyCode(bool unicode) {
           case 0x1938 : code = 0xF7; break;    // Division
           case 0x196A : code = 0x152; break;   // Ligature OE
           case 0x197A : code = 0x153; break;   // Ligature oe
-          case 0x197B : code = 0xDF; break;    // Bêta
+          case 0x197B : code = 0x3B2; break;   // Bêta
         }
       }
     }
@@ -965,7 +974,6 @@ boolean Minitel::isVisualisable(unsigned long code) {
     case 0x00C8: return true; // È (VGP2)
     case 0x00C9: return true; // É (VGP2)
     */
-    case 0x00DF: return true; // ß (VGP5 seulement, pas VGP2 - voir p.90)
     case 0x00E0: return true; // à
     case 0x00E2: return true; // â
     case 0x00E4: return true; // ä (VGP5 seulement, pas VGP2 - voir p.90)
@@ -984,6 +992,7 @@ boolean Minitel::isVisualisable(unsigned long code) {
     case 0x00FC: return true; // ü (VGP5 seulement, pas VGP2 - voir p.90)
     case 0x0152: return true; // Œ
     case 0x0153: return true; // œ
+    case 0x03B2: return true; // β (VGP5 seulement, pas VGP2 - voir p.90)
     case 0x2014: return true; // — Ctrl 5 au clavier
     case 0x2190: return true; // ← Ctrl 8 au clavier
     case 0x2191: return true; // ↑
@@ -1015,6 +1024,20 @@ void Minitel::writeBytesPRO(int n) {  // Voir p.134
   }
 }
 /*--------------------------------------------------------------------*/
+
+unsigned long Minitel::identificationBytes() { // Voir p.139
+  while (!mySerial); // On attend que le port soit sur écoute.
+  unsigned long trame = 0; // 32 bits = 4 octets
+  while (!mySerial.available()>0); // Indispensable
+  if (readByte() != 0x01) return 0;  // La trame doit débuter par SOH (0x01)
+  trame = readByte();                // octet définissant le constructeur du Minitel
+  trame = (trame << 8) + readByte(); // octet définissant le type du Minitel
+  trame = (trame << 8) + readByte(); // octet définissant la version du logiciel
+  if (readByte() != 0x04) return 0;  // La trame doit se terminer par EOT (0x04)
+  return trame;
+}
+/*--------------------------------------------------------------------*/
+
 
 int Minitel::workingSpeed() {
   int bauds = -1;
