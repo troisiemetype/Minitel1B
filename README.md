@@ -6,7 +6,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-Dernière Version : 27/02/2023 à 12h58.<br>
+Dernière Version : 27/02/2023 à 13h40.<br>
 
 27/02/2023 - Correction d'un bug sur le caractère Bêta.<br>
 
