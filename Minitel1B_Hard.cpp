@@ -110,6 +110,11 @@ unsigned long Minitel::identifyDevice() { // Voir p.139
                                  // octet définissant le type du Minitel
                                  // octet définissant la version du logiciel
 
+  // Codes d'identification de l'octet de poids fort :
+  /*
+     0x43 : Telic-Alcatel
+  */
+
   // Codes d'identification de l'octet du milieu (voir p.103 du Guide STU du Minitel 2) :
   /*
      Minitel 1             : 0x62, 0x63 ou 0x72 suivant les modèles
