@@ -8,7 +8,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 Dernière Version : 27/02/2023 à 12h58.<br>
 
-27/02/2023 - Correction d'un bug sur le caractère Bêta<br>
+27/02/2023 - Correction d'un bug sur le caractère Bêta.<br>
 
 26/02/2023 - Des exemples où il est question de caractères...<br>
 Ajout d'un nouvel exemple :<br>
