@@ -214,6 +214,10 @@
 #define TO                         0x62
 #define FROM                       0x63
 
+// 6 Demandes d'identification et de position curseur (voir p.139)
+// 6.1 Demande d'identification du Minitel (voir p.139)
+#define ENQROM                     0x7B
+
 // 7 Commandes relatives au modem (voir p.139)
 #define CONNEXION                  0x68
 #define DECONNEXION                0x67
@@ -269,6 +273,9 @@ public:
   void writeWord(word w);
   void write(unsigned long code);
   byte readByte();
+  
+  // Identification du type de minitel
+  unsigned long identifyDevice();
   
   // Vitesse de la liaison série
   // A la mise sous tension du Minitel, la vitesse des échanges entre
@@ -374,6 +381,7 @@ private:
   
   // Protocole
   void writeBytesPRO(int n);  // PRO1, PRO2 ou PRO3
+  unsigned long identificationBytes();
   int workingSpeed();
   byte workingStandard(unsigned long sequence);
   byte workingMode();
