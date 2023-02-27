@@ -10,7 +10,6 @@ Dernière Version : 27/02/2023 à 17h25.<br>
 
 27/02/2023 - Correction d'un bug dans :<br>
 unsigned long identificationBytes()<br>
-Cette fonction renvoyait 0 à la place du code d'identification du Minitel.<br>
 Mise à jour de l'exemple TestCaracteresSpeciaux.ino
 
 27/02/2023 - Sur proposition de iodeo :<br>
