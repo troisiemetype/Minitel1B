@@ -112,10 +112,10 @@ unsigned long Minitel::identifyDevice() { // Voir p.139
 
   // Codes d'identification de l'octet du milieu (voir p.103 du Guide STU du Minitel 2) :
   /*
-     Minitel 1             : 0x62, 0x63 ou 0x72 suivants les modèles
+     Minitel 1             : 0x62, 0x63 ou 0x72 suivant les modèles
      Minitel 1 Couleur     : 0x73
      Minitel 1 Dialogue    : 0x72
-     Minitel 10            : 0x64 ou 0x66 suivants les modèles
+     Minitel 10            : 0x64 ou 0x66 suivant les modèles
      Minitel 1 Bistandard  : 0x75
      Minitel 10 Bistandard : 0x77
      Minitel 2             : 0x76
