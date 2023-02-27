@@ -6,7 +6,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-Dernière Version : 27/02/2023 à 12h58 (correction d'un bug).<br>
+Dernière Version : 27/02/2023 à 12h58 (correction d'un bug sur le caractère Bêta).<br>
 
 26/02/2023 - Des exemples où il est question de caractères...<br>
 Ajout d'un nouvel exemple :<br>
