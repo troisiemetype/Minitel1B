@@ -99,7 +99,7 @@ byte Minitel::readByte() {
 }
 /*--------------------------------------------------------------------*/
 
-unsigned long Minitel::identifyDevice() { // Voir p.139
+unsigned long Minitel::identifyDevice() {  // Voir p.139
   // Fonction proposée par iodeo sur GitHub en février 2023
   // Demande
   writeBytesPRO(1); // 0x1B 0x39
