@@ -1026,7 +1026,6 @@ void Minitel::writeBytesPRO(int n) {  // Voir p.134
 /*--------------------------------------------------------------------*/
 
 unsigned long Minitel::identificationBytes() {  // Voir p.138
-
   while (!mySerial);  // On attend que le port soit sur écoute.
   unsigned long trame = 0;  // 32 bits = 4 octets
   while (trame >> 24 != 0x01) {  // La trame doit débuter par SOH (0x01)
