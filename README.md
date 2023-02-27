@@ -9,7 +9,7 @@ http://543210.free.fr/TV/stum1b.pdf
 Dernière Version : 27/02/2023 à 17h25.<br>
 
 27/02/2023 - Correction d'un bug dans :<br>
-unsigned long identificationBytes()
+unsigned long identificationBytes()<br>
 qui renvoyait 0 à la place du code d'identification du Minitel.
 
 27/02/2023 - Sur proposition de iodeo :<br>
