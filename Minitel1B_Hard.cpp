@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 27 février 2023 à 18h58
+   Minitel1B_Hard - Fichier source - Version du 27 février 2023 à 21h58
    Copyright 2016-2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -80,7 +80,7 @@ void Minitel::write(unsigned long code) {
 byte Minitel::readByte() {
   byte b = mySerial.read();
   // Le bit de parité est à 0 si la somme des autres bits est paire
-  // et à 1 si elle est impaire.	
+  // et à 1 si elle est impaire.
   boolean parite = 0;
   for (int i=0; i<7; i++) {
     if (bitRead(b,i) == 1)  {
@@ -481,8 +481,8 @@ void Minitel::print(String chaine) {
       // Caractères sur 2 octets
       code = (code << 8) + (byte) chaine.charAt(i++);
       switch (code) {                        // Voir p.90 pour VGP5 ou VGP2
-                          // 0x19 => SS2 (Accès au jeu G2)
-                          // 0x0F => SI (Accès au jeu G0)
+                         // 0x19 => SS2 (Accès au jeu G2)
+                         // 0x0F => SI (Accès au jeu G0)
         case 0xC2A3: code = 0x1923; break;   // £ (VGP5 et VGP2)
         case 0xC2A7: code = 0x1927; break;   // § (VGP5 seulement)
         case 0xC2B0: code = 0x1930; break;   // ° (VGP5 et VGP2)
@@ -567,6 +567,8 @@ void Minitel::println() {
 /*--------------------------------------------------------------------*/
 
 void Minitel::printChar(char caractere) {
+  // Peut s'utiliser de 2 manières : printChar('A') ou printChar(0x41) par exemple
+  //                                 printChar("A") ne fonctionne pas
   byte charByte = getCharByte(caractere);
   if (isValidChar(charByte)) {
     writeByte(charByte);
