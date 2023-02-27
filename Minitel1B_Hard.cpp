@@ -102,8 +102,8 @@ byte Minitel::readByte() {
 unsigned long Minitel::identifyDevice() {  // Voir p.139
   // Fonction proposée par iodeo sur GitHub en février 2023
   // Demande
-  writeBytesPRO(1); // 0x1B 0x39
-  writeByte(ENQROM); // 0x7B
+  writeBytesPRO(1);  // 0x1B 0x39
+  writeByte(ENQROM);  // 0x7B
   // Réponse
   return identificationBytes();  // 3 octets
                                  // octet définissant le constructeur du Minitel
@@ -113,6 +113,7 @@ unsigned long Minitel::identifyDevice() {  // Voir p.139
   // Codes d'identification de l'octet de poids fort :
   /*
      Telic-Alcatel : 0x43
+     à compléter...
   */
 
   // Codes d'identification de l'octet du milieu (voir p.103 du Guide STU du Minitel 2) :
