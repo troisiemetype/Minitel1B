@@ -26,8 +26,8 @@ Modification des exemples :<br>
 Couleurs_3615.ino<br>
 Tweet_3615.ino<br>
 
-26/02/2023 - Sur proposition de iodeo, pour une meilleure gestion des caractères spéciaux :<br>
-Ajout de nouvelles fonctions :<br>
+26/02/2023 - Sur proposition de iodeo :<br>
+Pour une meilleure gestion des caractères spéciaux, ajout de nouvelles fonctions :<br>
 void write(unsigned long code)<br>
 String getString(unsigned long code)<br>
 boolean isVisualisable(unsigned long code)<br>
