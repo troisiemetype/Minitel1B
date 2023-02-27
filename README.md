@@ -9,7 +9,7 @@ http://543210.free.fr/TV/stum1b.pdf
 Dernière Version : 27/02/2023 à 13h40.<br>
 
 27/02/2023 - Sur proposition de iodeo :<br>
-Correction d'un bug sur le caractère Bêta.<br>
+Correction d'un bug sur le caractère Bêta => Mise à jour de l'exemple TestCaracteresSpeciaux.ino.<br>
 Ajout d'une fonction d'identification du matériel :<br>
 unsigned long identifyDevice()<br>
 
