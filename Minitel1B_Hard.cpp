@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 27 février 2023 à 17h25
+   Minitel1B_Hard - Fichier source - Version du 27 février 2023 à 18h58
    Copyright 2016-2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -1026,6 +1026,7 @@ void Minitel::writeBytesPRO(int n) {  // Voir p.134
 /*--------------------------------------------------------------------*/
 
 unsigned long Minitel::identificationBytes() {  // Voir p.138
+
   while (!mySerial);  // On attend que le port soit sur écoute.
   unsigned long trame = 0;  // 32 bits = 4 octets
   while (trame >> 24 != 0x01) {  // La trame doit débuter par SOH (0x01)
@@ -1036,10 +1037,12 @@ unsigned long Minitel::identificationBytes() {  // Voir p.138
   while (!mySerial.available()>0); // Indispensable
   if (readByte() != 0x04) return 0;  // La trame doit se terminer par EOT (0x04)
   trame = (trame << 8) >> 8;  // On élimine l'octet SOH (0x01) de la trame
-  return trame;
+  return trame;  // 3 octets
+                 // octet définissant le constructeur du Minitel
+                 // octet définissant le type du Minitel
+                 // octet définissant la version du logiciel
 }
 /*--------------------------------------------------------------------*/
-
 
 int Minitel::workingSpeed() {
   int bauds = -1;
