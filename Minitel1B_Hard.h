@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier d'en-tête - Version du 27 février 2023 à 18h58
+   Minitel1B_Hard - Fichier d'en-tête - Version du 27 février 2023 à 21h58
    Copyright 2016-2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -274,7 +274,7 @@ public:
   void write(unsigned long code);
   byte readByte();
   
-  // Identification du type de minitel
+  // Identification du type de Minitel
   unsigned long identifyDevice();
   
   // Vitesse de la liaison série
