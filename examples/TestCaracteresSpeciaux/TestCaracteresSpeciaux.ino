@@ -1,4 +1,4 @@
-// Version du 27 février 2023 à 12h58
+// Version du 28 février 2023 à 21h55
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
 
@@ -122,6 +122,7 @@ void lectureChamp(int premiereLigne, int nbLignes) {
         (touche != ENVOI)) {
       if (nbCaracteres < 40*nbLignes) {
         nbCaracteres++;
+        // texte += char(touche);
         texte += minitel.getString(touche);
       }
       if (nbCaracteres == 40*nbLignes) {
