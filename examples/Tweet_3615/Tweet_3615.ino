@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   3615 - Version du 26 février 2023 à 02h57
+   3615 - Version du 28 février 2023 à 21h55
    Copyright 2017-2023 - Eric Sérandour
    
    Documentation utilisée :
@@ -136,6 +136,7 @@ void lectureChamp(int premiereLigne, int nbLignes) {
         (touche != ENVOI)) {
       if (nbCaracteres < 40*nbLignes) {
         nbCaracteres++;
+        // texte += char(touche);
         texte += minitel.getString(touche);
       }
       if (nbCaracteres == 40*nbLignes) {
