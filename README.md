@@ -24,22 +24,22 @@ unsigned long identificationBytes()<br>
 
 26/02/2023<br>
 Des exemples où il est question de caractères...<br>
-Ajout d'un nouvel exemple :<br>
+<b>Ajout d'un nouvel exemple :</b><br>
 TestCaracteresSpeciaux.ino<br>
-Modification des exemples :<br>
+<b>Modification des exemples :</b><br>
 Couleurs_3615.ino<br>
 Tweet_3615.ino<br>
 
 26/02/2023 - Sur proposition de iodeo :<br>
 Pour une meilleure gestion des caractères spéciaux :<br>
-Ajout de nouvelles fonctions :<br>
+<b>Ajout de nouvelles fonctions :</b><br>
 void write(unsigned long code)<br>
 String getString(unsigned long code)<br>
 boolean isVisualisable(unsigned long code)<br>
-Modification de :<br>
+<b>Modification de :</b><br>
 void print(String chaine)<br>
 unsigned long getKeyCode(bool unicode = true)<br>
-Supression, car devenues inutiles, de :<br>
+<b>Supression, car devenues inutiles, de :</b><br>
 void printDiacriticChar(unsigned char caractere)<br>
 boolean isDiacritic(unsigned char caractere)<br>
 
