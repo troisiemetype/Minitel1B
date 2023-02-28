@@ -18,9 +18,8 @@ Mise à jour de l'exemple TestCaracteresSpeciaux.ino<br>
 
 27/02/2023 - Sur proposition de iodeo :<br>
 Correction d'un bug sur le caractère Bêta.<br>
-<b>Ajout de fonctions pour identifier le Minitel :</b><br>
+<b>Ajout d'une fonction pour identifier le Minitel :</b><br>
 unsigned long identifyDevice()<br>
-unsigned long identificationBytes()<br>
 
 26/02/2023<br>
 Des exemples où il est question de caractères...<br>
