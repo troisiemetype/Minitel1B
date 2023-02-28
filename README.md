@@ -6,7 +6,11 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-Dernière Version : 27/02/2023 à 21h58.<br>
+Dernière Version : 28/02/2023 à 21h55.<br>
+
+28/02/2023<br>
+La fonction write() est renommée writeCode().
+J'ai dû changer son nom car avec ce nom un problème est apparu dans l'usage de la bibliothèque Minitel1B_Soft : le Minitel se bloquait. Il s'agissait probablement d'un conflit avec la fonction write de la bibliothèque SoftwareSerial. Par souci de cohérence entre les bibliothèques Minitel1B_Hard et Minitel1B_Soft, j'ai renommé write en writeCode.
 
 27/02/2023<br>
 Correction d'un bug dans unsigned long identificationBytes()<br>
