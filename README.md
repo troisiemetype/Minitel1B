@@ -6,7 +6,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-Dernière Version : 28/02/2023 à 21h55.<br>
+<b>Dernière Version :</b> 28/02/2023 à 21h55.<br>
 
 28/02/2023<br>
 <b>La fonction write(unsigned long code) est renommée writeCode(unsigned long code).</b><br>
