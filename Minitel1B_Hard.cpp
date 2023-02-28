@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 27 février 2023 à 21h58
+   Minitel1B_Hard - Fichier source - Version du 28 février 2023 à 21h55
    Copyright 2016-2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -68,8 +68,14 @@ void Minitel::writeWord(word w) {
 }
 /*--------------------------------------------------------------------*/
 
-void Minitel::write(unsigned long code) {
+void Minitel::writeCode(unsigned long code) {
   // Fonction proposée par iodeo sur GitHub en février 2023
+  // Initialement, cette fonction se nommait write, mais j'ai dû changer
+  // son nom car avec ce nom un problème est apparu dans l'usage de la
+  // bibliothèque Minitel1B_Soft : le Minitel se bloquait. Il s'agissait
+  // probablement d'un conflit avec la fonction write de la bibliothèque
+  // SoftwareSerial. Par souci de cohérence entre les bibliothèques
+  // Minitel1B_Hard et Minitel1B_Soft, j'ai renommé write en writeCode.
   if (code > 0x00FFFFFF) writeByte((byte) (code >> 24));
   if (code > 0x0000FFFF) writeByte((byte) (code >> 16));
   if (code > 0x000000FF) writeByte((byte) (code >> 8));
@@ -540,7 +546,7 @@ void Minitel::print(String chaine) {
         default: code = 0; // supposé non-visualisable
       }
     }
-    if (code != 0) write(code);
+    if (code != 0) writeCode(code);
   }
 }
 /*--------------------------------------------------------------------*/
