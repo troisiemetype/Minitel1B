@@ -31,7 +31,7 @@ Couleurs_3615.ino<br>
 Tweet_3615.ino<br>
 
 26/02/2023 - Sur proposition de iodeo :<br>
-Pour une meilleure gestion des caractères spéciaux :<br>
+Pour une meilleure gestion des caractères spéciaux (notamment dans la console série) :<br>
 <b>Ajout de nouvelles fonctions :</b><br>
 void write(unsigned long code)<br>
 String getString(unsigned long code)<br>
