@@ -38,7 +38,7 @@ boolean isVisualisable(unsigned long code)<br>
 <b>Modification de :</b><br>
 void print(String chaine)<br>
 unsigned long getKeyCode(bool unicode = true)<br>
-<b>Supression, car devenues inutiles, de :</b><br>
+<b>Suppression, car devenues inutiles, de :</b><br>
 void printDiacriticChar(unsigned char caractere)<br>
 boolean isDiacritic(unsigned char caractere)<br>
 
