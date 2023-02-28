@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier d'en-tête - Version du 27 février 2023 à 21h58
+   Minitel1B_Hard - Fichier d'en-tête - Version du 28 février 2023 à 21h55
    Copyright 2016-2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -268,10 +268,10 @@ class Minitel
 public:
   Minitel(HardwareSerial& serial);
   
-  // Ecrire un octet ou un mot / Lire un octet
+  // Ecrire un octet, un mot ou un code de 4 octets maximum / Lire un octet
   void writeByte(byte b);
   void writeWord(word w);
-  void write(unsigned long code);
+  void writeCode(unsigned long code);  // 4 octets maximum
   byte readByte();
   
   // Identification du type de Minitel
