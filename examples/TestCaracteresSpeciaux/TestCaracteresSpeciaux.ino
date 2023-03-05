@@ -15,7 +15,7 @@ const int NB_LIGNES_EXPRESSION = 15;
 const String VIDE = ".";
 
 unsigned long touche;
-const int TAILLE_CACHE = 20;
+const int TAILLE_CACHE = 20;  // Peut être augmenté si besoin
 int cache[TAILLE_CACHE] = {0};  // Utilisé pour enregistrer le nombre d'octets des caractères spéciaux
 
 ///////////////////////////////////////////////////////////////////////////////////
