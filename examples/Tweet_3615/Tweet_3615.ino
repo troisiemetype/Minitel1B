@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   3615 - Version du Version du 5 mars 2023 à 22h43
+   3615 - Version du Version du 5 mars 2023 à 23h00
    Copyright 2017-2023 - Eric Sérandour
    
    Documentation utilisée :
@@ -96,6 +96,9 @@ void champVide(int premiereLigne, int nbLignes)
   }
   texte="";
   nbCaracteres=0;
+  for (int i=0; i<TAILLE_CACHE; i++) {
+    cache[i] = 0;
+  }
   minitel.moveCursorXY(31,24);
   minitel.print("puis ");
   minitel.attributs(INVERSION_FOND);
