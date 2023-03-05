@@ -1,4 +1,4 @@
-// Version du 5 mars 2023 à 23h00
+// Version du 5 mars 2023 à 23h20
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
 
@@ -97,7 +97,7 @@ void champVide(int premiereLigne, int nbLignes)
 ////////////////////////////////////////////////////////////////////////
 
 void correction(int nbLignes) {
-  if ((nbCaracteres > 0) && (nbCaracteres <= 40*nbLignes)) {
+  if ((nbCaracteres > 0) && (nbCaracteres <= 40*nbLignes) && cache[0] !=0) {
     if (nbCaracteres != 40*nbLignes) { minitel.moveCursorLeft(1); }
     minitel.attributs(CARACTERE_BLEU);
     minitel.print(VIDE);
