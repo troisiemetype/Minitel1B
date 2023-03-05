@@ -97,7 +97,7 @@ void champVide(int premiereLigne, int nbLignes)
 ////////////////////////////////////////////////////////////////////////
 
 void correction(int nbLignes) {
-  if ((nbCaracteres > 0) && (nbCaracteres <= 40*nbLignes) && cache[0] !=0) {
+  if ((nbCaracteres > 0) && (nbCaracteres <= 40*nbLignes)) {
     if (nbCaracteres != 40*nbLignes) { minitel.moveCursorLeft(1); }
     minitel.attributs(CARACTERE_BLEU);
     minitel.print(VIDE);
