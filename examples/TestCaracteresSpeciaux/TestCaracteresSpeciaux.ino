@@ -1,4 +1,4 @@
-// Version du 5 mars 2023 à 21h27
+// Version du 5 mars 2023 à 22h49
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
 
@@ -43,6 +43,7 @@ void setup() {
   texte = "—←↑→↓";
   minitel.println(texte);
   Serial.println(texte);
+  Serial.println();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
