@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   3615 - Version du 26 février 2023 à 02h49
+   3615 - Version du 5 mars 2023 à 22h43
    Copyright 2017-2023 - Eric Sérandour
    
    Attention : Ce programme fonctionne bien sur un ATMega 1284P.
@@ -45,6 +45,8 @@ const int NB_LIGNES_EXPRESSION = 18;
 const String VIDE = ".";
 
 unsigned long touche;
+const int TAILLE_CACHE = 20;
+int cache[TAILLE_CACHE] = {0};  // Utilisé pour enregistrer le nombre d'octets des caractères spéciaux
 
 #include <avr/pgmspace.h>
 typedef unsigned char PROGMEM prog_uchar;
@@ -123,7 +125,17 @@ void correction(int nbLignes) {
     minitel.print(VIDE);
     minitel.attributs(CARACTERE_BLANC);
     minitel.moveCursorLeft(1);
-    texte = texte.substring(0,texte.length()-1);
+    unsigned int index = texte.length()-1;
+    if (texte.charAt(index) >> 8) {  // Caractère spécial
+      texte = texte.substring(0,texte.length()-cache[0]);
+      for (int i=0; i<TAILLE_CACHE-1; i++) {
+        cache[i]=cache[i+1];
+      }
+      cache[TAILLE_CACHE-1] = 0;
+    }
+    else {
+      texte = texte.substring(0,texte.length()-1);
+    }
     nbCaracteres--;
   }
 }
@@ -148,6 +160,13 @@ void lectureChamp(int premiereLigne, int nbLignes) {
       if (nbCaracteres < 40*nbLignes) {
         nbCaracteres++;
         texte += minitel.getString(touche);
+        int nbBytes = minitel.getNbBytes (touche);
+        if (nbBytes > 1) {  // Caractère spécial
+          for (int i=TAILLE_CACHE-1; i>0; i--) {
+            cache[i]=cache[i-1];
+          }
+          cache[0] = nbBytes;
+        }
       }
       if (nbCaracteres == 40*nbLignes) {
         minitel.moveCursorXY(40,(premiereLigne-1)+nbLignes);
