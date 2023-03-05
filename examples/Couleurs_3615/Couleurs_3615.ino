@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   3615 - Version du 5 mars 2023 à 23h00
+   3615 - Version du 5 mars 2023 à 23h59
    Copyright 2017-2023 - Eric Sérandour
    
    Attention : Ce programme fonctionne bien sur un ATMega 1284P.
@@ -122,24 +122,31 @@ void champVide(int premiereLigne, int nbLignes)
 ////////////////////////////////////////////////////////////////////////
 
 void correction(int nbLignes) {
+  boolean texteCorrige = false;
   if ((nbCaracteres > 0) && (nbCaracteres <= 40*nbLignes)) {
-    if (nbCaracteres != 40*nbLignes) { minitel.moveCursorLeft(1); }
-    minitel.attributs(CARACTERE_BLEU);
-    minitel.print(VIDE);
-    minitel.attributs(CARACTERE_BLANC);
-    minitel.moveCursorLeft(1);
     unsigned int index = texte.length()-1;
     if (texte.charAt(index) >> 8) {  // Caractère spécial
-      texte = texte.substring(0,texte.length()-cache[0]);
-      for (int i=0; i<TAILLE_CACHE-1; i++) {
-        cache[i]=cache[i+1];
+      if (cache[0] != 0) {
+        texte = texte.substring(0,texte.length()-cache[0]);
+        texteCorrige = true;
+        for (int i=0; i<TAILLE_CACHE-1; i++) {
+          cache[i]=cache[i+1];
+        }
+        cache[TAILLE_CACHE-1] = 0;
       }
-      cache[TAILLE_CACHE-1] = 0;
     }
     else {
       texte = texte.substring(0,texte.length()-1);
+      texteCorrige = true;
     }
-    nbCaracteres--;
+    if (texteCorrige) {
+      nbCaracteres--;
+      if (nbCaracteres != 40*nbLignes) { minitel.moveCursorLeft(1); }
+      minitel.attributs(CARACTERE_BLEU);
+      minitel.print(VIDE);
+      minitel.attributs(CARACTERE_BLANC);
+      minitel.moveCursorLeft(1);
+    }
   }
 }
 
