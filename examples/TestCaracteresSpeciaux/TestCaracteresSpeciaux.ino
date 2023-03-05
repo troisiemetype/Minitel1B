@@ -1,4 +1,4 @@
-// Version du 28 février 2023 à 21h55
+// Version du 5 mars 2023 à 21h27
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
 
@@ -15,6 +15,8 @@ const int NB_LIGNES_EXPRESSION = 15;
 const String VIDE = ".";
 
 unsigned long touche;
+const int TAILLE_CACHE = 20;
+int cache[TAILLE_CACHE] = {0};  // Utilisé pour enregistrer le nombre d'octets des caractères spéciaux
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -97,13 +99,33 @@ void correction(int nbLignes) {
     minitel.print(VIDE);
     minitel.attributs(CARACTERE_BLANC);
     minitel.moveCursorLeft(1);
-    texte = texte.substring(0,texte.length()-1);
+    unsigned int index = texte.length()-1;
+    if (texte.charAt(index) >> 8) {  // Caractère spécial
+      texte = texte.substring(0,texte.length()-cache[0]);
+      for (int i=0; i<TAILLE_CACHE-1; i++) {
+        cache[i]=cache[i+1];
+      }
+      cache[TAILLE_CACHE-1] = 0;
+    }
+    else {
+      texte = texte.substring(0,texte.length()-1);
+    }
     nbCaracteres--;
+
+    // Affichage des informations dans la console
+    Serial.print("texte = "); Serial.println(texte);
+    Serial.print("nbCaracteres = "); Serial.println(nbCaracteres);
+    Serial.print("Cache[");Serial.print(TAILLE_CACHE);Serial.print("]={");
+    for (int i=0; i<TAILLE_CACHE; i++) {
+      Serial.print(cache[i]);
+      if (i<TAILLE_CACHE-1) Serial.print(";");
+    }
+    Serial.println("} - Nombre d'octets des caractères spéciaux");
+    Serial.println();
   }
 }
 
 ////////////////////////////////////////////////////////////////////////
-
 
 void lectureChamp(int premiereLigne, int nbLignes) {
   champVide(premiereLigne,nbLignes);
@@ -122,8 +144,31 @@ void lectureChamp(int premiereLigne, int nbLignes) {
         (touche != ENVOI)) {
       if (nbCaracteres < 40*nbLignes) {
         nbCaracteres++;
-        // texte += char(touche);
         texte += minitel.getString(touche);
+        unsigned long index = texte.length()-1;
+        int nbBytes = minitel.getNbBytes (touche);
+        if (nbBytes > 1) {  // Caractère spécial
+          for (int i=TAILLE_CACHE-1; i>0; i--) {
+            cache[i]=cache[i-1];
+          }
+          cache[0] = nbBytes;
+        }
+        // Affichage des informations dans la console
+        Serial.print("Caractère : ");Serial.println(minitel.getString(touche));
+        Serial.print(touche, HEX); Serial.println(" (Unicode)");
+        for (int i=nbBytes; i>0; i--) {
+          Serial.print((byte) texte.charAt(index-i+1), HEX);
+        }
+        Serial.print(" (UTF-8) - Nb d'octets : "); Serial.println(nbBytes);
+        Serial.print("texte = "); Serial.println(texte);
+        Serial.print("nbCaracteres = "); Serial.println(nbCaracteres);
+        Serial.print("Cache[");Serial.print(TAILLE_CACHE);Serial.print("]={");
+        for (int i=0; i<TAILLE_CACHE; i++) {
+          Serial.print(cache[i]);
+          if (i<TAILLE_CACHE-1) Serial.print(";");
+        }
+        Serial.println("} - Nombre d'octets des caractères spéciaux");
+        Serial.println();
       }
       if (nbCaracteres == 40*nbLignes) {
         minitel.moveCursorXY(40,(premiereLigne-1)+nbLignes);
@@ -144,4 +189,3 @@ void lectureChamp(int premiereLigne, int nbLignes) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-
