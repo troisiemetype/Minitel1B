@@ -9,10 +9,11 @@ http://543210.free.fr/TV/stum1b.pdf
 <b>Dernière Version :</b> 05/03/2023 à 21h27.<br>
 
 05/03/2023<br>
-Ajout d'une nouvelle fonction :<br>
+<b>Ajout d'une nouvelle fonction :</b><br>
 int getNbBytes(unsigned long code)<br>
 à utiliser en association avec String getString(unsigned long code) afin de déterminer le nombre d'octets utilisés pour un caractère codé en UTF-8.<br>
-Mise à jour de l'exemple TestCaracteresSpeciaux.ino<br>
+<b>Mise à jour de l'exemple :</b>
+TestCaracteresSpeciaux.ino<br>
 
 28/02/2023<br>
 <b>La fonction write(unsigned long code) est renommée writeCode(unsigned long code).</b><br>
