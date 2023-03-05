@@ -12,7 +12,7 @@ http://543210.free.fr/TV/stum1b.pdf
 <b>Ajout d'une nouvelle fonction :</b><br>
 int getNbBytes(unsigned long code)<br>
 à utiliser en association avec String getString(unsigned long code) afin de déterminer le nombre d'octets utilisés pour un caractère codé en UTF-8.<br>
-<b>Mise à jour des exemples :</b>
+<b>Mise à jour des exemples :</b><br>
 TestCaracteresSpeciaux.ino<br>
 Couleurs_3615.ino<br>
 Tweet_3615.ino<br>
