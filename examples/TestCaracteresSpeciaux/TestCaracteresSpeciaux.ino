@@ -208,7 +208,7 @@ void lectureChamp(int premiereLigne, int nbLignes) {
 
 /*
 
-// Version du 6 mars 2023 à 14h20
+// Version du 6 mars 2023 à 16h54
 // Alternative au programme ci-dessus (sans cache)
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
@@ -310,7 +310,7 @@ void correction(int nbLignes) {
     minitel.attributs(CARACTERE_BLANC);
     minitel.moveCursorLeft(1);
     unsigned int index = texte.length()-1;
-    if (texte.charAt(index) >> 8) {  // Caractère spécial
+    if (texte.charAt(index) >> 8 == 0xFFFFFFFF) {  // Caractère spécial
       index--;
       if (texte.charAt(index) >> 8 == 0xFFFFFFFF && texte.charAt(index-1) == 0xFFFFFFE2) index--;  // Les caractères spéciaux codés sur 3 octets commencent par 0xE2
     }
