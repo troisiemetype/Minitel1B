@@ -16,7 +16,7 @@ avec une version sans cache en commentaire à la fin du programme.
 05/03/2023<br>
 <b>Ajout d'une nouvelle fonction :</b><br>
 int getNbBytes(unsigned long code)<br>
-à utiliser en association avec String getString(unsigned long code) afin de déterminer le nombre d'octets utilisés pour un caractère codé en UTF-8.<br>
+à utiliser (si besoin) en association avec String getString(unsigned long code) afin de déterminer le nombre d'octets utilisés pour un caractère codé en UTF-8.<br>
 <b>Mise à jour des exemples :</b><br>
 TestCaracteresSpeciaux.ino<br>
 Couleurs_3615.ino<br>
