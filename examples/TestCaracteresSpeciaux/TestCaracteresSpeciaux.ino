@@ -1,4 +1,4 @@
-// Version du 5 mars 2023 à 17h14
+// Version du 5 mars 2023 à 17h23
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
 
@@ -100,7 +100,7 @@ void correction(int nbLignes) {
   boolean texteCorrige = false;
   if ((nbCaracteres > 0) && (nbCaracteres <= 40*nbLignes)) {
     unsigned int index = texte.length()-1;
-    if (texte.charAt(index) >> 8) {  // Caractère spécial
+    if (texte.charAt(index) >> 8 == 0xFFFFFFFF) {  // Caractère spécial
       if (cache[0] != 0) {
         texte = texte.substring(0,texte.length()-cache[0]);
         texteCorrige = true;
