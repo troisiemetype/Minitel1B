@@ -343,12 +343,12 @@ void lectureChamp(int premiereLigne, int nbLignes) {
       if (nbCaracteres < 40*nbLignes) {
         nbCaracteres++;
         texte += minitel.getString(touche);
-        int nbBytes = minitel.getNbBytes(touche);
-   
+        
         // Affichage des informations dans la console
         Serial.print("Caractère : "); Serial.println(minitel.getString(touche));
         Serial.print(touche, HEX); Serial.println(" (Unicode)");
         unsigned long index = texte.length()-1;
+        int nbBytes = minitel.getNbBytes(touche);
         for (int i=nbBytes; i>0; i--) {
           Serial.print((byte) texte.charAt(index-i+1), HEX);
         }
