@@ -11,7 +11,6 @@ http://543210.free.fr/TV/stum1b.pdf
 06/03/2023<br>
 <b>Mise à jour de l'exemple :</b><br>
 TestCaracteresSpeciaux.ino<br>
-avec une version sans cache en commentaire à la fin du programme.
 
 05/03/2023<br>
 <b>Ajout d'une nouvelle fonction :</b><br>
