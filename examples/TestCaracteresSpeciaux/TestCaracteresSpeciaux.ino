@@ -208,7 +208,7 @@ void lectureChamp(int premiereLigne, int nbLignes) {
 
 /*
 
-// Version du 6 mars 2023 à 08h10
+// Version du 6 mars 2023 à 14h20
 // Alternative au programme ci-dessus (sans cache)
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
