@@ -1,4 +1,4 @@
-// Version du 5 mars 2023 à 23h55
+// Version du 5 mars 2023 à 17h14
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
 
@@ -125,7 +125,7 @@ void correction(int nbLignes) {
     // Affichage des informations dans la console
     Serial.print("texte = "); Serial.println(texte);
     Serial.print("nbCaracteres = "); Serial.println(nbCaracteres);
-    Serial.print("Cache[");Serial.print(TAILLE_CACHE);Serial.print("]={");
+    Serial.print("Cache["); Serial.print(TAILLE_CACHE); Serial.print("]={");
     for (int i=0; i<TAILLE_CACHE; i++) {
       Serial.print(cache[i]);
       if (i<TAILLE_CACHE-1) Serial.print(";");
@@ -163,7 +163,7 @@ void lectureChamp(int premiereLigne, int nbLignes) {
           cache[0] = nbBytes;
         }
         // Affichage des informations dans la console
-        Serial.print("Caractère : ");Serial.println(minitel.getString(touche));
+        Serial.print("Caractère : "); Serial.println(minitel.getString(touche));
         Serial.print(touche, HEX); Serial.println(" (Unicode)");
         unsigned long index = texte.length()-1;
         for (int i=nbBytes; i>0; i--) {
@@ -172,7 +172,7 @@ void lectureChamp(int premiereLigne, int nbLignes) {
         Serial.print(" (UTF-8) - Nb d'octets : "); Serial.println(nbBytes);
         Serial.print("texte = "); Serial.println(texte);
         Serial.print("nbCaracteres = "); Serial.println(nbCaracteres);
-        Serial.print("Cache[");Serial.print(TAILLE_CACHE);Serial.print("]={");
+        Serial.print("Cache["); Serial.print(TAILLE_CACHE); Serial.print("]={");
         for (int i=0; i<TAILLE_CACHE; i++) {
           Serial.print(cache[i]);
           if (i<TAILLE_CACHE-1) Serial.print(";");
@@ -208,7 +208,7 @@ void lectureChamp(int premiereLigne, int nbLignes) {
 
 /*
 
-// Version du 6 mars 2023 à 16h54
+// Version du 6 mars 2023 à 17h14
 // Alternative au programme ci-dessus (sans cache)
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
@@ -316,11 +316,11 @@ void correction(int nbLignes) {
     }
     texte.remove(index);
     nbCaracteres--;
+    // Affichage des informations dans la console
+    Serial.print("texte = "); Serial.println(texte);
+    Serial.print("nbCaracteres = "); Serial.println(nbCaracteres);
+    Serial.println();
   }
-  // Affichage des informations dans la console
-  Serial.print("texte = "); Serial.println(texte);
-  Serial.print("nbCaracteres = "); Serial.println(nbCaracteres);
-  Serial.println();
 }
 
 ////////////////////////////////////////////////////////////////////////
