@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   3615 Couleur - Version du 6 mars 2023 à 17h59
+   3615 Couleurs - Version du 6 mars 2023 à 17h59
    Copyright 2017-2023 - Eric Sérandour
    
    Attention : Ce programme fonctionne bien sur un ATMega 1284P.
