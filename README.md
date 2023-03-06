@@ -9,8 +9,9 @@ http://543210.free.fr/TV/stum1b.pdf
 <b>Dernière Version :</b> 06/03/2023 à 17h36<br>
 
 06/03/2023<br>
-<b>Mise à jour de l'exemple :</b><br>
+<b>Mise à jour des exemples pour les rendre plus réactifs (version sans cache) :</b><br>
 TestCaracteresSpeciaux.ino<br>
+Tweet_3615.ino<br>
 
 05/03/2023<br>
 <b>Ajout d'une nouvelle fonction :</b><br>
