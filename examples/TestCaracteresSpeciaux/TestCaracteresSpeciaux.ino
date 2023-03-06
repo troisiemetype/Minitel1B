@@ -1,4 +1,4 @@
-// Version du 6 mars 2023 à 17h36
+// Version du 6 mars 2023 à 18h32
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
 
@@ -53,6 +53,7 @@ void loop() {
   // Lecture du champ expression
   lectureChamp(PREMIERE_LIGNE_EXPRESSION, NB_LIGNES_EXPRESSION);
   Serial.println(texte);
+  Serial.println();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
