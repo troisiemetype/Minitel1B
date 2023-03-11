@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Portrait - Version du 11 mars 2023 à 19h07
+   Portrait - Version du 11 mars 2023 à 20h03
    Copyright 2017-2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -45,7 +45,7 @@ Minitel minitel(Serial1);
 
 ////////////////////////////////////////////////////////////////////////
 
-#include <avr/pgmspace.h>
+// #include <avr/pgmspace.h> // Devenu inutile
 typedef unsigned char PROGMEM prog_uchar;
 // Voir https://github.com/eserandour/Conversion_Videotex_Hex
 const int LONGUEUR_TRAME_PORTRAIT = 4802;
