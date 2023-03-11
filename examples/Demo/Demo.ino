@@ -1,7 +1,8 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Démo - Version du 11 juin 2017 à 16h00
-   Copyright 2016, 2017 - Eric Sérandour
+   Minitel1B_Hard - Démo - Version du 11 mars 2023 à 19h07
+   Copyright 2016, 2023 - Eric Sérandour
+   https://entropie.org/3615/
    
    Documentation utilisée :
    Spécifications Techniques d'Utilisation du Minitel 1B
@@ -31,12 +32,18 @@
 
 ////////////////////////////////////////////////////////////////////////
 
-
-#include <Minitel1B_Hard.h>
+#include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
 // On n'utilise pas la bibliothèque SoftwareSerial.
-  
-// Minitel minitel(Serial);  // Le premier port série matériel de l'ATMega 1284P (RXD0 TXD0).
-Minitel minitel(Serial1);  // Le deuxième port série matériel de l'ATMega 1284P (RXD1 TXD1).
+
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)  // Pour ESP32
+// Le troisième port série matériel de l'ESP32 (Serial2 / U2RXD U2TXD)
+// est utilisé pour la connexion avec le Minitel.
+Minitel minitel(Serial2);
+#else  // Pour ATmega 1284P notamment
+// Le deuxième port série matériel de l'ATMega 1284P (Serial1 / RXD1 TXD1)
+// est utilisé pour la connexion avec le Minitel.
+Minitel minitel(Serial1);
+#endif
 
 int pause = 10000;
 
