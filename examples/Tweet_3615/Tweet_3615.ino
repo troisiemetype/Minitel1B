@@ -1,7 +1,8 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   3615 Tweet - Version du Version du 6 mars 2023 à 17h49
+   3615 Tweet - Version du 11 mars 2023 à 19h07
    Copyright 2017-2023 - Eric Sérandour
+   https://entropie.org/3615/
    
    Documentation utilisée :
    Spécifications Techniques d'Utilisation du Minitel 1B
@@ -23,12 +24,20 @@
    along with this program. If not, see <http://www.gnu.org/licenses/>.
    
 ////////////////////////////////////////////////////////////////////////
-  DEBUT DU PROGRAMME (Compile sous Arduino 1.6.13)
+  DEBUT DU PROGRAMME (Compile sous Arduino 1.8.19)
 *///////////////////////////////////////////////////////////////////////
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
-// Minitel minitel(Serial);  // Le premier port série matériel de l'ATMega 1284P (RXD0 TXD0).
-Minitel minitel(Serial1);    // Le deuxième port série matériel de l'ATMega 1284P (RXD1 TXD1).
+
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)  // Pour ESP32
+// Le troisième port série matériel de l'ESP32 (Serial2 / U2RXD U2TXD)
+// est utilisé pour la connexion avec le Minitel.
+Minitel minitel(Serial2);
+#else  // Pour ATmega 1284P notamment
+// Le deuxième port série matériel de l'ATMega 1284P (Serial1 / RXD1 TXD1)
+// est utilisé pour la connexion avec le Minitel.
+Minitel minitel(Serial1);
+#endif
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -113,10 +122,19 @@ void correction(int nbLignes) {
     minitel.attributs(CARACTERE_BLANC);
     minitel.moveCursorLeft(1);
     unsigned int index = texte.length()-1;
+    #if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)  // Pour ESP32
+    if (texte.charAt(index) >> 7 == 0x01) {  // Caractère spécial
+      index--;
+      // Les caractères spéciaux codés sur 3 octets commencent par 0xE2
+      if (texte.charAt(index) >> 7 == 0x01 && texte.charAt(index-1) == 0xE2) index--;
+    }
+    #else  // Pour ATmega 1284P
     if (texte.charAt(index) >> 8 == 0xFFFFFFFF) {  // Caractère spécial
       index--;
-      if (texte.charAt(index) >> 8 == 0xFFFFFFFF && texte.charAt(index-1) == 0xFFFFFFE2) index--;  // Les caractères spéciaux codés sur 3 octets commencent par 0xE2
+      // Les caractères spéciaux codés sur 3 octets commencent par 0xE2
+      if (texte.charAt(index) >> 8 == 0xFFFFFFFF && texte.charAt(index-1) == 0xFFFFFFE2) index--;
     }
+    #endif
     texte.remove(index);
     nbCaracteres--;
   }
