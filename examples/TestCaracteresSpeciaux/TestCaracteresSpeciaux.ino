@@ -1,10 +1,14 @@
-// Version du 6 mars 2023 à 18h32
+// Version du 11 mars 2023 à 17h24
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
 
 // Le deuxième port série matériel de l'ATMega 1284P (Serial1 / RXD1 TXD1)
 // est utilisé pour la connexion avec le Minitel.
 Minitel minitel(Serial1);
+
+// Le troisième port série matériel de l'ESP32 (Serial2 / U2RXD U2TXD)
+// est utilisé pour la connexion avec le Minitel.
+// Minitel minitel(Serial2);
 
 #define TITRE "TEST CARACTÈRES SPÉCIAUX"
 
@@ -100,10 +104,36 @@ void correction(int nbLignes) {
     minitel.attributs(CARACTERE_BLANC);
     minitel.moveCursorLeft(1);
     unsigned int index = texte.length()-1;
+
+    // Pour test
+    Serial.println(texte.charAt(index), HEX);
+    Serial.println(texte.charAt(index) >> 8, HEX);
+    Serial.println(texte.charAt(index) >> 7, HEX);
+    Serial.println(texte.charAt(index) >> 6, HEX);
+    
+    Serial.println(texte.charAt(index-1), HEX);
+    Serial.println(texte.charAt(index-1) >> 8, HEX);
+    Serial.println(texte.charAt(index-1) >> 7, HEX);
+    Serial.println(texte.charAt(index-1) >> 6, HEX);
+    
+    Serial.println(texte.charAt(index-2), HEX);
+    Serial.println(texte.charAt(index-2) >> 8, HEX);
+    Serial.println(texte.charAt(index-2) >> 7, HEX);
+    Serial.println(texte.charAt(index-2) >> 6, HEX);
+    //
+
+    #if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)  // Pour ESP32
+    if (texte.charAt(index) >> 7 == 0x01) {  // Caractère spécial
+      index--;
+      if (texte.charAt(index) >> 7 == 0x01 && texte.charAt(index-1) == 0xE2) index--;  // Les caractères spéciaux codés sur 3 octets commencent par 0xE2
+    }
+    #else  // Pour Atmega 328P / Atmega 1284P
     if (texte.charAt(index) >> 8 == 0xFFFFFFFF) {  // Caractère spécial
       index--;
       if (texte.charAt(index) >> 8 == 0xFFFFFFFF && texte.charAt(index-1) == 0xFFFFFFE2) index--;  // Les caractères spéciaux codés sur 3 octets commencent par 0xE2
     }
+    #endif
+    
     texte.remove(index);
     nbCaracteres--;
     // Affichage des informations dans la console
