@@ -1,7 +1,8 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Portrait - Version du 24 avril 2022 à 00h50
-   Copyright 2017-2022 - Eric Sérandour
+   Portrait - Version du 11 mars 2023 à 19h07
+   Copyright 2017-2023 - Eric Sérandour
+   https://entropie.org/3615/
    
    Attention : Ce programme fonctionne bien sur un ATMega 1284P.
    Sur un microcontrôleur qui dispose de moins de mémoire,
@@ -27,12 +28,20 @@
    along with this program. If not, see <http://www.gnu.org/licenses/>.
    
 ////////////////////////////////////////////////////////////////////////
-  DEBUT DU PROGRAMME (Compile sous Arduino 1.8.15)
+  DEBUT DU PROGRAMME (Compile sous Arduino 1.8.19)
 *///////////////////////////////////////////////////////////////////////
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
-// Minitel minitel(Serial);  // Le premier port série matériel de l'ATMega 1284P (RXD0 TXD0).
-Minitel minitel(Serial1);    // Le deuxième port série matériel de l'ATMega 1284P (RXD1 TXD1).
+
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)  // Pour ESP32
+// Le troisième port série matériel de l'ESP32 (Serial2 / U2RXD U2TXD)
+// est utilisé pour la connexion avec le Minitel.
+Minitel minitel(Serial2);
+#else  // Pour ATmega 1284P notamment
+// Le deuxième port série matériel de l'ATMega 1284P (Serial1 / RXD1 TXD1)
+// est utilisé pour la connexion avec le Minitel.
+Minitel minitel(Serial1);
+#endif
 
 ////////////////////////////////////////////////////////////////////////
 
