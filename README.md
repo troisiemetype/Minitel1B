@@ -9,7 +9,7 @@ http://543210.free.fr/TV/stum1b.pdf
 <b>Dernière Version :</b> 11/03/2023 à 20h29<br>
 
 11/03/2023<br>
-<b>Mise à jour de tous les exemples</b> pour tenir compte des différences entre ce qui concerne l'ATmega 1284P et l'ESP32. J'utilise la version 1.8.19 d'Arduino.<br>
+<b>Mise à jour de tous les exemples</b> pour tenir compte des différences entre ce qui concerne l'ATmega 1284P et l'ESP32-WROOM-32. J'utilise la version 1.8.19 d'Arduino.<br>
 
 06/03/2023<br>
 <b>Mise à jour des exemples :</b><br>
