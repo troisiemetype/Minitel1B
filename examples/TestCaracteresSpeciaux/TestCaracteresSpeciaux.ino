@@ -1,4 +1,4 @@
-// Version du 11 mars 2023 à 17h24
+// Version du 11 mars 2023 à 18h01
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
 
@@ -127,7 +127,7 @@ void correction(int nbLignes) {
       index--;
       if (texte.charAt(index) >> 7 == 0x01 && texte.charAt(index-1) == 0xE2) index--;  // Les caractères spéciaux codés sur 3 octets commencent par 0xE2
     }
-    #else  // Pour Atmega 328P / Atmega 1284P
+    #else  // Pour ATmega 1284P
     if (texte.charAt(index) >> 8 == 0xFFFFFFFF) {  // Caractère spécial
       index--;
       if (texte.charAt(index) >> 8 == 0xFFFFFFFF && texte.charAt(index-1) == 0xFFFFFFE2) index--;  // Les caractères spéciaux codés sur 3 octets commencent par 0xE2
