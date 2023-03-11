@@ -6,7 +6,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-<b>Dernière Version :</b> 11/03/2023 à 20h41<br>
+<b>Dernière Version :</b> 11/03/2023 à 21h26<br>
 
 11/03/2023<br>
 Suppression de l'exemple (car redondant) :<br>
