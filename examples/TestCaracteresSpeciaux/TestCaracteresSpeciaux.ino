@@ -1,4 +1,31 @@
-// Version du 11 mars 2023 à 18h35
+////////////////////////////////////////////////////////////////////////
+/*
+   TestCaracteresSpeciaux - Version du 11 mars 2023 à 19h07
+   Copyright 2023 - Eric Sérandour
+   https://entropie.org/3615/
+   
+   Documentation utilisée :
+   Spécifications Techniques d'Utilisation du Minitel 1B
+   http://543210.free.fr/TV/stum1b.pdf
+   
+////////////////////////////////////////////////////////////////////////
+   
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program. If not, see <http://www.gnu.org/licenses/>.
+   
+////////////////////////////////////////////////////////////////////////
+  DEBUT DU PROGRAMME (Compile sous Arduino 1.8.19)
+*///////////////////////////////////////////////////////////////////////
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
 
@@ -6,11 +33,13 @@
 // Le troisième port série matériel de l'ESP32 (Serial2 / U2RXD U2TXD)
 // est utilisé pour la connexion avec le Minitel.
 Minitel minitel(Serial2);
-#else  // Pour ATmega 1284P
+#else  // Pour ATmega 1284P notamment
 // Le deuxième port série matériel de l'ATMega 1284P (Serial1 / RXD1 TXD1)
 // est utilisé pour la connexion avec le Minitel.
 Minitel minitel(Serial1);
 #endif
+
+////////////////////////////////////////////////////////////////////////
 
 #define TITRE "TEST CARACTÈRES SPÉCIAUX"
 
@@ -22,7 +51,7 @@ const String VIDE = ".";
 
 unsigned long touche;
 
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 void setup() {  
   // Le premier port série matériel de l'ATMega 1284P (Serial / RXD0 TXD0)
@@ -50,7 +79,7 @@ void setup() {
   Serial.println();
 }
 
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 void loop() {
   // Affichage de la page
@@ -62,7 +91,7 @@ void loop() {
   Serial.println();
 }
 
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 void newPage(String titre) {
   minitel.newScreen();
@@ -127,12 +156,14 @@ void correction(int nbLignes) {
     #if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)  // Pour ESP32
     if (texte.charAt(index) >> 7 == 0x01) {  // Caractère spécial
       index--;
-      if (texte.charAt(index) >> 7 == 0x01 && texte.charAt(index-1) == 0xE2) index--;  // Les caractères spéciaux codés sur 3 octets commencent par 0xE2
+      // Les caractères spéciaux codés sur 3 octets commencent par 0xE2
+      if (texte.charAt(index) >> 7 == 0x01 && texte.charAt(index-1) == 0xE2) index--;
     }
     #else  // Pour ATmega 1284P
     if (texte.charAt(index) >> 8 == 0xFFFFFFFF) {  // Caractère spécial
       index--;
-      if (texte.charAt(index) >> 8 == 0xFFFFFFFF && texte.charAt(index-1) == 0xFFFFFFE2) index--;  // Les caractères spéciaux codés sur 3 octets commencent par 0xE2
+      // Les caractères spéciaux codés sur 3 octets commencent par 0xE2
+      if (texte.charAt(index) >> 8 == 0xFFFFFFFF && texte.charAt(index-1) == 0xFFFFFFE2) index--;
     }
     #endif
     texte.remove(index);
@@ -196,7 +227,7 @@ void lectureChamp(int premiereLigne, int nbLignes) {
   }
 }
 
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 
 
@@ -226,7 +257,7 @@ unsigned long touche;
 const int TAILLE_CACHE = 20;  // Peut être augmenté si besoin
 int cache[TAILLE_CACHE] = {0};  // Utilisé pour enregistrer le nombre d'octets des caractères spéciaux
 
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 void setup() {  
   // Le premier port série matériel de l'ATMega 1284P (Serial / RXD0 TXD0)
@@ -254,7 +285,7 @@ void setup() {
   Serial.println();
 }
 
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 void loop() {
   // Affichage de la page
@@ -265,7 +296,7 @@ void loop() {
   Serial.println(texte);
 }
 
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 void newPage(String titre) {
   minitel.newScreen();
@@ -406,6 +437,6 @@ void lectureChamp(int premiereLigne, int nbLignes) {
   }
 }
 
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 */
