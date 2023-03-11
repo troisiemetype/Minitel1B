@@ -9,8 +9,7 @@ http://543210.free.fr/TV/stum1b.pdf
 <b>Dernière Version :</b> 11/03/2023 à 21h26<br>
 
 11/03/2023<br>
-Suppression de l'exemple (car redondant) :<br>
-Couleurs_3615.ino<br>
+Suppression de l'exemple Couleurs_3615.ino (car redondant).<br>
 <b>Mise à jour de tous les autres exemples</b> pour tenir compte des différences entre ce qui concerne l'ATmega 1284P et l'ESP32-WROOM-32E. J'utilise la version 1.8.19 d'Arduino.<br>
 
 06/03/2023<br>
