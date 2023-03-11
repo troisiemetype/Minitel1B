@@ -133,7 +133,6 @@ void correction(int nbLignes) {
       if (texte.charAt(index) >> 8 == 0xFFFFFFFF && texte.charAt(index-1) == 0xFFFFFFE2) index--;  // Les caractères spéciaux codés sur 3 octets commencent par 0xE2
     }
     #endif
-    
     texte.remove(index);
     nbCaracteres--;
     // Affichage des informations dans la console
