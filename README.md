@@ -6,7 +6,10 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-<b>Dernière Version :</b> 11/03/2023 à 21h26<br>
+<b>Dernière Version :</b> 12/03/2023 à 00h35<br>
+
+12/03/2023<br>
+Correction d'un bug dans getKeyCode(bool unicode).<br>
 
 11/03/2023<br>
 Suppression de l'exemple Couleurs_3615.ino (car redondant).<br>
