@@ -1,14 +1,16 @@
-// Version du 11 mars 2023 à 18h01
+// Version du 11 mars 2023 à 18h35
 
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
 
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)  // Pour ESP32
+// Le troisième port série matériel de l'ESP32 (Serial2 / U2RXD U2TXD)
+// est utilisé pour la connexion avec le Minitel.
+Minitel minitel(Serial2);
+#else  // Pour ATmega 1284P
 // Le deuxième port série matériel de l'ATMega 1284P (Serial1 / RXD1 TXD1)
 // est utilisé pour la connexion avec le Minitel.
 Minitel minitel(Serial1);
-
-// Le troisième port série matériel de l'ESP32 (Serial2 / U2RXD U2TXD)
-// est utilisé pour la connexion avec le Minitel.
-// Minitel minitel(Serial2);
+#endif
 
 #define TITRE "TEST CARACTÈRES SPÉCIAUX"
 
