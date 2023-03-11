@@ -6,12 +6,10 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-<b>Dernière Version :</b> 11/03/2023 à 18h35<br>
+<b>Dernière Version :</b> 11/03/2023 à 19h07<br>
 
 11/03/2023<br>
-<b>Mise à jour des exemples :</b><br>
-TestCaracteresSpeciaux.ino<br>
-Pour tenir compte des différences entre l'ATmega 1284P et l'ESP32.
+<b>Mise à jour de tous les exemples pour tenir compte des différences entre l'ATmega 1284P et l'ESP32.
 
 06/03/2023<br>
 <b>Mise à jour des exemples :</b><br>
