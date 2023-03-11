@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Démo - Version du 11 mars 2023 à 19h07
+   Minitel1B_Hard - Démo - Version du 11 mars 2023 à 19h50
    Copyright 2016, 2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -45,7 +45,7 @@ Minitel minitel(Serial2);
 Minitel minitel(Serial1);
 #endif
 
-int pause = 10000;
+int attente = 10000;
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -116,7 +116,7 @@ void demoCaracteres() {
   minitel.attributs(FIN_LIGNAGE);
   minitel.moveCursorReturn(2);
     
-  delay(pause); 
+  delay(attente); 
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -152,7 +152,7 @@ void demoGraphic() {
   minitel.graphicMode();
   minitel.graphic(0b110110,30,15);
   minitel.noCursor();
-  delay(2*pause); 
+  delay(2*attente); 
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -173,7 +173,7 @@ void demoTailles() {
   minitel.println("SEULEMENT EN MODE TEXTE");  
   minitel.attributs(FIN_LIGNAGE);
   minitel.println();
-  delay(pause);  
+  delay(attente);  
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -203,7 +203,7 @@ void demoCouleurs() {
     minitel.println("CARACTERE_BLANC");
     minitel.println();
   }
-  delay(pause);
+  delay(attente);
 }
 
 ////////////////////////////////////////////////////////////////////////
