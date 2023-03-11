@@ -11,6 +11,7 @@ http://543210.free.fr/TV/stum1b.pdf
 11/03/2023<br>
 <b>Mise à jour des exemples :</b><br>
 TestCaracteresSpeciaux.ino<br>
+Pour tenir compte des différences entre l'ATmega 1284P et ESP32.
 
 06/03/2023<br>
 <b>Mise à jour des exemples :</b><br>
