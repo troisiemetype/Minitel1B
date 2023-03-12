@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   TestCaracteresSpeciaux - Version du 12 mars 2023 à 01h04
+   TestCaracteresSpeciaux - Version du 12 mars 2023 à 04h38
    Copyright 2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -192,7 +192,8 @@ void lectureChamp(int premiereLigne, int nbLignes) {
         (touche != GUIDE) &&
         (touche != CORRECTION) &&
         (touche != SUITE) &&
-        (touche != ENVOI)) {
+        (touche != ENVOI) &&
+        (touche != CR)) {
       if (nbCaracteres < 40*nbLignes) {
         nbCaracteres++;
         texte += minitel.getString(touche);
@@ -236,7 +237,7 @@ void lectureChamp(int premiereLigne, int nbLignes) {
 
 /*
 
-// Version du 11 mars 2023 à 20h41
+// Version du 12 mars 2023 à 04h38
 // Alternative au programme ci-dessus (avec cache)
 // Version moins performante (si on tape trop vite, l'Arduino ne suit pas).
 
@@ -397,7 +398,8 @@ void lectureChamp(int premiereLigne, int nbLignes) {
         (touche != GUIDE) &&
         (touche != CORRECTION) &&
         (touche != SUITE) &&
-        (touche != ENVOI)) {
+        (touche != ENVOI) &&
+        (touche != CR)) {
       if (nbCaracteres < 40*nbLignes) {
         nbCaracteres++;
         texte += minitel.getString(touche);
