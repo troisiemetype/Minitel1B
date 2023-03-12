@@ -6,7 +6,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-<b>Dernière Version :</b> 12/03/2023 à 13h34<br>
+<b>Dernière Version :</b> 12/03/2023 à 13h34 - J'utilise la version 1.8.19 d'Arduino.<br>
 
 12/03/2023<br>
 <b>Correction de deux bugs mineurs</b> dans getKeyCode(bool unicode)<br>
@@ -14,7 +14,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 11/03/2023<br>
 Suppression de l'exemple Couleurs_3615.ino (car redondant).<br>
-<b>Mise à jour de tous les autres exemples</b> pour tenir compte des différences entre ce qui concerne l'ATmega 1284P et l'ESP32-WROOM-32E. J'utilise la version 1.8.19 d'Arduino.<br>
+<b>Mise à jour de tous les autres exemples</b> pour tenir compte des différences entre ce qui concerne l'ATmega 1284P et l'ESP32-WROOM-32E.<br>
 
 06/03/2023<br>
 <b>Mise à jour des exemples :</b><br>
