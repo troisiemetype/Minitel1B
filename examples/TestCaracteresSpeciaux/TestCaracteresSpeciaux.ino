@@ -237,7 +237,7 @@ void lectureChamp(int premiereLigne, int nbLignes) {
 
 /*
 
-// Version du 12 mars 2023 à 04h38
+// Version du 12 mars 2023 à 13h34
 // Alternative au programme ci-dessus (avec cache)
 // Version moins performante (si on tape trop vite, l'Arduino ne suit pas).
 
@@ -347,7 +347,12 @@ void correction(int nbLignes) {
   boolean texteCorrige = false;
   if ((nbCaracteres > 0) && (nbCaracteres <= 40*nbLignes)) {
     unsigned int index = texte.length()-1;
+    
+    #if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)  // Pour ESP32
+    if (texte.charAt(index) >> 7 == 0x01) {  // Caractère spécial
+    #else  // Pour ATmega 1284P
     if (texte.charAt(index) >> 8 == 0xFFFFFFFF) {  // Caractère spécial
+    #endif
       if (cache[0] != 0) {
         texte = texte.substring(0,texte.length()-cache[0]);
         texteCorrige = true;
