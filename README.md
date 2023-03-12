@@ -9,7 +9,7 @@ http://543210.free.fr/TV/stum1b.pdf
 <b>Dernière Version :</b> 12/03/2023 à 13h34<br>
 
 12/03/2023<br>
-<b>Correction de deux bugs mineurs</b> dans getKeyCode(bool unicode).<br>
+<b>Correction de deux bugs mineurs</b> dans getKeyCode(bool unicode)<br>
 <b>Mise à jour de l'exemple</b> TestCaracteresSpeciaux.ino<br>
 
 11/03/2023<br>
