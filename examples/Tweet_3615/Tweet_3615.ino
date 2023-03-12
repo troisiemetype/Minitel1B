@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   3615 Tweet - Version du 11 mars 2023 à 19h07
+   3615 Tweet - Version du 12 mars 2023 à 04h49
    Copyright 2017-2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -156,7 +156,8 @@ void lectureChamp(int premiereLigne, int nbLignes) {
         (touche != GUIDE) &&
         (touche != CORRECTION) &&
         (touche != SUITE) &&
-        (touche != ENVOI)) {
+        (touche != ENVOI) &&
+        (touche != CR)) {
       if (nbCaracteres < 40*nbLignes) {
         nbCaracteres++;
         texte += minitel.getString(touche);
