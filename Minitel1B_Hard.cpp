@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   Minitel1B_Hard - Fichier source - Version du 12 mars 2023 à 00h35
+   Minitel1B_Hard - Fichier source - Version du 12 mars 2023 à 02h43
    Copyright 2016-2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -792,6 +792,14 @@ unsigned long Minitel::getKeyCode(bool unicode) {
           caractere = readByte();
           caractere = 0x19;
         }
+      }
+
+      // Pour éviter de compter un caractère lorsqu'on appuie sur les touches de fonction après avoir appuyé sur une touche avec accent ou tréma
+      if (caractere == 0x13) {  // Les touches RETOUR REPETITION GUIDE ANNULATION SOMMAIRE CORRECTION SUITE CONNEXION_FIN ont un code qui commence par 0x13
+          while (!mySerial.available()>0);  // Indispensable
+          caractere = readByte();  // Les touches de fonction sont codées sur 2 octets (0x13..)
+          caractere = 0;
+          code = 0;
       }
 
       code = (code << 8) + caractere;
