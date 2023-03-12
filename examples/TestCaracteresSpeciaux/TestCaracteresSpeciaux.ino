@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   TestCaracteresSpeciaux - Version du 11 mars 2023 à 20h41
+   TestCaracteresSpeciaux - Version du 12 mars 2023 à 01h04
    Copyright 2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -69,6 +69,7 @@ void setup() {
 
   texte = "àâäèéêëîïôöùûüçÀÂÄÈÉÊËÎÏÔÖÙÛÜÇ";
   minitel.println(texte);
+  Serial.println();
   Serial.println(texte);
   texte = "£§°±¼½¾β÷Œœ";
   minitel.println(texte);
