@@ -8,6 +8,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Dernière Version :</b> 12/03/2023 à 13h34.<br>
 J'utilise la version 1.8.19 d'Arduino pour compiler.<br>
+J'utilise un ATmega 1284P et un ESP32-WROOM-32E<br>
 
 12/03/2023<br>
 <b>Correction de deux bugs mineurs</b> dans getKeyCode(bool unicode)<br>
