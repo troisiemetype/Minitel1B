@@ -10,8 +10,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 12/03/2023<br>
 <b>Correction de deux bugs mineurs</b> dans getKeyCode(bool unicode).<br>
-<b>Mise à jour de l'exemple :</b><br>
-TestCaracteresSpeciaux.ino<br>
+<b>Mise à jour de l'exemple</b> TestCaracteresSpeciaux.ino<br>
 
 11/03/2023<br>
 Suppression de l'exemple Couleurs_3615.ino (car redondant).<br>
