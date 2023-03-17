@@ -6,7 +6,7 @@ http://543210.free.fr/TV/stum1b.pdf
 
 <b>Historique</b> :
 
-<b>Dernière Version :</b> 12/03/2023 à 13h34.<br>
+<b>Dernière Version :</b> 17/03/2023 à 14h55.<br>
 J'utilise la version 1.8.19 d'Arduino pour compiler.<br>
 Je travaille avec un ATmega 1284P, un ATmega 2560 et un ESP32-WROOM-32E.<br>
 
