@@ -15,7 +15,7 @@ Minitel minitel(Serial1);
 
 void setup() {  
   // Le premier port série matériel de l'ATMega (Serial / RXD0 TXD0)
-  // ou de l'ESP32 (Serial / U0RXD / U0TXD) est utilisé pour la connexion
+  // ou de l'ESP32 (Serial / U0RXD U0TXD) est utilisé pour la connexion
   // avec le PC.
   Serial.begin(9600);
 
