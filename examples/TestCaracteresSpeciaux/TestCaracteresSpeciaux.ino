@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-   TestCaracteresSpeciaux - Version du 12 mars 2023 à 04h38
+   TestCaracteresSpeciaux - Version du 17 mars 2023 à 14h24
    Copyright 2023 - Eric Sérandour
    https://entropie.org/3615/
    
@@ -14,12 +14,10 @@
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-
    You should have received a copy of the GNU General Public License
    along with this program. If not, see <http://www.gnu.org/licenses/>.
    
@@ -33,8 +31,8 @@
 // Le troisième port série matériel de l'ESP32 (Serial2 / U2RXD U2TXD)
 // est utilisé pour la connexion avec le Minitel.
 Minitel minitel(Serial2);
-#else  // Pour ATmega 1284P notamment
-// Le deuxième port série matériel de l'ATMega 1284P (Serial1 / RXD1 TXD1)
+#else  // Pour ATmega 1284P ou ATmega 2560 notamment
+// Le deuxième port série matériel de l'ATMega (Serial1 / RXD1 TXD1)
 // est utilisé pour la connexion avec le Minitel.
 Minitel minitel(Serial1);
 #endif
@@ -54,9 +52,19 @@ unsigned long touche;
 ////////////////////////////////////////////////////////////////////////
 
 void setup() {  
-  // Le premier port série matériel de l'ATMega 1284P (Serial / RXD0 TXD0)
-  // est utilisé pour la connexion avec le PC.
-  Serial.begin(9600);  
+  // Le premier port série matériel de l'ATMega (Serial / RXD0 TXD0)
+  // ou de l'ESP32 (Serial / U0RXD / U0TXD) est utilisé pour la connexion
+  // avec le PC.
+  Serial.begin(9600);
+
+  // Pour le cas où on utilise le shield 3615 avec une Arduino Mega 2560,
+  // on relie avec un fil les broches 8 et 19 d'un côté et 9 et 18 de l'autre.
+  // Les 2 broches 8 et 9 du shield 3615 sont dès lors respectivement reroutées
+  // vers les broches 19 (RX1) et 18 (TX1).
+  // Afin que les broches 8 et 9 de la carte Arduino ne perturbent pas
+  // ce reroutage, on les définit comme des entrées.
+  // pinMode(8,INPUT);
+  // pinMode(9,INPUT);
 
   // A la mise sous tension du Minitel, la vitesse des échanges entre
   // le Minitel et le périphérique est de 1200 bauds par défaut.
@@ -236,41 +244,43 @@ void lectureChamp(int premiereLigne, int nbLignes) {
 
 
 /*
-
-// Version du 12 mars 2023 à 13h34
+// Version du 17 mars 2023 à 14h24
 // Alternative au programme ci-dessus (avec cache)
 // Version moins performante (si on tape trop vite, l'Arduino ne suit pas).
-
 #include <Minitel1B_Hard.h>  // Voir https://github.com/eserandour/Minitel1B_Hard
-
 #if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)  // Pour ESP32
 // Le troisième port série matériel de l'ESP32 (Serial2 / U2RXD U2TXD)
 // est utilisé pour la connexion avec le Minitel.
 Minitel minitel(Serial2);
-#else  // Pour ATmega 1284P notamment
-// Le deuxième port série matériel de l'ATMega 1284P (Serial1 / RXD1 TXD1)
+#else  // Pour ATmega 1284P ou ATmega 2560 notamment
+// Le deuxième port série matériel de l'ATMega (Serial1 / RXD1 TXD1)
 // est utilisé pour la connexion avec le Minitel.
 Minitel minitel(Serial1);
 #endif
-
 #define TITRE "TEST CARACTÈRES SPÉCIAUX"
-
 String texte="";
 int nbCaracteres=0;
 const int PREMIERE_LIGNE_EXPRESSION = 7;
 const int NB_LIGNES_EXPRESSION = 15;
 const String VIDE = ".";
-
 unsigned long touche;
 const int TAILLE_CACHE = 20;  // Peut être augmenté si besoin
 int cache[TAILLE_CACHE] = {0};  // Utilisé pour enregistrer le nombre d'octets des caractères spéciaux
-
 ////////////////////////////////////////////////////////////////////////
-
 void setup() {  
-  // Le premier port série matériel de l'ATMega 1284P (Serial / RXD0 TXD0)
-  // est utilisé pour la connexion avec le PC.
-  Serial.begin(9600);  
+  // Le premier port série matériel de l'ATMega (Serial / RXD0 TXD0)
+  // ou de l'ESP32 (Serial / U0RXD / U0TXD) est utilisé pour la connexion
+  // avec le PC.
+  Serial.begin(9600);
+
+  // Pour le cas où on utilise le shield 3615 avec une Arduino Mega 2560,
+  // on relie avec un fil les broches 8 et 19 d'un côté et 9 et 18 de l'autre.
+  // Les 2 broches 8 et 9 du shield 3615 sont dès lors respectivement reroutées
+  // vers les broches 19 (RX1) et 18 (TX1).
+  // Afin que les broches 8 et 9 de la carte Arduino ne perturbent pas
+  // ce reroutage, on les définit comme des entrées.
+  // pinMode(8,INPUT);
+  // pinMode(9,INPUT);
 
   // A la mise sous tension du Minitel, la vitesse des échanges entre
   // le Minitel et le périphérique est de 1200 bauds par défaut.
@@ -280,7 +290,6 @@ void setup() {
   
   // Affichage de la page
   newPage(TITRE);  
-
   texte = "àâäèéêëîïôöùûüçÀÂÄÈÉÊËÎÏÔÖÙÛÜÇ";
   minitel.println(texte);
   Serial.println(texte);
@@ -292,9 +301,7 @@ void setup() {
   Serial.println(texte);
   Serial.println();
 }
-
 ////////////////////////////////////////////////////////////////////////
-
 void loop() {
   // Affichage de la page
   //newPage(TITRE);
@@ -303,9 +310,7 @@ void loop() {
   lectureChamp(PREMIERE_LIGNE_EXPRESSION, NB_LIGNES_EXPRESSION);
   Serial.println(texte);
 }
-
 ////////////////////////////////////////////////////////////////////////
-
 void newPage(String titre) {
   minitel.newScreen();
   minitel.println(titre);
@@ -313,9 +318,7 @@ void newPage(String titre) {
     minitel.writeByte(0x7E);
   }
 }
-
 ////////////////////////////////////////////////////////////////////////
-
 void champVide(int premiereLigne, int nbLignes)
 {
   minitel.noCursor();
@@ -340,9 +343,7 @@ void champVide(int premiereLigne, int nbLignes)
   minitel.moveCursorDown(premiereLigne-1);
   minitel.cursor();
 }
-
 ////////////////////////////////////////////////////////////////////////
-
 void correction(int nbLignes) {
   boolean texteCorrige = false;
   if ((nbCaracteres > 0) && (nbCaracteres <= 40*nbLignes)) {
@@ -386,9 +387,7 @@ void correction(int nbLignes) {
     Serial.println();
   }
 }
-
 ////////////////////////////////////////////////////////////////////////
-
 void lectureChamp(int premiereLigne, int nbLignes) {
   champVide(premiereLigne,nbLignes);
   boolean fin = false;
@@ -450,7 +449,5 @@ void lectureChamp(int premiereLigne, int nbLignes) {
     }    
   }
 }
-
 ////////////////////////////////////////////////////////////////////////
-
 */
