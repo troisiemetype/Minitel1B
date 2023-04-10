@@ -9,7 +9,7 @@ http://543210.free.fr/TV/stum1b.pdf
 <b>Dernière Version :</b> 17/03/2023 à 14h55.<br>
 J'utilise la version 1.8.19 d'Arduino pour compiler.<br>
 Je travaille avec un ATmega 1284P, un ATmega 2560 et un ESP32-WROOM-32E.<br>
-Avec la carte Arduino Mega (ATmega 2560), j'utilise le <a href="https://entropie.org/3615/index.php/hardware-2017/" target="_blank">shield 3615</a>.
+Avec la carte Arduino Mega (ATmega 2560), j'utilise le <a href="https://entropie.org/3615/index.php/hardware-2023/" target="_blank">shield 3615</a> (version 2023).
 
 12/03/2023<br>
 <b>Correction de deux bugs mineurs</b> dans getKeyCode(bool unicode)<br>
