@@ -11,6 +11,8 @@ Minitel minitel(Serial2);
 Minitel minitel(Serial1);
 #endif
 
+uint8_t counter = 0;
+
 ////////////////////////////////////////////////////////////////////////
 
 void setup() {  
@@ -18,6 +20,8 @@ void setup() {
   // ou de l'ESP32 (Serial / U0RXD U0TXD) est utilisé pour la connexion
   // avec le PC.
   Serial.begin(9600);
+
+//  Serial2.begin(1200, SERIAL_7N1, 16, 17);
 
   // Pour le cas où on utilise le shield 3615 avec une Arduino Mega 2560,
   // on relie avec un fil les broches 8 et 19 d'un côté et 9 et 18 de l'autre.
@@ -31,15 +35,32 @@ void setup() {
   // A la mise sous tension du Minitel, la vitesse des échanges entre
   // le Minitel et le périphérique est de 1200 bauds par défaut.
   // On envisage cependant le cas où le Minitel se trouve dans un autre état.
-  minitel.changeSpeed(minitel.searchSpeed());
+//  minitel.changeSpeed(minitel.searchSpeed());
   
   minitel.newScreen();
+/*
+  minitel.print('à'); minitel.println();
+  minitel.print('é'); minitel.println();
+  minitel.print('è'); minitel.println();
+  minitel.print('ë'); minitel.println();
+  minitel.print('ê'); minitel.println();
+  minitel.print('ï'); minitel.println();
+  minitel.print('î'); minitel.println();
+  minitel.print('ô'); minitel.println();
+*/
 }
 
 ////////////////////////////////////////////////////////////////////////
 
 void loop() {
-  minitel.print("Hello World ! ");
+//  minitel.print("Hello World ! ");
+/*
+  minitel.print("compteur : ");
+  minitel.print(counter++);
+  minitel.println();
+
+  delay(250);
+*/
 }
 
 ////////////////////////////////////////////////////////////////////////

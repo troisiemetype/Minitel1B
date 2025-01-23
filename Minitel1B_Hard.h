@@ -263,7 +263,7 @@
 
 ////////////////////////////////////////////////////////////////////////
 
-class Minitel
+class Minitel : public Stream
 {
 public:
   Minitel(HardwareSerial& serial);
@@ -273,6 +273,12 @@ public:
   void writeWord(word w);
   void writeCode(unsigned long code);  // 4 octets maximum
   byte readByte();
+
+  // methods that are pure virtual into the Stream class.
+  size_t write(uint8_t);
+  int available();
+  int read();
+  int peek();
   
   // Identification du type de Minitel
   unsigned long identifyDevice();
@@ -338,9 +344,8 @@ public:
 
   // Contenu
   void attributs(byte attribut);
-  void print(String chaine);  // UTF-8 => Codes Minitel
-  void println(String chaine);
-  void println();
+//  void print(String chaine);  // UTF-8 => Codes Minitel
+  size_t println();
   void printChar(char caractere);  // Caractère du jeu G0 exceptés ceux codés 0x60, 0x7E, 0x7F.
   // void printDiacriticChar(unsigned char caractere);  // Caractère avec accent, tréma ou cédille.  // Obsolète depuis le 26/02/2023
   void printSpecialChar(byte b);  // Caractère du jeu G2. Voir plus haut, au niveau de 1.2.3, les constantes possibles.
