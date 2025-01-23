@@ -180,8 +180,11 @@ int Minitel::changeSpeed(int bauds) {  // Voir p.141
 	mySerial.flush(false); // Patch pour Arduino-ESP32 core v1.0.6 https://github.com/espressif/arduino-esp32
 	#endif
 	mySerial.end();
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_RP2040)
 	mySerial.begin(bauds, SERIAL_7E1, rx_pin, tx_pin);
-//  mySerial.begin(bauds);
+#elif
+	mySerial.begin(bauds, SERIAL_7E1);
+#endif
 	// Acquittement
 	return workingSpeed();  // En bauds (voir section Private ci-dessous)
 }
@@ -202,8 +205,11 @@ int Minitel::searchSpeed() {
 	int speed;
 	do {
 //    mySerial.begin(SPEED[i]);
-//		mySerial.end();
-		mySerial.begin(SPEED[i], SERIAL_7E1, rx_pin, tx_pin);
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_RP2040)
+	mySerial.begin(SPEED[i], SERIAL_7E1, rx_pin, tx_pin);
+#elif
+	mySerial.begin(SPEED[i], SERIAL_7E1);
+#endif
 		if (i++ > 3) { i = 0; }
 		speed = currentSpeed();
 	} while (speed < 0);
