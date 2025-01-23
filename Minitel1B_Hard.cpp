@@ -37,9 +37,24 @@
 ////////////////////////////////////////////////////////////////////////
 
 Minitel::Minitel(HardwareSerial& serial) : mySerial(serial) {
+  if(mySerial == Serial){
+    rx_pin = RX;
+    tx_pin = TX;
+  }
+
   // A la mise sous tension du Minitel, la vitesse des échanges entre
   // le Minitel et le périphérique est de 1200 bauds par défaut.
-  mySerial.begin(1200);
+  mySerial.begin(1200, SERIAL_7N1, rx_pin, tx_pin);
+}
+
+
+Minitel::Minitel(HardwareSerial& serial, uint8_t rx, uint8_t tx) : mySerial(serial){
+
+  mySerial = serial;
+  rx_pin = rx;
+  tx_pin = tx;
+
+  mySerial.begin(1200, SERIAL_7N1, rx_pin, tx_pin);
 }
 /*--------------------------------------------------------------------*/
 
@@ -153,7 +168,8 @@ int Minitel::changeSpeed(int bauds) {  // Voir p.141
   mySerial.flush(false); // Patch pour Arduino-ESP32 core v1.0.6 https://github.com/espressif/arduino-esp32
   #endif
   mySerial.end();
-  mySerial.begin(bauds);
+  mySerial.begin(bauds, SERIAL_8N1, rx_pin, tx_pin);
+//  mySerial.begin(bauds);
   // Acquittement
   return workingSpeed();  // En bauds (voir section Private ci-dessous)
 }
@@ -173,7 +189,8 @@ int Minitel::searchSpeed() {
   int i = 0;
   int speed;
   do {
-    mySerial.begin(SPEED[i]);
+//    mySerial.begin(SPEED[i]);
+    mySerial.begin(SPEED[i], SERIAL_8N1, rx_pin, tx_pin);
     if (i++ > 3) { i = 0; }
     speed = currentSpeed();
   } while (speed < 0);

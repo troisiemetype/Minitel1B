@@ -267,6 +267,7 @@ class Minitel
 {
 public:
   Minitel(HardwareSerial& serial);
+  Minitel(HardwareSerial& serial, uint8_t, uint8_t);
   
   // Ecrire un octet, un mot ou un code de 4 octets maximum / Lire un octet
   void writeByte(byte b);
@@ -373,6 +374,9 @@ public:
   
 private: 
   HardwareSerial& mySerial; 
+
+  uint8_t rx_pin;
+  uint8_t tx_pin;
   
   byte currentSize = GRANDEUR_NORMALE;
   boolean isValidChar(byte index);
