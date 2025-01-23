@@ -37,18 +37,12 @@
 ////////////////////////////////////////////////////////////////////////
 
 Minitel::Minitel(HardwareSerial& serial) : mySerial(serial) {
-/*
-	if(mySerial == Serial){
-		rx_pin = RX;
-		tx_pin = TX;
-	}
-*/
 	// A la mise sous tension du Minitel, la vitesse des échanges entre
 	// le Minitel et le périphérique est de 1200 bauds par défaut.
-	mySerial.begin(1200, SERIAL_7E1, rx_pin, tx_pin);
+	mySerial.begin(1200, SERIAL_7E1);
 }
 
-
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)  // Pour ESP32
 Minitel::Minitel(HardwareSerial& serial, uint8_t rx, uint8_t tx) : mySerial(serial){
 
 	rx_pin = rx;
@@ -56,6 +50,18 @@ Minitel::Minitel(HardwareSerial& serial, uint8_t rx, uint8_t tx) : mySerial(seri
 
 	mySerial.begin(1200, SERIAL_7E1, rx_pin, tx_pin);
 }
+#elif defined(ARDUINO_ARCH_RP2040)
+Minitel::Minitel(HardwareSerial& serial, uint8_t rx, uint8_t tx) : mySerial(serial){
+
+	rx_pin = rx;
+	tx_pin = tx;
+
+	mySerial.setRX(rx_pin);
+	mySerial.setTX(tx_pin);
+
+	mySerial.begin(1200, SERIAL_7E1);
+}
+#endif
 
 
 void Minitel::writeByte(byte b) {
