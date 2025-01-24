@@ -257,9 +257,22 @@
 class Minitel
 {
 public:
+
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
+
 	Minitel(HardwareSerial& serial);
-#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_RP2040)
 	Minitel(HardwareSerial& serial, uint8_t, uint8_t);
+
+#elif defined(ARDUINO_ARCH_RP2040)
+	// RP2040 overloads the HardwareSerial class, which is onlu used for Serial (i.e. USB)
+	// Both UART use the SerialUART class.
+	Minitel(SerialUART& serial);
+	Minitel(SerialUART& serial, uint8_t, uint8_t);	
+
+#else
+
+	Minitel(HardwareSerial& serial);
+
 #endif
 	
 	// Ecrire un octet, un mot ou un code de 4 octets maximum / Lire un octet
@@ -365,8 +378,12 @@ public:
 	byte connexion(boolean commande);
 	byte reset();
 	
-private: 
+private:
+#if defined(ARDUINO_ARCH_RP2040)
+	SerialUART& mySerial;
+#else
 	HardwareSerial& mySerial; 
+#endif
 
 	uint8_t rx_pin;
 	uint8_t tx_pin;

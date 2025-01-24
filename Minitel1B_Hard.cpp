@@ -36,13 +36,14 @@
 */
 ////////////////////////////////////////////////////////////////////////
 
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)  // Pour ESP32
+
 Minitel::Minitel(HardwareSerial& serial) : mySerial(serial) {
 	// A la mise sous tension du Minitel, la vitesse des échanges entre
 	// le Minitel et le périphérique est de 1200 bauds par défaut.
 	mySerial.begin(1200, SERIAL_7E1);
 }
 
-#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)  // Pour ESP32
 Minitel::Minitel(HardwareSerial& serial, uint8_t rx, uint8_t tx) : mySerial(serial){
 
 	rx_pin = rx;
@@ -50,8 +51,16 @@ Minitel::Minitel(HardwareSerial& serial, uint8_t rx, uint8_t tx) : mySerial(seri
 
 	mySerial.begin(1200, SERIAL_7E1, rx_pin, tx_pin);
 }
+
 #elif defined(ARDUINO_ARCH_RP2040)
-Minitel::Minitel(HardwareSerial& serial, uint8_t rx, uint8_t tx) : mySerial(serial){
+
+Minitel::Minitel(SerialUART& serial) : mySerial(serial) {
+	// A la mise sous tension du Minitel, la vitesse des échanges entre
+	// le Minitel et le périphérique est de 1200 bauds par défaut.
+	mySerial.begin(1200, SERIAL_7E1);
+}
+
+Minitel::Minitel(SerialUART& serial, uint8_t rx, uint8_t tx) : mySerial(serial){
 
 	rx_pin = rx;
 	tx_pin = tx;
@@ -61,6 +70,15 @@ Minitel::Minitel(HardwareSerial& serial, uint8_t rx, uint8_t tx) : mySerial(seri
 
 	mySerial.begin(1200, SERIAL_7E1);
 }
+
+#else
+
+Minitel::Minitel(HardwareSerial& serial) : mySerial(serial) {
+	// A la mise sous tension du Minitel, la vitesse des échanges entre
+	// le Minitel et le périphérique est de 1200 bauds par défaut.
+	mySerial.begin(1200, SERIAL_7E1);
+}
+
 #endif
 
 
@@ -180,9 +198,9 @@ int Minitel::changeSpeed(int bauds) {  // Voir p.141
 	mySerial.flush(false); // Patch pour Arduino-ESP32 core v1.0.6 https://github.com/espressif/arduino-esp32
 	#endif
 	mySerial.end();
-#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_RP2040)
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
 	mySerial.begin(bauds, SERIAL_7E1, rx_pin, tx_pin);
-#elif
+#else
 	mySerial.begin(bauds, SERIAL_7E1);
 #endif
 	// Acquittement
@@ -205,9 +223,9 @@ int Minitel::searchSpeed() {
 	int speed;
 	do {
 //    mySerial.begin(SPEED[i]);
-#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_RP2040)
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
 	mySerial.begin(SPEED[i], SERIAL_7E1, rx_pin, tx_pin);
-#elif
+#else
 	mySerial.begin(SPEED[i], SERIAL_7E1);
 #endif
 		if (i++ > 3) { i = 0; }
