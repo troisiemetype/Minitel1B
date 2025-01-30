@@ -53,14 +53,17 @@ void setup() {
 ////////////////////////////////////////////////////////////////////////
 
 void loop() {
-//  minitel.print("Hello World ! ");
+  minitel.print("Hello World ! ");
 /*
   minitel.print("compteur : ");
   minitel.print(counter++);
   minitel.println();
-
-  delay(250);
 */
+//  minitel.printf("compteur : %i\n\r", counter++);
+
+//  delay(100);
+
+
 }
 
 ////////////////////////////////////////////////////////////////////////

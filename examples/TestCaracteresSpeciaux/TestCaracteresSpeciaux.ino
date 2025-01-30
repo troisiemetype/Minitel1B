@@ -106,7 +106,7 @@ void newPage(String titre) {
   minitel.newScreen();
   minitel.println(titre);
   for (int i=1; i<=40; i++) {
-    minitel.writeByte(0x7E);
+    minitel.write(0x7E);
   }
 }
 
@@ -315,7 +315,7 @@ void newPage(String titre) {
   minitel.newScreen();
   minitel.println(titre);
   for (int i=1; i<=40; i++) {
-    minitel.writeByte(0x7E);
+    minitel.write(0x7E);
   }
 }
 ////////////////////////////////////////////////////////////////////////
