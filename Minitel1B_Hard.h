@@ -351,13 +351,14 @@ public:
 
 	// Contenu
 	void attributs(byte attribut);
-	void print(String chaine);  // UTF-8 => Codes Minitel
-	void println(String chaine);
-	void println();
+
+	using Stream::println;
+
+	size_t println();
+
 	void printChar(char caractere);  // Caractère du jeu G0 exceptés ceux codés 0x60, 0x7E, 0x7F.
-	// void printDiacriticChar(unsigned char caractere);  // Caractère avec accent, tréma ou cédille.  // Obsolète depuis le 26/02/2023
 	void printSpecialChar(byte b);  // Caractère du jeu G2. Voir plus haut, au niveau de 1.2.3, les constantes possibles.
-	byte getCharByte(char caractere);
+//	byte getCharByte(char caractere);
 	String getString(unsigned long code);  // Unicode => UTF-8
 	int getNbBytes(unsigned long code);  // À utiliser en association avec getString(unsigned long code) juste ci-dessus.
 	void graphic(byte b, int x, int y);  // Jeu G1. Voir page 101. Sous la forme 0b000000 à 0b111111 en allant du coin supérieur gauche au coin inférieur droit. En colonne x et rangée y.

@@ -250,7 +250,7 @@ int Minitel::searchSpeed() {
 		if (i++ > 3) i = 0;
 		speed = currentSpeed();
 	} while (speed < 0);
-	
+
 	return speed;  // En bauds
 }
 
@@ -626,69 +626,23 @@ size_t Minitel::println() {
 	return 2;
 }
 
-void Minitel::printChar(char caractere) {
+void Minitel::printChar(char charByte) {
 	// Peut s'utiliser de 2 manières : printChar('A') ou printChar(0x41) par exemple
 	//                                 printChar("A") ne fonctionne pas
-	byte charByte = getCharByte(caractere);
+//	byte charByte = getCharByte(caractere);
 	if (isValidChar(charByte)) {
 		writeByte(charByte);
 	}
 }
 
-/*
-void Minitel::printDiacriticChar(unsigned char caractere) {  // Obsolète depuis le 26/02/2023
-	writeByte(SS2);  // Accès au jeu G2 (voir p.103)
-	String diacritics = "àâäèéêëîïôöùûüçÀÂÄÈÉÊËÎÏÔÖÙÛÜÇ";
-	// Dans une chaine de caractères, un caractère diacritique prend la
-	// place de 2 caractères simples, ce qui explique le /2.
-	int index = (diacritics.indexOf(caractere)-1)/2;
-	char car;
-	switch (index) {
-		case( 0): car = 'a'; writeByte(ACCENT_GRAVE); break;
-		case( 1): car = 'a'; writeByte(ACCENT_CIRCONFLEXE); break;
-		case( 2): car = 'a'; writeByte(TREMA); break;
-		case( 3): car = 'e'; writeByte(ACCENT_GRAVE); break;
-		case( 4): car = 'e'; writeByte(ACCENT_AIGU); break;
-		case( 5): car = 'e'; writeByte(ACCENT_CIRCONFLEXE); break;
-		case( 6): car = 'e'; writeByte(TREMA); break;
-		case( 7): car = 'i'; writeByte(ACCENT_CIRCONFLEXE); break;
-		case( 8): car = 'i'; writeByte(TREMA); break;
-		case( 9): car = 'o'; writeByte(ACCENT_CIRCONFLEXE); break;
-		case(10): car = 'o'; writeByte(TREMA); break;
-		case(11): car = 'u'; writeByte(ACCENT_GRAVE); break;
-		case(12): car = 'u'; writeByte(ACCENT_CIRCONFLEXE); break;      
-		case(13): car = 'u'; writeByte(TREMA); break;
-		case(14): car = 'c'; writeByte(CEDILLE); break;
-		// Pour les cas où on essaye d'afficher un caractère diacritique majuscule,
-		// ce que ne peut pas faire le Minitel.
-		case(15): car = 'A'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(16): car = 'A'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(17): car = 'A'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(18): car = 'E'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(19): car = 'E'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(20): car = 'E'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(21): car = 'E'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(22): car = 'I'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(23): car = 'I'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(24): car = 'O'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(25): car = 'O'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(26): car = 'U'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(27): car = 'U'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(28): car = 'U'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-		case(29): car = 'C'; writeByte(SI); break; // Accès au jeu G0 (voir p.100)
-	}
-	printChar(car);
-}
-*/
-
-
 void Minitel::printSpecialChar(byte b) {
-	// N'est pas fonctionnelle pour les diacritiques (accents, tréma et cédille)
+	// N'est pas fonctionnel pour les diacritiques (accents, tréma et cédille)
 	writeByte(SS2);  // Accès au jeu G2 (voir p.103)
 	writeByte(b);
 }
 
-// G0 set follow the standard ASCII alphabet.
+/*
+// G0 set follow the standard ASCII alphabet, which makes this function useless.
 byte Minitel::getCharByte(char caractere) {
 	// Voir les codes et séquences émis en mode Vidéotex (Jeu G0 p.100).
 	// Dans la chaine ci-dessous, on utilise l'échappement (\) :
@@ -697,7 +651,7 @@ byte Minitel::getCharByte(char caractere) {
 	String caracteres = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_xabcdefghijklmnopqrstuvwxyz{|}";
 	return (byte) caracteres.lastIndexOf(caractere);
 }
-
+*/
 
 String Minitel::getString(unsigned long code) {
 	// Fonction proposée par iodeo sur GitHub en février 2023
