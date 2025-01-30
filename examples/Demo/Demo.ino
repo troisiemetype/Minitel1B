@@ -45,45 +45,13 @@ Minitel minitel(Serial2, 16, 17);
 Minitel minitel(Serial1);
 #endif
 
-int attente = 10000;
-
-////////////////////////////////////////////////////////////////////////
-
-void setup() {
-  // Le premier port série matériel de l'ATMega (Serial / RXD0 TXD0)
-  // ou de l'ESP32 (Serial / U0RXD U0TXD) est utilisé pour la connexion
-  // avec le PC.
-  Serial.begin(9600);
-
-  // Pour le cas où on utilise le shield 3615 avec une Arduino Mega 2560,
-  // on relie avec un fil les broches 8 et 19 d'un côté et 9 et 18 de l'autre.
-  // Les 2 broches 8 et 9 du shield 3615 sont dès lors respectivement reroutées
-  // vers les broches 19 (RX1) et 18 (TX1).
-  // Afin que les broches 8 et 9 de la carte Arduino ne perturbent pas
-  // ce reroutage, on les définit comme des entrées.
-  // pinMode(8,INPUT);
-  // pinMode(9,INPUT);
-
-  minitel.changeSpeed(minitel.searchSpeed());
-}
-
-////////////////////////////////////////////////////////////////////////
-
-void loop() {
-  demoCaracteres();
-  demoGraphic();
-  demoTailles();
-  demoCouleurs();
-  demoCurseur();
-}
-
-////////////////////////////////////////////////////////////////////////
+int attente = 5000;
 
 void newPage(String titre) {
   minitel.newScreen();
   minitel.println(titre);
   for (int i=1; i<=40; i++) {
-    minitel.writeByte(0x7E);
+    minitel.write(0x7E);
   }
   minitel.moveCursorReturn(1); 
 }
@@ -97,14 +65,14 @@ void demoCaracteres() {
   
   minitel.println("MODE TEXTE SANS LIGNAGE :");
   for (int i=0x20; i<=0x7F; i++) {
-    minitel.writeByte(i);
+    minitel.write(i);
   }
   minitel.moveCursorReturn(2);
   
   minitel.println("MODE TEXTE AVEC LIGNAGE :");
   minitel.attributs(DEBUT_LIGNAGE);  // En mode texte, le lignage est déclenché par le premier espace rencontré (0x20).
   for (int i=0x20; i<=0x7F; i++) {   
-    minitel.writeByte(i);   
+    minitel.write(i);   
   }
   minitel.attributs(FIN_LIGNAGE);
   minitel.moveCursorReturn(2);  
@@ -115,7 +83,7 @@ void demoCaracteres() {
   minitel.println("MODE SEMI-GRAPHIQUE SANS LIGNAGE :");
   minitel.graphicMode();  
   for (int i=0x20; i<=0x7F; i++) {
-    minitel.writeByte(i);
+    minitel.write(i);
   }
   minitel.moveCursorReturn(2);
   
@@ -124,7 +92,7 @@ void demoCaracteres() {
   minitel.graphicMode();
   minitel.attributs(DEBUT_LIGNAGE);
   for (int i=0x20; i<=0x7F; i++) {
-    minitel.writeByte(i);
+    minitel.write(i);
   }
   minitel.attributs(FIN_LIGNAGE);
   minitel.moveCursorReturn(2);
@@ -141,12 +109,12 @@ void demoGraphic() {
   minitel.println();
   minitel.graphicMode();
   minitel.attributs(DEBUT_LIGNAGE);
-  minitel.writeByte(0x7F);
+  minitel.write(0x7F);
   minitel.attributs(FIN_LIGNAGE);
   minitel.textMode();
   minitel.print(" avec lignage ou ");
   minitel.graphicMode();
-  minitel.writeByte(0x7F);
+  minitel.write(0x7F);
   minitel.textMode();
   minitel.println(" sans lignage.");
   minitel.println();
@@ -238,7 +206,7 @@ void demoCurseur() {
   minitel.textMode();
   for (int i=1; i<1000; i++) {
     minitel.moveCursorXY(1+random(40),3+random(22));
-    minitel.writeByte(0x20 + random(0x60));
+    minitel.write(0x20 + random(0x60));
   }
   
   minitel.newScreen();
@@ -251,9 +219,40 @@ void demoCurseur() {
       minitel.attributs(DEBUT_LIGNAGE);
     }
     minitel.attributs(0x4C+random(5));
-    minitel.writeByte(0x20 + random(0x60));
+    minitel.write(0x20 + random(0x60));
     minitel.attributs(FIN_LIGNAGE);
   }
+}
+
+
+////////////////////////////////////////////////////////////////////////
+
+void setup() {
+  // Le premier port série matériel de l'ATMega (Serial / RXD0 TXD0)
+  // ou de l'ESP32 (Serial / U0RXD U0TXD) est utilisé pour la connexion
+  // avec le PC.
+  Serial.begin(9600);
+
+  // Pour le cas où on utilise le shield 3615 avec une Arduino Mega 2560,
+  // on relie avec un fil les broches 8 et 19 d'un côté et 9 et 18 de l'autre.
+  // Les 2 broches 8 et 9 du shield 3615 sont dès lors respectivement reroutées
+  // vers les broches 19 (RX1) et 18 (TX1).
+  // Afin que les broches 8 et 9 de la carte Arduino ne perturbent pas
+  // ce reroutage, on les définit comme des entrées.
+  // pinMode(8,INPUT);
+  // pinMode(9,INPUT);
+
+  minitel.changeSpeed(minitel.searchSpeed());
+}
+
+////////////////////////////////////////////////////////////////////////
+
+void loop() {
+  demoCaracteres();
+  demoGraphic();
+  demoTailles();
+  demoCouleurs();
+  demoCurseur();
 }
 
 ////////////////////////////////////////////////////////////////////////

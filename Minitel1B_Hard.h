@@ -276,16 +276,17 @@ public:
 #endif
 
 	// Ecrire un octet, un mot ou un code de 4 octets maximum / Lire un octet
-	void writeByte(byte b);
-	void writeWord(word w);
-	void writeCode(unsigned long code);  // 4 octets maximum
-	byte readByte();
+	size_t writeWord(word w);
+	size_t writeCode(unsigned long code);  // 4 octets maximum
 
 	// methods that are pure virtual into the Stream class.
 	size_t write(uint8_t);
 	int available();
 	int read();
 	int peek();
+
+//	size_t write(uint16_t w);
+	size_t write(const uint8_t* str, size_t size);
 	
 	// Identification du type de Minitel
 	unsigned long identifyDevice();
@@ -351,10 +352,6 @@ public:
 
 	// Contenu
 	void attributs(byte attribut);
-
-	using Stream::println;
-
-	size_t println();
 
 	void printChar(char caractere);  // Caractère du jeu G0 exceptés ceux codés 0x60, 0x7E, 0x7F.
 	void printSpecialChar(byte b);  // Caractère du jeu G2. Voir plus haut, au niveau de 1.2.3, les constantes possibles.
