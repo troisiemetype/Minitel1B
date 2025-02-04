@@ -126,7 +126,7 @@ int Minitel::read(){
 }
 
 int Minitel::peek(){
-
+	return mySerial.peek();
 }
 
 // This write function transforms the UTF8 special chars into Minitel G2.
