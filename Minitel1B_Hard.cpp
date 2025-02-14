@@ -133,101 +133,33 @@ int Minitel::peek(){
 // It's rewritten from the print method present in the class from Eric Serandour, modified by Iodeo
 // It would be better to use write(const char*, size_t), but it's not declared virtual in Print, where this one is.
 // Anyway, we probably won't have to send bytes, because the Minitel is as a terminal.
-// TODO : export those values to a pair list, so the code bellow can be refatored, the list usable for check, and the whole easily exandable.
 size_t Minitel::write(const uint8_t *str, size_t size){
 	size_t n = 0;
 
 	while(size--){
 		char c = *str++;
-/*
-		if(c < ' '){
-			// Space (0x20) is the first caracter which is writable.
-			// We dont write anything.
-			n += write(c);
-			continue;
-		} else
-*/
+
+		// Non-printable characters are handled by the Minitel as they should (BEL, CR, LF, etc), so we just pass them through.
 		if(c < DEL){
 			// Between space (0x20) and DEL (0x7F) is the standard ASCII set, we just forward the caracter to write.
 			// two exceptions : ^ and ` cannot be displayed alone by the minitel.
 			if(c != 0x5E && c != 0x60) n += write(c);
-		} else if(c == 0xC2 || c == 0xC3 || c == 0xC5 || c == 0xCE){
-			// characters coded on two bytes start by those bytes.
-			uint32_t code = (c << 8) | *str++;
+		} else {
+			uint32_t code = c;
+			// 0xE2 is a three-bytes character, we have to consume one more
+			if(c == 0xE2){
+				code <<= 8;
+				code |= *str++;
+				size--;
+			}
+			// Else we have a two-bytes character, starting with 0xC2, 0xC3 or 0xC5, we consume one character.
+			code <<= 8;
+			code |= *str++;
 			size--;
 
-			switch (code) {								// Voir p.90 pour VGP5 ou VGP2
-													// 0x19 => SS2 (Accès au jeu G2)
-													// 0x0F => SI (Accès au jeu G0)
-				case 0xC2A3: code = 0x1923; break;		// £ (VGP5 et VGP2)
-				case 0xC2A7: code = 0x1927; break;		// § (VGP5 seulement)
-				case 0xC2B0: code = 0x1930; break;		// ° (VGP5 et VGP2)
-				case 0xC2B1: code = 0x1931; break;		// ± (VGP5 et VGP2)
-				case 0xC2BC: code = 0x193C; break;		// ¼ (VGP5 et VGP2)
-				case 0xC2BD: code = 0x193D; break;		// ½ (VGP5 et VGP2)
-				case 0xC2BE: code = 0x193E; break;		// ¾ (VGP5 et VGP2)
-				case 0xC380: code = 0x0F41; break;		// À (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC382: code = 0x0F41; break;		// Â (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC384: code = 0x0F41; break;		// Ä (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC387: code = 0x0F43; break;		// Ç (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC388: code = 0x0F45; break;		// È (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC389: code = 0x0F45; break;		// É (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC38A: code = 0x0F45; break;		// Ê (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC38B: code = 0x0F45; break;		// Ë (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC38E: code = 0x0F49; break;		// Î (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC38F: code = 0x0F49; break;		// Ï (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC394: code = 0x0F4F; break;		// Ô (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC396: code = 0x0F4F; break;		// Ö (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC399: code = 0x0F55; break;		// Ù (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC39B: code = 0x0F55; break;		// Û (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC39C: code = 0x0F55; break;		// Ü (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
-				case 0xC3A0: code = 0x194161; break;	// à (VGP5 et VGP2)
-				case 0xC3A2: code = 0x194361; break;	// â (VGP5 et VGP2)
-				case 0xC3A4: code = 0x194861; break;	// ä (VGP5 seulement)
-				case 0xC3A7: code = 0x194B63; break;	// ç (VGP5 et VGP2)
-				case 0xC3A8: code = 0x194165; break;	// è (VGP5 et VGP2)
-				case 0xC3A9: code = 0x194265; break;	// é (VGP5 et VGP2)
-				case 0xC3AA: code = 0x194365; break;	// ê (VGP5 et VGP2)
-				case 0xC3AB: code = 0x194865; break;	// ë (VGP5 et VGP2)
-				case 0xC3AE: code = 0x194369; break;	// î (VGP5 et VGP2)
-				case 0xC3AF: code = 0x194869; break;	// ï (VGP5 et VGP2)
-				case 0xC3B4: code = 0x19436F; break;	// ô (VGP5 et VGP2)
-				case 0xC3B6: code = 0x19486F; break;	// ö (VGP5 seulement)
-				case 0xC3B7: code = 0x1938; break;		// ÷ (VGP5 et VGP2)
-				case 0xC3B9: code = 0x194175; break;	// ù (VGP5 et VGP2)
-				case 0xC3BB: code = 0x194375; break;	// û (VGP5 et VGP2)
-				case 0xC3BC: code = 0x194875; break;	// ü (VGP5 seulement)
-				case 0xC592: code = 0x196A; break;		// Œ (VGP5 et VGP2)
-				case 0xC593: code = 0x197A; break;		// œ (VGP5 et VGP2)
-				case 0xCEB2: code = 0x197B; break;		// β (VGP5 seulement)
-				default: code = 0; // supposé non-visualisable
-			}
-
-			n += writeCode(code);
-		} else if(c == 0xE2){
-			// This is a character coded on 3 bytes.
-			uint32_t code = c;
-			code <<= 8;
-			code |= *str++;
-			code <<= 8;
-			code |= *str++;
-
-			size -= 2;
-
-			switch (code) {
-				case 0xE28094: code = 0x60; break;		// —
-				case 0xE28099: code = 0x27; break;		// ' (it seems OSX encodes apostrophe like this)
-				case 0xE28690: code = 0x192C; break;	// ←
-				case 0xE28691: code = 0x5E; break;		// ↑
-				case 0xE28692: code = 0x192E; break;	// →
-				case 0xE28693: code = 0x192F; break;	// ↓
-				default: code = 0; // supposé non-visualisable
-		 	}
-
-			n += writeCode(code);
+			n += writeCode(getUTFReplacement(code));
 		}
 	}
-
 	return n;
 }
 
@@ -951,8 +883,17 @@ byte Minitel::reset() {  // Voir p.145
 	return workingStandard(0x135E);  // SEP (0x13), 0x5E
 }
 
+uint32_t Minitel::getUTFReplacement(uint32_t code){
+	const uint16_t size = sizeof(UTF8_TABLE) / sizeof(uint32_t) / 2;
 
+	for(uint16_t i = 0; i < size; ++i){
+		if(code == UTF8_TABLE[i][0]){
+			return UTF8_TABLE[i][1];
+		}
+	}
 
+	return 0;
+}
 
 
 ////////////////////////////////////////////////////////////////////////

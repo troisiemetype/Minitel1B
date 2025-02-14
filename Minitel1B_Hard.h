@@ -253,6 +253,56 @@
 #define UP      5
 #define DOWN    6
 
+const uint32_t UTF8_TABLE[][2] = {
+	{0xC2A3, 0x1923},		// £ (VGP5 et VGP2)
+	{0xC2A7, 0x1927},		// § (VGP5 seulement)
+	{0xC2B0, 0x1930},		// ° (VGP5 et VGP2)
+	{0xC2B1, 0x1931},		// ± (VGP5 et VGP2)
+	{0xC2BC, 0x193C},		// ¼ (VGP5 et VGP2)
+	{0xC2BD, 0x193D},		// ½ (VGP5 et VGP2)
+	{0xC2BE, 0x193E},		// ¾ (VGP5 et VGP2)
+	{0xC380, 0x0F41},		// À (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC382, 0x0F41},		// Â (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC384, 0x0F41},		// Ä (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC387, 0x0F43},		// Ç (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC388, 0x0F45},		// È (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC389, 0x0F45},		// É (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC38A, 0x0F45},		// Ê (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC38B, 0x0F45},		// Ë (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC38E, 0x0F49},		// Î (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC38F, 0x0F49},		// Ï (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC394, 0x0F4F},		// Ô (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC396, 0x0F4F},		// Ö (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC399, 0x0F55},		// Ù (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC39B, 0x0F55},		// Û (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC39C, 0x0F55},		// Ü (Aucune lettre accentuée majuscule n'est disponible - voir p.90)
+	{0xC3A0, 0x194161},		// à (VGP5 et VGP2)
+	{0xC3A2, 0x194361},		// â (VGP5 et VGP2)
+	{0xC3A4, 0x194861},		// ä (VGP5 seulement)
+	{0xC3A7, 0x194B63},		// ç (VGP5 et VGP2)
+	{0xC3A8, 0x194165},		// è (VGP5 et VGP2)
+	{0xC3A9, 0x194265},		// é (VGP5 et VGP2)
+	{0xC3AA, 0x194365},		// ê (VGP5 et VGP2)
+	{0xC3AB, 0x194865},		// ë (VGP5 et VGP2)
+	{0xC3AE, 0x194369},		// î (VGP5 et VGP2)
+	{0xC3AF, 0x194869},		// ï (VGP5 et VGP2)
+	{0xC3B4, 0x19436F},		// ô (VGP5 et VGP2)
+	{0xC3B6, 0x19486F},		// ö (VGP5 seulement)
+	{0xC3B7, 0x1938},		// ÷ (VGP5 et VGP2)
+	{0xC3B9, 0x194175},		// ù (VGP5 et VGP2)
+	{0xC3BB, 0x194375},		// û (VGP5 et VGP2)
+	{0xC3BC, 0x194875},		// ü (VGP5 seulement)
+	{0xC592, 0x196A},		// Œ (VGP5 et VGP2)
+	{0xC593, 0x197A},		// œ (VGP5 et VGP2)
+	{0xCEB2, 0x197B},		// β (VGP5 seulement)
+	{0xE28094, 0x60},		// —
+	{0xE28099, 0x27},		// ' (it seems OSX encodes apostrophe like this)
+	{0xE28690, 0x192C},		// ←
+	{0xE28691, 0x5E},		// ↑
+	{0xE28692, 0x192E},		// →
+	{0xE28693, 0x192F},		// ↓
+};
+
 ////////////////////////////////////////////////////////////////////////
 
 class Minitel : public Stream
@@ -381,6 +431,8 @@ public:
 	byte statusAiguillage(byte module);
 	byte connexion(boolean commande);
 	byte reset();
+
+	static uint32_t getUTFReplacement(uint32_t code);
 	
 private:
 #if defined(ARDUINO_ARCH_RP2040)
